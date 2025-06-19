@@ -1,2 +1,86 @@
-./data
-env
+# Data directories
+data/
+datasets/
+*.csv
+*.xlsx
+*.xls
+
+# Virtual environments
+env/
+venv/
+.env
+.venv
+ENV/
+env.bak/
+venv.bak/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Model files (optional - comment out if you want to track models)
+*.pkl
+*.joblib
+*.h5
+*.model
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Config files with secrets
+config.ini
+secrets.yaml
+.env.local
+.env.production
+
+# Output directories
+output/
+results/
+plots/
+figures/
