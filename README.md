@@ -295,17 +295,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Focus on data-driven farming recommendations
 - Contributing to food security and agricultural innovation
 
-## 📞 Contact
-
-For questions, suggestions, or collaboration opportunities:
-
-- 📧 Email: [your-email@example.com]
-- 🐙 GitHub: [Your GitHub Profile]
-- 💼 LinkedIn: [Your LinkedIn Profile]
 
 ## 🙏 Acknowledgments
 
-- **Dataset**: Agricultural research community
+- **Dataset**: kaggle
 - **Libraries**: Scikit-learn, XGBoost, Pandas, NumPy
 - **Inspiration**: Sustainable agriculture and food security goals
 - **Community**: Open-source ML and agricultural technology communities
