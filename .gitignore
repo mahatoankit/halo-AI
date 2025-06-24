@@ -84,3 +84,8 @@ output/
 results/
 plots/
 figures/
+
+# Project Overview
+PROJECT-OVERVIEW.md
+
+backend/haloai/db.sqlite3
