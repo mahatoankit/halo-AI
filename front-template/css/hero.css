@@ -1,0 +1,1127 @@
+.hero-page,
+.hero-page * {
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+  min-height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #fafafa;
+}
+
+.hero-page {
+  min-height: 100vh;
+  min-width: 100vw;
+  width: 100vw;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.depth-0-frame-0 {
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex: 1 1 auto;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+.depth-1-frame-0 {
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.depth-2-frame-0 {
+  border-style: solid;
+  border-color: #e5e8eb;
+  border-width: 0px 0px 1px 0px;
+  padding: 12px 40px 12px 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.depth-3-frame-0 {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.depth-4-frame-0 {
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.depth-5-frame-0 {
+  background: #fafafa;
+  flex: 1;
+  width: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.vector-0 {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+.depth-6-frame-0 {
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 12px;
+  height: 13px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.depth-4-frame-1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.halo-ai {
+  color: #121712;
+  text-align: left;
+  font-family: "PublicSans-Bold", sans-serif;
+  font-size: 18px;
+  line-height: 23px;
+  font-weight: 700;
+  position: relative;
+  align-self: stretch;
+}
+.depth-3-frame-1 {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  flex: 1;
+  position: relative;
+}
+.depth-4-frame-02 {
+  display: flex;
+  flex-direction: row;
+  gap: 36px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.depth-5-frame-02 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.home {
+  color: #121712;
+  text-align: left;
+  font-family: "PublicSans-Medium", sans-serif;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 500;
+  position: relative;
+  align-self: stretch;
+}
+.depth-5-frame-1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.crops-prediction {
+  color: #121712;
+  text-align: left;
+  font-family: "PublicSans-Medium", sans-serif;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 500;
+  position: relative;
+  align-self: stretch;
+}
+.depth-5-frame-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.grants-offers {
+  color: #121712;
+  text-align: left;
+  font-family: "PublicSans-Medium", sans-serif;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 500;
+  position: relative;
+  align-self: stretch;
+}
+.depth-5-frame-3 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.connect-with-expert {
+  color: #121712;
+  text-align: left;
+  font-family: "PublicSans-Medium", sans-serif;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 500;
+  position: relative;
+  align-self: stretch;
+}
+.depth-5-frame-4 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.contact {
+  color: #121712;
+  text-align: left;
+  font-family: "PublicSans-Medium", sans-serif;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 500;
+  position: relative;
+  align-self: stretch;
+}
+.depth-2-frame-1 {
+  padding: 20px 160px 20px 160px;
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 938px;
+  position: relative;
+}
+.depth-3-frame-02 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex: 1;
+  max-width: 960px;
+  position: relative;
+  overflow: hidden;
+}
+.depth-4-frame-03 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.depth-5-frame-03 {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+}
+.depth-6-frame-02 {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  border-radius: 12px;
+  padding: 16px;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 480px;
+  min-height: 480px;
+  position: relative;
+  overflow: hidden;
+  background-attachment: fixed;
+}
+.depth-7-frame-0 {
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 240px;
+}
+.depth-8-frame-0 {
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.halo-ai2 {
+  color: #ffffff;
+  text-align: center;
+  font-family: "PublicSans-Black", sans-serif;
+  font-size: 48px;
+  line-height: 60px;
+  letter-spacing: -2px;
+  font-weight: 900;
+  position: relative;
+  align-self: stretch;
+}
+.depth-8-frame-1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 723px;
+  position: relative;
+}
+.empowering-farmers-with-ai-driven-insights-for-better-yields-and-sustainable-agriculture {
+  color: #ffffff;
+  text-align: center;
+  font-family: "PublicSans-Regular", sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
+}
+.depth-7-frame-1 {
+  background: #c9e5bd;
+  border-radius: 24px;
+  padding: 0px 20px 0px 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  min-width: 84px;
+  max-width: 480px;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 380px;
+  overflow: hidden;
+}
+.depth-8-frame-02 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.get-started {
+  color: #121712;
+  text-align: center;
+  font-family: "PublicSans-Bold", sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+  position: relative;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  background: #c9e5bd;
+  border-radius: 20px;
+  padding: 0px 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  min-width: 60px;
+  max-width: 240px;
+  box-sizing: border-box;
+  cursor: pointer;
+  margin: 0 auto;
+}
+.depth-4-frame-12 {
+  padding: 40px 16px 40px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.depth-5-frame-04 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.depth-6-frame-03 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 720px;
+  max-width: 720px;
+  position: relative;
+}
+.key-features {
+  color: #121712;
+  text-align: left;
+  font-family: "PublicSans-Black", sans-serif;
+  font-size: 36px;
+  line-height: 45px;
+  letter-spacing: -1px;
+  font-weight: 900;
+  position: relative;
+  align-self: stretch;
+}
+.depth-6-frame-1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 720px;
+  max-width: 720px;
+  position: relative;
+}
+.halo-ai-provides-a-suite-of-tools-to-help-farmers-make-informed-decisions-optimize-their-operations-and-increase-productivity {
+  color: #121712;
+  text-align: left;
+  font-family: "PublicSans-Regular", sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
+}
+.depth-5-frame-12 {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.depth-6-frame-04 {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+}
+.depth-7-frame-02 {
+  background: #fafafa;
+  border-radius: 8px;
+  border-style: solid;
+  border-color: #d9e3d6;
+  border-width: 1px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  width: 301px;
+  position: relative;
+}
+.depth-8-frame-03 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.depth-9-frame-0 {
+  flex: 1;
+  width: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.vector-02 {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+.depth-10-frame-0 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 22px;
+  height: 18px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.depth-8-frame-12 {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.depth-9-frame-02 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.crop-recommendation {
+  color: #121712;
+  text-align: left;
+  font-family: "PublicSans-Bold", sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+  position: relative;
+  align-self: stretch;
+}
+.depth-9-frame-1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.get-personalized-crop-recommendations-based-on-your-land-climate-and-market-trends {
+  color: #6b875e;
+  text-align: left;
+  font-family: "PublicSans-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
+}
+.depth-7-frame-12 {
+  background: #fafafa;
+  border-radius: 8px;
+  border-style: solid;
+  border-color: #d9e3d6;
+  border-width: 1px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  width: 301px;
+  position: relative;
+}
+.vector-03 {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+.depth-10-frame-02 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 23px;
+  height: 17px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.connect-with-expert2 {
+  color: #121712;
+  text-align: left;
+  font-family: "PublicSans-Bold", sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+  position: relative;
+  align-self: stretch;
+}
+.connect-with-agricultural-experts-for-personalized-advice-and-support {
+  color: #6b875e;
+  text-align: left;
+  font-family: "PublicSans-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
+}
+.depth-7-frame-2 {
+  background: #fafafa;
+  border-radius: 8px;
+  border-style: solid;
+  border-color: #d9e3d6;
+  border-width: 1px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  width: 301px;
+  position: relative;
+}
+.vector-04 {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+.depth-10-frame-03 {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.grants-offers2 {
+  color: #121712;
+  text-align: left;
+  font-family: "PublicSans-Bold", sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+  position: relative;
+  align-self: stretch;
+}
+.access-information-on-available-grants-and-offers-to-support-your-farming-activities {
+  color: #6b875e;
+  text-align: left;
+  font-family: "PublicSans-Regular", sans-serif;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 400;
+  position: relative;
+  align-self: stretch;
+}
+.hero-center-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  min-height: 400px;
+  gap: 16px;
+}
+.depth-7-frame-0, .depth-7-frame-1 {
+  position: static;
+  left: unset;
+  top: unset;
+  translate: unset;
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  height: auto;
+  min-width: unset;
+  max-width: unset;
+  overflow: unset;
+}
+.get-started {
+  margin-top: 24px;
+}
+.logo-img {
+  width: 60px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 1200px) {
+  .depth-2-frame-0 {
+    padding: 12px 20px;
+  }
+  
+  .depth-4-frame-02 {
+    gap: 24px;
+  }
+  
+  .depth-5-frame-12 {
+    gap: 24px;
+  }
+  
+  .depth-6-frame-04 {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 900px) {
+  /* Only hide the navigation, not the whole header/content */
+  .depth-4-frame-02 {
+    display: none !important;
+  }
+  
+  .depth-2-frame-0 {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 16px;
+    display: none; /* Hide original header on mobile */
+  }
+  
+  .depth-3-frame-0 {
+    justify-content: center;
+  }
+  
+  .depth-3-frame-1 {
+    justify-content: center;
+    flex: none;
+  }
+  
+  .depth-4-frame-02 {
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .depth-2-frame-1 {
+    padding: 20px 16px;
+  }
+  
+  .depth-3-frame-02 {
+    flex-direction: column;
+    gap: 40px;
+  }
+  
+  .depth-4-frame-03 {
+    min-height: 300px;
+  }
+  
+  .depth-4-frame-12 {
+    padding: 0 16px;
+  }
+  
+  .depth-5-frame-12 {
+    gap: 20px;
+  }
+  
+  .depth-6-frame-04 {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .depth-7-frame-02,
+  .depth-7-frame-12,
+  .depth-7-frame-2 {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .halo-ai2 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+  
+  .empowering-farmers-with-ai-driven-insights-for-better-yields-and-sustainable-agriculture {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  
+  .key-features {
+    font-size: 24px;
+    line-height: 32px;
+  }
+  
+  .halo-ai-provides-a-suite-of-tools-to-help-farmers-make-informed-decisions-optimize-their-operations-and-increase-productivity {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .depth-2-frame-0 {
+    padding: 12px 12px;
+  }
+  
+  .depth-4-frame-02 {
+    gap: 16px;
+  }
+  
+  .home,
+  .crops-prediction,
+  .grants-offers,
+  .connect-with-expert,
+  .contact {
+    font-size: 13px;
+    line-height: 18px;
+  }
+  
+  .depth-2-frame-1 {
+    padding: 16px 12px;
+  }
+  
+  .depth-4-frame-03 {
+    min-height: 250px;
+  }
+  
+  .depth-4-frame-12 {
+    padding: 0 12px;
+  }
+  
+  .depth-5-frame-12 {
+    gap: 16px;
+  }
+  
+  .depth-6-frame-04 {
+    gap: 16px;
+  }
+  
+  .depth-7-frame-02,
+  .depth-7-frame-12,
+  .depth-7-frame-2 {
+    gap: 12px;
+  }
+  
+  .halo-ai2 {
+    font-size: 24px;
+    line-height: 32px;
+    padding: 0 16px;
+  }
+  
+  .empowering-farmers-with-ai-driven-insights-for-better-yields-and-sustainable-agriculture {
+    font-size: 14px;
+    line-height: 22px;
+    padding: 0 16px;
+  }
+  
+  .get-started {
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 8px;
+  }
+  
+  .key-features {
+    font-size: 20px;
+    line-height: 28px;
+  }
+  
+  .halo-ai-provides-a-suite-of-tools-to-help-farmers-make-informed-decisions-optimize-their-operations-and-increase-productivity {
+    font-size: 14px;
+    line-height: 22px;
+  }
+  
+  .crop-recommendation,
+  .connect-with-expert2,
+  .grants-offers2 {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  
+  .get-personalized-crop-recommendations-based-on-your-land-climate-and-market-trends,
+  .connect-with-agricultural-experts-for-personalized-advice-and-support,
+  .access-information-on-available-grants-and-offers-to-support-your-farming-activities {
+    font-size: 13px;
+    line-height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .depth-2-frame-0 {
+    padding: 10px 8px;
+  }
+  
+  .depth-4-frame-02 {
+    gap: 12px;
+  }
+  
+  .home,
+  .crops-prediction,
+  .grants-offers,
+  .connect-with-expert,
+  .contact {
+    font-size: 12px;
+    line-height: 16px;
+  }
+  
+  .depth-2-frame-1 {
+    padding: 12px 8px;
+  }
+  
+  .depth-4-frame-03 {
+    min-height: 200px;
+  }
+  
+  .depth-4-frame-12 {
+    padding: 0 8px;
+  }
+  
+  .halo-ai2 {
+    font-size: 20px;
+    line-height: 28px;
+    padding: 0 12px;
+  }
+  
+  .empowering-farmers-with-ai-driven-insights-for-better-yields-and-sustainable-agriculture {
+    font-size: 13px;
+    line-height: 20px;
+    padding: 0 12px;
+  }
+  
+  .get-started {
+    font-size: 13px;
+    padding: 8px 20px;
+  }
+  
+  .key-features {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  
+  .halo-ai-provides-a-suite-of-tools-to-help-farmers-make-informed-decisions-optimize-their-operations-and-increase-productivity {
+    font-size: 13px;
+    line-height: 20px;
+  }
+  
+  .crop-recommendation,
+  .connect-with-expert2,
+  .grants-offers2 {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  
+  .get-personalized-crop-recommendations-based-on-your-land-climate-and-market-trends,
+  .connect-with-agricultural-experts-for-personalized-advice-and-support,
+  .access-information-on-available-grants-and-offers-to-support-your-farming-activities {
+    font-size: 12px;
+    line-height: 18px;
+  }
+}
+
+/* Ensure images are responsive */
+.logo-img {
+  max-width: 100%;
+  height: auto;
+}
+
+.vector-0,
+.vector-02,
+.vector-03,
+.vector-04 {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Improve touch targets on mobile */
+@media (max-width: 600px) {
+  .home,
+  .crops-prediction,
+  .grants-offers,
+  .connect-with-expert,
+  .contact,
+  .get-started {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Mobile Menu Override Styles */
+@media (max-width: 900px) {
+  .depth-4-frame-02 {
+    display: none !important;
+  }
+  
+  .depth-4-frame-02.active {
+    display: flex !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: #fafafa !important;
+    flex-direction: column !important;
+    padding: 80px 20px 20px 20px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+    z-index: 1000 !important;
+    border-top: 1px solid #e5e8eb !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+  }
+  
+  .depth-5-frame-02,
+  .depth-5-frame-1,
+  .depth-5-frame-2,
+  .depth-5-frame-3,
+  .depth-5-frame-4 {
+    margin: 15px 0 !important;
+    text-align: center !important;
+    padding: 10px !important;
+    border-bottom: 1px solid #e5e8eb !important;
+  }
+  
+  .depth-5-frame-02:last-child,
+  .depth-5-frame-1:last-child,
+  .depth-5-frame-2:last-child,
+  .depth-5-frame-3:last-child,
+  .depth-5-frame-4:last-child {
+    border-bottom: none !important;
+  }
+  
+  .depth-5-frame-03 {
+    margin: 15px 0 !important;
+    text-align: center !important;
+    padding: 10px !important;
+    border-bottom: 1px solid #e5e8eb !important;
+  }
+  
+  .depth-5-frame-03:last-child {
+    border-bottom: none !important;
+  }
+  
+  .home,
+  .crops-prediction,
+  .grants-offers,
+  .connect-with-expert,
+  .contact,
+  .log-out {
+    font-size: 18px !important;
+    padding: 10px 0 !important;
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .depth-4-frame-02.active {
+    padding: 70px 16px 16px 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .depth-4-frame-02.active {
+    padding: 60px 12px 12px 12px !important;
+  }
+}
+
+@media (min-width: 901px) {
+  .mobile-header,
+  .mobile-nav-menu,
+  .mobile-log-out {
+    display: none !important;
+  }
+}
+
+/* Ensure all navigation links are black on the index page */
+.depth-4-frame-02 a,
+.depth-4-frame-02 a:visited,
+.depth-4-frame-02 a.active {
+  color: #121712 !important;
+  font-weight: 700;
+}
