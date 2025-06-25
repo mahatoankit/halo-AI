@@ -24,7 +24,7 @@ urlpatterns = [
 
 
     path('community/', include('apps.community.urls')),
-    path('crops/', include('apps.crops.urls')),
+    path('crop-prediction/', include('apps.crops.urls')),
     path('dashboard/', include('apps.dashboard.urls')),
     path('sensors/', include('apps.sensors.urls')),
     path('users/', include('apps.users.urls')),

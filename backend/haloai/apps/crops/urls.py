@@ -8,5 +8,5 @@ from . import views
 app_name = "crops"
 
 urlpatterns = [
-    path("crop-prediction", views.crop_prediction, name="crop_prediction"),
+    path("", views.crop_prediction, name="crop_prediction"),
 ]
