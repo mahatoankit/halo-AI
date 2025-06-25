@@ -1,34 +1,46 @@
 # 🌾 HALO-AI: Intelligent Crop Recommendation System
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.95+-green.svg)](https://fastapi.tiangolo.com/)
+[![Django](https://img.shields.io/badge/Django-4.2+-green.svg)](https://www.djangoproject.com/)
+[![Firebase](https://img.shields.io/badge/Firebase-Firestore-orange.svg)](https://firebase.google.com/docs/firestore)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Development--Phase-yellow.svg)]()
 
 ## 📋 Project Overview
 
-HALO-AI is an intelligent IoT-enabled crop recommendation system that combines machine learning, sensor data simulation, and modern backend architecture to help farmers make data-driven decisions about crop selection. The system leverages trained ML models with 99%+ accuracy to analyze soil conditions, environmental factors, and agricultural parameters, suggesting the most suitable crops for given conditions to promote sustainable agriculture and food security.
+HALO-AI is an intelligent IoT-enabled crop recommendation system that combines machine learning, sensor data simulation, and modern Django backend architecture to help farmers make data-driven decisions about crop selection. The system leverages trained ML models with 99%+ accuracy to analyze soil conditions, environmental factors, and agricultural parameters, suggesting the most suitable crops for given conditions to promote sustainable agriculture and food security.
 
 ### 🎯 Key Features
 
 - **🤖 Advanced ML Models**: XGBoost, Random Forest, and SVM algorithms with 99%+ accuracy
 - **📡 IoT Simulation**: Realistic sensor data generation and processing framework
-- **�️ Modern Architecture**: Modular FastAPI backend with clean separation of concerns
+- **🌐 Django Backend**: Monolithic Django framework with template-based frontend
 - **📊 Comprehensive Analysis**: Complete data pipeline with 3 detailed Jupyter notebooks
 - **🚀 Production-Ready Models**: Pre-trained models available for immediate deployment
-- **⚙️ Automated Setup**: One-command environment setup and API server deployment
+- **⚙️ Automated Setup**: One-command environment setup and Django server deployment
+- **🔥 Firebase Integration**: NoSQL database with real-time capabilities
+- **👥 Multi-User System**: Farmers, Technicians, and Admin roles with community features
 
 ## 🏗️ Project Structure
 
 ```
 Codebase/
-├── backend/                       # FastAPI backend service
-│   └── app/                       # Application core
-│       ├── main.py               # Main FastAPI application entry point
-│       ├── __init__.py           # Module initialization
-│       └── core/                 # Core configurations
-│           └── config.py         # Backend-specific configuration
-├── frontend/                      # Web frontend (planned for future development)
+├── backend/                       # Django backend service
+│   └── haloai/                    # Django project
+│       ├── manage.py             # Django management utility
+│       ├── haloai/               # Project configuration
+│       │   ├── __init__.py       # Module initialization
+│       │   ├── settings.py       # Django settings
+│       │   ├── urls.py           # URL configuration
+│       │   ├── wsgi.py           # WSGI configuration
+│       │   └── asgi.py           # ASGI configuration
+│       └── apps/                 # Django applications
+│           ├── users/            # User management (farmers, technicians, admins)
+│           ├── crops/            # Crop recommendations
+│           ├── community/        # Social platform features
+│           ├── sensors/          # IoT sensor data management
+│           └── dashboard/        # Dashboard views
+├── frontend/                      # Web frontend (Django templates)
 ├── iot/                          # IoT sensor simulation system
 │   ├── __init__.py               # Module initialization
 │   ├── sensors/                  # Sensor simulation and hardware interface
@@ -56,7 +68,9 @@ Codebase/
 │   └── schemas.py               # Pydantic data models and validation schemas
 ├── scripts/                      # Automation and utility scripts
 │   ├── setup.sh                 # Complete environment setup automation
-│   └── start_api.sh             # FastAPI server startup script
+│   └── start_django.sh          # Django server startup script
+├── templates/                    # Django HTML templates
+├── static/                       # CSS, JavaScript, and static files
 ├── .env.example                  # Environment configuration template
 ├── .gitignore                   # Git ignore rules
 ├── requirements.txt              # Python dependencies and versions
@@ -109,16 +123,17 @@ The fastest way to get HALO-AI running:
    ./scripts/setup.sh
    ```
 
-2. **Start the API server**
+2. **Start the Django server**
 
    ```bash
-   ./scripts/start_api.sh
+   ./scripts/start_django.sh
    ```
 
 3. **Access the system**
-   - **API Documentation**: `http://localhost:8000/docs` (Interactive Swagger UI)
-   - **Health Check**: `http://localhost:8000/health`
-   - **API Base**: `http://localhost:8000/`
+   - **Main Application**: `http://localhost:8000/`
+   - **Admin Panel**: `http://localhost:8000/admin/`
+   - **Farmer Dashboard**: `http://localhost:8000/dashboard/farmer/`
+   - **Technician Dashboard**: `http://localhost:8000/dashboard/technician/`
 
 ### 🔧 Manual Setup (Alternative)
 
@@ -126,9 +141,9 @@ If you prefer manual control over the setup process:
 
 ```bash
 # Create and activate virtual environment
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# venv\Scripts\activate   # Windows
+python -m venv env
+source env/bin/activate  # Linux/Mac
+# env\Scripts\activate   # Windows
 
 # Install dependencies
 pip install -r requirements.txt
@@ -137,9 +152,17 @@ pip install -r requirements.txt
 cp .env.example .env
 # Edit .env with your preferred settings
 
-# Start the FastAPI server
-cd backend/app
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+# Navigate to Django project
+cd backend/haloai
+
+# Run migrations
+python manage.py migrate
+
+# Create superuser (optional)
+python manage.py createsuperuser
+
+# Start the Django development server
+python manage.py runserver
 ```
 
 ### 📓 Working with Jupyter Notebooks
@@ -201,20 +224,29 @@ jupyter notebook
 
 ### 🌐 Backend System (`backend/`)
 
-**FastAPI Application Architecture:**
+**Django Application Architecture:**
 
-- Modern async Python web framework
-- Modular application structure with clean separation
-- Environment-based configuration management
-- Built-in API documentation (Swagger/OpenAPI)
-- Health monitoring and status endpoints
+- Monolithic Django framework with template-based frontend
+- Multiple Django apps for modular organization
+- Firebase integration for NoSQL data storage
+- Built-in admin interface for data management
+- User authentication and role-based access control
+
+**Django Apps Structure:**
+
+- **users/**: User management for farmers, technicians, and admins
+- **crops/**: Crop recommendation functionality
+- **community/**: Social platform features (forums, posts, discussions)
+- **sensors/**: IoT sensor data management and visualization
+- **dashboard/**: Role-specific dashboard views
 
 **Current Implementation Status:**
 
-- ✅ Basic FastAPI application structure
-- ✅ Configuration management system
-- 🚧 API endpoints for model predictions (planned)
-- 🚧 Model loading and serving (planned)
+- ✅ Basic Django project structure
+- ✅ Django apps for modular organization
+- 🚧 Firebase integration setup (planned)
+- 🚧 ML model integration (planned)
+- 🚧 Template-based frontend (planned)
 
 ### 📡 IoT Integration (`iot/`)
 
@@ -250,26 +282,46 @@ jupyter notebook
 
 ## 🔮 Making Predictions
 
-### 🚧 Using the API (In Development)
+### 🚧 Using the Django Web Interface (In Development)
 
-The FastAPI endpoints are currently being implemented. Once complete, you'll be able to make predictions like this:
+The Django web interface is currently being implemented. Once complete, you'll be able to:
 
-```bash
-# Health check (currently available)
-curl http://localhost:8000/health
+- **Farmer Dashboard**: View personalized crop recommendations
+- **Technician Interface**: Manage communities and input NPK data
+- **Admin Panel**: Manage users, content moderation, and system oversight
+- **Community Forum**: Participate in agricultural discussions and Q&A
 
-# Prediction endpoint (planned implementation)
-curl -X POST "http://localhost:8000/predict/xgboost" \
-     -H "Content-Type: application/json" \
-     -d '{
-       "nitrogen": 90,
-       "phosphorous": 42,
-       "potassium": 43,
-       "temperature": 20.8,
-       "humidity": 82.0,
-       "ph": 6.5,
-       "rainfall": 202.9
-     }'
+### 🚧 Django Views and Templates (Planned Implementation)
+
+```python
+# Example Django view for crop recommendations
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import CropRecommendation
+from ml.models import load_xgboost_model
+
+@login_required
+def get_crop_recommendation(request):
+    if request.method == 'POST':
+        # Get sensor data from Firebase
+        sensor_data = get_latest_sensor_data(request.user)
+
+        # Load ML model and make prediction
+        model = load_xgboost_model()
+        prediction = model.predict(sensor_data)
+
+        # Save recommendation to Firebase
+        recommendation = CropRecommendation.objects.create(
+            user=request.user,
+            predicted_crop=prediction,
+            sensor_data=sensor_data
+        )
+
+        return render(request, 'crops/recommendation.html', {
+            'recommendation': recommendation
+        })
+
+    return render(request, 'crops/input_form.html')
 ```
 
 ### ✅ Direct Model Usage (Currently Available)
@@ -367,38 +419,42 @@ asyncio.run(test_collection())
 
 **🚧 In Development:**
 
-- **API Endpoints**: FastAPI routes for model predictions
-- **Model Integration**: Loading and serving trained models via API
-- **Error Handling**: Robust error handling and logging
-- **Testing**: Unit and integration test suite
+- **Django Apps**: Complete implementation of users, crops, community, sensors, and dashboard apps
+- **Firebase Integration**: Real-time database connectivity and data synchronization
+- **Template Frontend**: HTML/CSS templates with Django template engine
+- **ML Model Integration**: Loading and serving trained models within Django views
+- **User Authentication**: Role-based access control for farmers, technicians, and admins
+- **Community Features**: Forum functionality and social networking capabilities
 
 **📋 Planned for Next Phase:**
 
-- **Frontend Interface**: Web dashboard for predictions and monitoring
-- **Database Integration**: Data persistence layer
-- **Authentication**: User management and API security
-- **Real-time Processing**: Live IoT data streaming
-- **Model Management**: A/B testing and model versioning
+- **Advanced Frontend**: Enhanced UI/UX with modern JavaScript frameworks
+- **Real-time Features**: Live IoT data streaming and real-time recommendations
+- **Mobile App**: React Native or Flutter mobile application
+- **API Layer**: RESTful APIs for mobile app integration
+- **Advanced Analytics**: Detailed reporting and insights dashboard
+- **Geospatial Features**: Map-based visualizations and location-specific recommendations
 
 ### 🎯 Current Development Focus
 
-**Priority 1: Complete API Implementation**
+**Priority 1: Complete Django Implementation**
 
-- Model loading and prediction endpoints
-- Request validation and error handling
-- Performance optimization for inference
+- Django apps development (users, crops, community, sensors, dashboard)
+- Firebase integration for data storage and real-time features
+- Template-based frontend with responsive design
+- User authentication and role-based access control
 
-**Priority 2: Frontend Development**
+**Priority 2: ML Model Integration**
 
-- Interactive web dashboard
-- Real-time prediction interface
-- Data visualization components
+- Model loading and inference within Django views
+- Real-time crop recommendation functionality
+- Data visualization and dashboard components
 
-**Priority 3: Production Features**
+**Priority 3: Community & Social Features**
 
-- Database integration for data persistence
-- User authentication and authorization
-- Monitoring and alerting systems
+- Forum and discussion platform implementation
+- User messaging and notification systems
+- Content moderation and admin tools
 
 ### 🔧 Development Guidelines
 
@@ -450,27 +506,29 @@ class WeatherStation:
 
 **Project Structure Guidelines:**
 
-- **Backend**: Follow FastAPI best practices with dependency injection
-- **Shared**: Keep common utilities and schemas in shared module
-- **IoT**: Maintain sensor abstraction for easy hardware integration
-- **ML**: Preserve notebook-driven development for reproducibility
-- **Scripts**: Add automation for common development tasks
+- **Backend**: Follow Django best practices with app-based organization
+- **Templates**: Use Django template engine with modern CSS frameworks
+- **Firebase**: Integrate Firebase SDK for real-time data operations
+- **ML**: Integrate trained models within Django views and services
+- **Static Files**: Organize CSS, JavaScript, and images in Django static structure
+- **Scripts**: Add automation for common Django development tasks
 
 ### 🧪 Testing (Planned)
 
 ```bash
 # Install development dependencies
-pip install pytest pytest-asyncio pytest-cov
+pip install pytest pytest-django pytest-cov
 
-# Run test suite (when implemented)
-pytest tests/ -v
+# Run Django test suite (when implemented)
+python manage.py test
 
 # Run with coverage report
-pytest --cov=backend --cov=shared --cov=iot tests/
+coverage run --source='.' manage.py test
+coverage report
 
-# Run specific test modules
-pytest tests/test_models.py -v
-pytest tests/test_api.py -v
+# Run specific app tests
+python manage.py test apps.users
+python manage.py test apps.crops
 ```
 
 ## 🎯 Use Cases
@@ -513,20 +571,20 @@ pytest tests/test_api.py -v
 
 ## 📈 Architecture & Future Roadmap
 
-### �️ System Architecture
+### 🌐 System Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │   Backend       │    │   ML Pipeline   │
-│   (Planned)     │◄──►│   FastAPI       │◄──►│   Models        │
+│   (Templates)   │◄──►│   Django        │◄──►│   Models        │
 │                 │    │   (Active)      │    │   (Ready)       │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          ▲                       ▲                       ▲
          │                       │                       │
          ▼                       ▼                       ▼
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Dashboard     │    │   API Layer     │    │   Data Science  │
-│   Interface     │    │   & Services    │    │   Notebooks     │
+│   Dashboard     │    │   Firebase      │    │   Data Science  │
+│   Interface     │    │   Database      │    │   Notebooks     │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
                                 ▲
                                 │
@@ -539,64 +597,63 @@ pytest tests/test_api.py -v
 
 ### 🚀 Development Roadmap
 
-**Phase 1: Core API Development (Current)**
+**Phase 1: Core Django Development (Current)**
 
-- [ ] Complete FastAPI prediction endpoints
-- [ ] Model loading and inference optimization
-- [ ] API testing and validation
-- [ ] Performance benchmarking
+- [ ] Complete Django apps implementation (users, crops, community, sensors, dashboard)
+- [ ] Firebase integration and real-time data synchronization
+- [ ] ML model loading and inference within Django views
+- [ ] User authentication and role-based access control
 
 **Phase 2: Frontend & User Experience**
 
-- [ ] React/Vue.js dashboard development
-- [ ] Interactive prediction interface
-- [ ] Real-time data visualization
-- [ ] Mobile-responsive design
+- [ ] Django template development with modern CSS frameworks
+- [ ] Interactive dashboard interfaces for different user roles
+- [ ] Real-time data visualization and charts
+- [ ] Mobile-responsive design and progressive web app features
 
-**Phase 3: Production & Deployment**
+**Phase 3: Community & Social Features**
 
-- [ ] Database integration (PostgreSQL/MongoDB)
-- [ ] User authentication and authorization
-- [ ] Docker containerization
-- [ ] Cloud deployment (AWS/GCP/Azure)
+- [ ] Forum and discussion platform implementation
+- [ ] User messaging and notification systems
+- [ ] Content moderation and admin management tools
+- [ ] Community engagement analytics and insights
 
 **Phase 4: Advanced Features**
 
 - [ ] Real-time IoT hardware integration
-- [ ] Weather API integration
-- [ ] Geospatial crop mapping
-- [ ] Economic optimization models
-- [ ] Multi-language support
+- [ ] Weather API integration for enhanced predictions
+- [ ] Geospatial crop mapping and regional analytics
+- [ ] Economic optimization models and cost-benefit analysis
+- [ ] Multi-language support for global deployment
 
 **Phase 5: Scale & Intelligence**
 
-- [ ] Microservices architecture
-- [ ] ML model versioning and A/B testing
-- [ ] Automated model retraining
-- [ ] Advanced analytics and insights
+- [ ] API layer for mobile app integration
+- [ ] ML model versioning and A/B testing framework
+- [ ] Automated model retraining pipeline
+- [ ] Advanced analytics and business intelligence
 - [ ] Mobile application (React Native/Flutter)
 
 ### 🌐 Deployment Strategy
 
 **Development Environment:**
 
-- Local development with FastAPI dev server
+- Local development with Django dev server
 - Jupyter notebooks for ML experimentation
-- SQLite for rapid prototyping
+- Firebase for real-time NoSQL database
 
 **Staging Environment:**
 
 - Docker containers for consistency
-- PostgreSQL database
-- Redis for caching
-- API load testing
+- Firebase staging environment
+- Load testing for Django applications
 
 **Production Environment:**
 
-- Kubernetes orchestration
-- Cloud-managed databases
+- Cloud deployment (AWS/GCP/Azure)
+- Firebase production environment with scaling
 - CDN for static assets
-- Monitoring with Prometheus/Grafana
+- Monitoring with Django logging and Firebase Analytics
 - Auto-scaling based on demand
 
 ## 🤝 Contributing
@@ -617,23 +674,24 @@ We welcome contributions to HALO-AI! Here's how you can help improve this agricu
 
 **🔥 High Priority:**
 
-- � **FastAPI Endpoints**: Complete the prediction API implementation
-- 🌐 **Frontend Dashboard**: Build the web interface for farmers
-- 🧪 **Testing Suite**: Add comprehensive test coverage
-- 📊 **Data Visualization**: Create interactive charts and dashboards
+- 🌐 **Django Apps**: Complete the users, crops, community, sensors, and dashboard apps
+- 🔥 **Firebase Integration**: Set up real-time database connectivity
+- 🧪 **Testing Suite**: Add comprehensive test coverage for Django apps
+- 📊 **ML Integration**: Integrate trained models within Django views
 
 **🌟 Medium Priority:**
 
-- 🤖 **New ML Models**: Add ensemble methods or deep learning
+- 🎨 **Template Frontend**: Build responsive Django templates with modern UI
+- 🤖 **New ML Models**: Add ensemble methods or deep learning capabilities
 - 📡 **IoT Hardware**: Real sensor integration and drivers
-- 🌍 **Internationalization**: Multi-language support
-- � **Mobile App**: React Native or Flutter application
+- 🌍 **Internationalization**: Multi-language support for global deployment
 
 **💡 Enhancement Ideas:**
 
-- 🛰️ **Satellite Data**: Remote sensing integration
-- 🌦️ **Weather APIs**: Real-time weather integration
-- 💰 **Economic Models**: Cost-benefit analysis features
+- 📱 **Mobile App**: React Native or Flutter application with Django API
+- 🛰️ **Satellite Data**: Remote sensing integration for crop monitoring
+- 🌦️ **Weather APIs**: Real-time weather integration for enhanced predictions
+- 💰 **Economic Models**: Cost-benefit analysis and market price integration
 - 🔄 **Crop Rotation**: Multi-season planning algorithms
 
 ### 🛠️ Development Setup
@@ -650,7 +708,7 @@ cd halo-ai/Codebase
 git checkout -b feature/your-feature-name
 
 # Start development server
-./scripts/start_api.sh
+./scripts/start_django.sh
 ```
 
 ### � Contribution Guidelines
@@ -664,17 +722,17 @@ git checkout -b feature/your-feature-name
 
 **Testing Requirements:**
 
-- Add tests for new features
+- Add Django tests for new features
 - Ensure existing tests pass
 - Aim for >80% code coverage
-- Include integration tests for API endpoints
+- Include integration tests for views and Firebase integration
 
 **Documentation:**
 
 - Update README for new features
 - Add docstrings and comments
 - Include usage examples
-- Update API documentation
+- Update Django admin documentation
 
 ### 🐛 Bug Reports
 
@@ -715,7 +773,8 @@ HALO-AI represents our commitment to leveraging cutting-edge technology for sust
 ### 🏗️ Technical Excellence
 
 - **Advanced ML Pipeline**: XGBoost, Random Forest, and SVM with 99%+ accuracy
-- **Modern Architecture**: FastAPI backend with modular, scalable design
+- **Modern Django Architecture**: Monolithic framework with modular app structure
+- **Firebase Integration**: Real-time NoSQL database with scalable cloud infrastructure
 - **IoT Integration**: Comprehensive sensor simulation and data collection framework
 - **Data Science**: 3 complete Jupyter notebooks with thorough analysis
 - **Production Ready**: Automated setup, deployment scripts, and configuration management
@@ -741,7 +800,8 @@ HALO-AI represents our commitment to leveraging cutting-edge technology for sust
 - **📊 Dataset Source**: [Kaggle Crop Recommendation Dataset](https://www.kaggle.com/datasets/atharvaingle/crop-recommendation-dataset) - High-quality agricultural data for model training
 - **🛠️ Core Technologies**:
   - **Machine Learning**: Scikit-learn, XGBoost, Pandas, NumPy for robust ML pipeline
-  - **Web Framework**: FastAPI, Uvicorn for modern async API development
+  - **Web Framework**: Django, Django Templates for monolithic web application
+  - **Database**: Firebase Firestore for real-time NoSQL data storage
   - **Data Analysis**: Jupyter, Matplotlib, Seaborn for comprehensive data exploration
   - **Validation**: Pydantic for type-safe data models and validation
 - **🎓 Inspiration**: UN Sustainable Development Goals, particularly Goal 2 (Zero Hunger) and Goal 15 (Life on Land)
@@ -754,7 +814,8 @@ HALO-AI represents our commitment to leveraging cutting-edge technology for sust
 
 - **Agricultural Data**: FAO (Food and Agriculture Organization) datasets
 - **ML Frameworks**: Scikit-learn, XGBoost documentation and communities
-- **Modern Web APIs**: FastAPI and Pydantic communities
+- **Web Framework**: Django documentation and community resources
+- **Database**: Firebase documentation and real-time database guides
 - **Sustainable Agriculture**: Precision agriculture research papers and initiatives
 
 ---

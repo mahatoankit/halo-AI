@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import firebase_admin
+from firebase_admin import credentials
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Custom apps
+    'apps.analytics',
+    'apps.crops',
+    'apps.community',
+    'apps.dashboard',
+    'apps.sensors',
+    'apps.users',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +131,32 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Firebase Configuration
+def get_env_variable(var_name):
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = f"Set the {var_name} environment variable"
+        raise ImproperlyConfigured(error_msg)
+
+# Firebase setup
+FIREBASE_CONFIG = {
+    'type': get_env_variable('FIREBASE_TYPE'),
+    'project_id': get_env_variable('FIREBASE_PROJECT_ID'),
+    'private_key_id': get_env_variable('FIREBASE_PRIVATE_KEY_ID'),
+    'private_key': get_env_variable('FIREBASE_PRIVATE_KEY').replace('\\n', '\n'),
+    'client_email': get_env_variable('FIREBASE_CLIENT_EMAIL'),
+    'client_id': get_env_variable('FIREBASE_CLIENT_ID'),
+    'auth_uri': get_env_variable('FIREBASE_AUTH_URI'),
+    'token_uri': get_env_variable('FIREBASE_TOKEN_URI'),
+    'auth_provider_x509_cert_url': get_env_variable('FIREBASE_AUTH_PROVIDER_X509_CERT_URL'),
+    'client_x509_cert_url': get_env_variable('FIREBASE_CLIENT_X509_CERT_URL'),
+}
+
+# Initialize Firebase Admin SDK
+if not firebase_admin._apps:
+    cred = credentials.Certificate(FIREBASE_CONFIG)
+    firebase_admin.initialize_app(cred)
+
