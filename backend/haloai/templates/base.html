@@ -1,0 +1,285 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>
+      {% block title %}Halo AI - Smart Agriculture Platform{% endblock %}
+    </title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: "#f0fdf4",
+                100: "#dcfce7",
+                200: "#bbf7d0",
+                300: "#86efac",
+                400: "#4ade80",
+                500: "#22c55e",
+                600: "#16a34a",
+                700: "#15803d",
+                800: "#166534",
+                900: "#14532d",
+              },
+              secondary: {
+                50: "#fefce8",
+                100: "#fef3c7",
+                200: "#fde68a",
+                300: "#fcd34d",
+                400: "#fbbf24",
+                500: "#f59e0b",
+                600: "#d97706",
+                700: "#b45309",
+                800: "#92400e",
+                900: "#78350f",
+              },
+            },
+            fontFamily: {
+              manrope: ["Manrope", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Additional CSS -->
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body class="font-manrope bg-gray-50">
+    <!-- Navigation -->
+    {% block navigation %}
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <!-- Logo -->
+          <div class="flex items-center">
+            <a href="{% url 'home:home' %}" class="flex items-center space-x-2">
+              <img
+                src="{% static 'images/halo.jpg' %}"
+                alt="Halo AI"
+                class="h-10 w-10 rounded-full"
+              />
+              <span class="text-xl font-bold text-primary-600">Halo AI</span>
+            </a>
+          </div>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-8">
+              <a
+                href="{% url 'home:home' %}"
+                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Home</a
+              >
+              <a
+                href="{% url 'crops:crop_prediction' %}"
+                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Crop Prediction</a
+              >
+              <a
+                href="#"
+                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Grants & Offers</a
+              >
+              <a
+                href="#"
+                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Connect with Expert</a
+              >
+              <a
+                href="#"
+                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Contact</a
+              >
+            </div>
+          </div>
+
+          <!-- Mobile menu button -->
+          <div class="md:hidden">
+            <button
+              type="button"
+              class="mobile-menu-button text-gray-700 hover:text-primary-600 focus:outline-none focus:text-primary-600"
+              aria-controls="mobile-menu"
+              aria-expanded="false"
+            >
+              <span class="sr-only">Open main menu</span>
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile menu -->
+      <div class="mobile-menu hidden md:hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+          <a
+            href="{% url 'home:home' %}"
+            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            >Home</a
+          >
+          <a
+            href="#"
+            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            >Crop Prediction</a
+          >
+          <a
+            href="#"
+            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            >Grants & Offers</a
+          >
+          <a
+            href="#"
+            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            >Connect with Expert</a
+          >
+          <a
+            href="#"
+            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            >Contact</a
+          >
+        </div>
+      </div>
+    </nav>
+    {% endblock %}
+
+    <!-- Main Content -->
+    <main class="{% block main_class %}pt-16{% endblock %}">
+      <!-- Messages -->
+      {% if messages %}
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        {% for message in messages %}
+        <div
+          class="alert alert-{{ message.tags }} px-4 py-3 rounded mb-4
+          {% if message.tags == 'error' %}
+            bg-red-100 border border-red-400 text-red-700
+          {% elif message.tags == 'success' %}
+            bg-green-100 border border-green-400 text-green-700
+          {% elif message.tags == 'warning' %}
+            bg-yellow-100 border border-yellow-400 text-yellow-700
+          {% else %}
+            bg-blue-100 border border-blue-400 text-blue-700
+          {% endif %}"
+        >
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% block footer %}
+    <footer class="bg-gray-800 text-white">
+      <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div class="col-span-1 md:col-span-2">
+            <div class="flex items-center space-x-2 mb-4">
+              <img
+                src="{% static 'images/halo.jpg' %}"
+                alt="Halo AI"
+                class="h-10 w-10 rounded-full"
+              />
+              <span class="text-xl font-bold">Halo AI</span>
+            </div>
+            <p class="text-gray-300 mb-4">
+              Empowering farmers with AI-driven insights for better yields and
+              sustainable agriculture.
+            </p>
+            <p class="text-sm text-gray-400">
+              सही निर्णय, उन्नत कृषि — Halo AI सग्गै
+            </p>
+          </div>
+          <div>
+            <h3
+              class="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-4"
+            >
+              Services
+            </h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >Crop Recommendation</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >Expert Consultation</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >Market Analysis</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-300 hover:text-white transition-colors"
+                  >Weather Insights</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3
+              class="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-4"
+            >
+              Contact
+            </h3>
+            <ul class="space-y-2 text-gray-300">
+              <li>Email: haloaiagriculture@gmail.com</li>
+              <li>Phone: +91 123 456 7890</li>
+              <li>Address: Sunway Innovation Lab, Kathmandu, Matidevi</li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400"
+        >
+          <p>&copy; 2025 Halo AI. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+    {% endblock %}
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.dashboard',
     'apps.sensors',
     'apps.users',
+    'apps.home',
 ]
 
 MIDDLEWARE = [
@@ -65,13 +66,14 @@ ROOT_URLCONF = 'haloai.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
             ],
         },
     },
@@ -125,7 +127,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # Project-level static files
+]
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # For production
+
+# Media files (user uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -133,30 +143,30 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# Firebase Configuration
-def get_env_variable(var_name):
-    try:
-        return os.environ[var_name]
-    except KeyError:
-        error_msg = f"Set the {var_name} environment variable"
-        raise ImproperlyConfigured(error_msg)
+# # Firebase Configuration
+# def get_env_variable(var_name):
+#     try:
+#         return os.environ[var_name]
+#     except KeyError:
+#         error_msg = f"Set the {var_name} environment variable"
+#         raise ImproperlyConfigured(error_msg)
 
-# Firebase setup
-FIREBASE_CONFIG = {
-    'type': get_env_variable('FIREBASE_TYPE'),
-    'project_id': get_env_variable('FIREBASE_PROJECT_ID'),
-    'private_key_id': get_env_variable('FIREBASE_PRIVATE_KEY_ID'),
-    'private_key': get_env_variable('FIREBASE_PRIVATE_KEY').replace('\\n', '\n'),
-    'client_email': get_env_variable('FIREBASE_CLIENT_EMAIL'),
-    'client_id': get_env_variable('FIREBASE_CLIENT_ID'),
-    'auth_uri': get_env_variable('FIREBASE_AUTH_URI'),
-    'token_uri': get_env_variable('FIREBASE_TOKEN_URI'),
-    'auth_provider_x509_cert_url': get_env_variable('FIREBASE_AUTH_PROVIDER_X509_CERT_URL'),
-    'client_x509_cert_url': get_env_variable('FIREBASE_CLIENT_X509_CERT_URL'),
-}
+# # Firebase setup
+# FIREBASE_CONFIG = {
+#     'type': get_env_variable('FIREBASE_TYPE'),
+#     'project_id': get_env_variable('FIREBASE_PROJECT_ID'),
+#     'private_key_id': get_env_variable('FIREBASE_PRIVATE_KEY_ID'),
+#     'private_key': get_env_variable('FIREBASE_PRIVATE_KEY').replace('\\n', '\n'),
+#     'client_email': get_env_variable('FIREBASE_CLIENT_EMAIL'),
+#     'client_id': get_env_variable('FIREBASE_CLIENT_ID'),
+#     'auth_uri': get_env_variable('FIREBASE_AUTH_URI'),
+#     'token_uri': get_env_variable('FIREBASE_TOKEN_URI'),
+#     'auth_provider_x509_cert_url': get_env_variable('FIREBASE_AUTH_PROVIDER_X509_CERT_URL'),
+#     'client_x509_cert_url': get_env_variable('FIREBASE_CLIENT_X509_CERT_URL'),
+# }
 
-# Initialize Firebase Admin SDK
-if not firebase_admin._apps:
-    cred = credentials.Certificate(FIREBASE_CONFIG)
-    firebase_admin.initialize_app(cred)
+# # Initialize Firebase Admin SDK
+# if not firebase_admin._apps:
+#     cred = credentials.Certificate(FIREBASE_CONFIG)
+#     firebase_admin.initialize_app(cred)
 

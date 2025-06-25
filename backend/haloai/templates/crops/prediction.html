@@ -1,0 +1,644 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Crop Prediction -
+Halo AI{% endblock %} {% block content %}
+<div class="bg-gradient-to-br from-primary-50 to-secondary-50 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Crop Prediction</h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Get AI-powered crop recommendations based on your soil conditions,
+        climate data, and farming requirements.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Prediction Form -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+          <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+            Enter Your Farm Details
+          </h2>
+
+          <form id="crop-prediction-form" class="space-y-6" method="POST">
+            {% csrf_token %}
+
+            <!-- Soil Parameters -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="md:col-span-2">
+                <h3
+                  class="text-lg font-medium text-gray-900 mb-4 flex items-center"
+                >
+                  <svg
+                    class="w-5 h-5 mr-2 text-primary-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945"
+                    />
+                  </svg>
+                  Soil Parameters
+                </h3>
+              </div>
+
+              <div>
+                <label
+                  for="nitrogen"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  >Nitrogen (N) - mg/kg</label
+                >
+                <input
+                  type="number"
+                  id="nitrogen"
+                  name="nitrogen"
+                  step="0.01"
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  placeholder="e.g., 80.5"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="phosphorus"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  >Phosphorus (P) - mg/kg</label
+                >
+                <input
+                  type="number"
+                  id="phosphorus"
+                  name="phosphorus"
+                  step="0.01"
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  placeholder="e.g., 42.0"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="potassium"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  >Potassium (K) - mg/kg</label
+                >
+                <input
+                  type="number"
+                  id="potassium"
+                  name="potassium"
+                  step="0.01"
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  placeholder="e.g., 38.0"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="ph"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  >pH Level</label
+                >
+                <input
+                  type="number"
+                  id="ph"
+                  name="ph"
+                  step="0.01"
+                  min="0"
+                  max="14"
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  placeholder="e.g., 6.8"
+                />
+              </div>
+            </div>
+
+            <!-- Climate Parameters -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="md:col-span-2">
+                <h3
+                  class="text-lg font-medium text-gray-900 mb-4 flex items-center"
+                >
+                  <svg
+                    class="w-5 h-5 mr-2 text-secondary-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+                    />
+                  </svg>
+                  Climate Conditions
+                </h3>
+              </div>
+
+              <div>
+                <label
+                  for="temperature"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  >Temperature (°C)</label
+                >
+                <input
+                  type="number"
+                  id="temperature"
+                  name="temperature"
+                  step="0.1"
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  placeholder="e.g., 25.5"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="humidity"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  >Humidity (%)</label
+                >
+                <input
+                  type="number"
+                  id="humidity"
+                  name="humidity"
+                  step="0.1"
+                  min="0"
+                  max="100"
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  placeholder="e.g., 65.2"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="rainfall"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  >Annual Rainfall (mm)</label
+                >
+                <input
+                  type="number"
+                  id="rainfall"
+                  name="rainfall"
+                  step="0.1"
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  placeholder="e.g., 1200.5"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="location"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  >Location</label
+                >
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  placeholder="e.g., Delhi, India"
+                />
+              </div>
+            </div>
+
+            <!-- Farm Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="md:col-span-2">
+                <h3
+                  class="text-lg font-medium text-gray-900 mb-4 flex items-center"
+                >
+                  <svg
+                    class="w-5 h-5 mr-2 text-primary-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
+                  </svg>
+                  Farm Information
+                </h3>
+              </div>
+
+              <div>
+                <label
+                  for="area"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  >Farm Area (acres)</label
+                >
+                <input
+                  type="number"
+                  id="area"
+                  name="area"
+                  step="0.1"
+                  min="0.1"
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  placeholder="e.g., 2.5"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="season"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                  >Growing Season</label
+                >
+                <select
+                  id="season"
+                  name="season"
+                  required
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                >
+                  <option value="">Select Season</option>
+                  <option value="kharif">Kharif (Monsoon)</option>
+                  <option value="rabi">Rabi (Winter)</option>
+                  <option value="zaid">Zaid (Summer)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-6">
+              <button
+                type="submit"
+                class="w-full bg-primary-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors inline-flex items-center justify-center"
+              >
+                <svg
+                  class="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                  />
+                </svg>
+                Get Crop Recommendations
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Information Panel -->
+      <div class="space-y-6">
+        <!-- Quick Tips -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+          <h3
+            class="text-lg font-semibold text-gray-900 mb-4 flex items-center"
+          >
+            <svg
+              class="w-5 h-5 mr-2 text-secondary-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            Quick Tips
+          </h3>
+          <ul class="space-y-3 text-sm text-gray-600">
+            <li class="flex items-start">
+              <svg
+                class="w-4 h-4 mt-0.5 mr-2 text-primary-600 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                />
+              </svg>
+              Test your soil regularly for accurate NPK values
+            </li>
+            <li class="flex items-start">
+              <svg
+                class="w-4 h-4 mt-0.5 mr-2 text-primary-600 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                />
+              </svg>
+              Consider local climate patterns and seasonal variations
+            </li>
+            <li class="flex items-start">
+              <svg
+                class="w-4 h-4 mt-0.5 mr-2 text-primary-600 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                />
+              </svg>
+              Market demand affects profitability
+            </li>
+            <li class="flex items-start">
+              <svg
+                class="w-4 h-4 mt-0.5 mr-2 text-primary-600 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                />
+              </svg>
+              Water availability is crucial for crop success
+            </li>
+          </ul>
+        </div>
+
+        <!-- Sample Values -->
+        <div class="bg-secondary-50 rounded-2xl shadow-lg p-6">
+          <h3
+            class="text-lg font-semibold text-gray-900 mb-4 flex items-center"
+          >
+            <svg
+              class="w-5 h-5 mr-2 text-secondary-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            Sample Values
+          </h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Nitrogen:</span>
+              <span class="font-medium">50-120 mg/kg</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Phosphorus:</span>
+              <span class="font-medium">20-80 mg/kg</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Potassium:</span>
+              <span class="font-medium">20-60 mg/kg</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">pH:</span>
+              <span class="font-medium">6.0-7.5</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Temperature:</span>
+              <span class="font-medium">20-35°C</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Humidity:</span>
+              <span class="font-medium">40-80%</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onclick="fillSampleData()"
+            class="mt-4 w-full bg-secondary-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-secondary-700 transition-colors"
+          >
+            Use Sample Data
+          </button>
+        </div>
+
+        <!-- Help -->
+        <div class="bg-primary-50 rounded-2xl shadow-lg p-6">
+          <h3
+            class="text-lg font-semibold text-gray-900 mb-4 flex items-center"
+          >
+            <svg
+              class="w-5 h-5 mr-2 text-primary-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            Need Help?
+          </h3>
+          <p class="text-sm text-gray-600 mb-4">
+            Don't know your soil parameters? Contact our agricultural experts
+            for soil testing services.
+          </p>
+          <a
+            href="#"
+            class="text-primary-600 text-sm font-medium hover:text-primary-700 inline-flex items-center"
+          >
+            Contact Expert
+            <svg
+              class="ml-1 w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Results Modal -->
+<div
+  id="results-modal"
+  class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50"
+>
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Crop Recommendations</h2>
+        <button
+          onclick="closeModal()"
+          class="text-gray-400 hover:text-gray-600"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <div id="results-content">
+        <!-- Results will be loaded here -->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  function fillSampleData() {
+    document.getElementById("nitrogen").value = "80";
+    document.getElementById("phosphorus").value = "42";
+    document.getElementById("potassium").value = "38";
+    document.getElementById("ph").value = "6.8";
+    document.getElementById("temperature").value = "25.5";
+    document.getElementById("humidity").value = "65";
+    document.getElementById("rainfall").value = "1200";
+    document.getElementById("location").value = "Delhi, India";
+    document.getElementById("area").value = "2.5";
+    document.getElementById("season").value = "kharif";
+  }
+
+  function closeModal() {
+    document.getElementById("results-modal").classList.add("hidden");
+  }
+
+  // Form submission handler
+  document
+    .getElementById("crop-prediction-form")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // Show loading state
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = `
+            <svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Analyzing...
+        `;
+      submitBtn.disabled = true;
+
+      // Simulate API call (replace with actual AJAX call)
+      setTimeout(() => {
+        // Sample results (replace with actual API response)
+        const results = {
+          recommended_crops: [
+            {
+              name: "Rice",
+              confidence: 95,
+              reason:
+                "High humidity and rainfall are ideal for rice cultivation",
+            },
+            {
+              name: "Wheat",
+              confidence: 78,
+              reason: "Good soil nutrient balance supports wheat growth",
+            },
+            {
+              name: "Maize",
+              confidence: 65,
+              reason: "Temperature and pH levels are suitable for maize",
+            },
+          ],
+        };
+
+        showResults(results);
+
+        // Restore button
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }, 2000);
+    });
+
+  function showResults(results) {
+    const resultsContent = document.getElementById("results-content");
+    let html = `
+            <div class="space-y-4">
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h3 class="text-lg font-semibold text-green-800 mb-2">✅ Analysis Complete</h3>
+                    <p class="text-green-700">Based on your farm conditions, here are our top crop recommendations:</p>
+                </div>
+        `;
+
+    results.recommended_crops.forEach((crop, index) => {
+      const bgColor =
+        index === 0
+          ? "bg-primary-50 border-primary-200"
+          : "bg-gray-50 border-gray-200";
+      const textColor = index === 0 ? "text-primary-800" : "text-gray-800";
+      const badge =
+        index === 0
+          ? '<span class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-1 rounded-full">Best Match</span>'
+          : "";
+
+      html += `
+                <div class="${bgColor} border rounded-lg p-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="text-lg font-semibold ${textColor}">${crop.name}</h4>
+                        ${badge}
+                    </div>
+                    <div class="flex items-center mb-2">
+                        <span class="text-sm text-gray-600">Confidence: </span>
+                        <div class="ml-2 flex-1 bg-gray-200 rounded-full h-2">
+                            <div class="bg-primary-500 h-2 rounded-full" style="width: ${crop.confidence}%"></div>
+                        </div>
+                        <span class="ml-2 text-sm font-medium">${crop.confidence}%</span>
+                    </div>
+                    <p class="text-sm text-gray-600">${crop.reason}</p>
+                </div>
+            `;
+    });
+
+    html += `
+                <div class="flex space-x-4 pt-4">
+                    <button onclick="downloadReport()" class="flex-1 bg-primary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors">
+                        Download Report
+                    </button>
+                    <button onclick="closeModal()" class="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-lg font-medium hover:bg-gray-300 transition-colors">
+                        Close
+                    </button>
+                </div>
+            </div>
+        `;
+
+    resultsContent.innerHTML = html;
+    document.getElementById("results-modal").classList.remove("hidden");
+  }
+
+  function downloadReport() {
+    // Implement report download functionality
+    alert("Report download functionality will be implemented here");
+  }
+</script>
+{% endblock %}

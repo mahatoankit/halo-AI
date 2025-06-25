@@ -1,0 +1,493 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Grants & Offers -
+Halo AI{% endblock %} {% block content %}
+<div class="bg-gradient-to-br from-primary-50 to-secondary-50 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Grants & Offers</h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Discover financial support, subsidies, and special offers available for
+        farmers to enhance productivity and sustainability.
+      </p>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="flex flex-wrap justify-center mb-8 space-x-2">
+      <button
+        class="px-6 py-2 bg-primary-600 text-white rounded-lg font-medium active-tab"
+      >
+        All
+      </button>
+      <button
+        class="px-6 py-2 bg-white text-gray-700 rounded-lg font-medium hover:bg-gray-50 filter-tab"
+      >
+        Government
+      </button>
+      <button
+        class="px-6 py-2 bg-white text-gray-700 rounded-lg font-medium hover:bg-gray-50 filter-tab"
+      >
+        Private
+      </button>
+      <button
+        class="px-6 py-2 bg-white text-gray-700 rounded-lg font-medium hover:bg-gray-50 filter-tab"
+      >
+        Subsidies
+      </button>
+      <button
+        class="px-6 py-2 bg-white text-gray-700 rounded-lg font-medium hover:bg-gray-50 filter-tab"
+      >
+        Equipment
+      </button>
+    </div>
+
+    <!-- Grants Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      <!-- Grant Card 1 -->
+      <div
+        class="bg-white rounded-2xl shadow-lg p-6 grant-card"
+        data-category="government"
+      >
+        <div class="flex justify-between items-start mb-4">
+          <span
+            class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full"
+            >Government</span
+          >
+          <span class="text-sm text-gray-500">Deadline: Dec 31, 2025</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">
+          PM-KISAN Scheme
+        </h3>
+        <p class="text-gray-600 mb-4">
+          Financial assistance of ₹6,000 per year to small and marginal farmer
+          families.
+        </p>
+        <div class="space-y-2 mb-4">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Amount:</span>
+            <span class="font-medium">₹6,000/year</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Eligibility:</span>
+            <span class="font-medium">Small farmers</span>
+          </div>
+        </div>
+        <a
+          href="#"
+          class="w-full bg-primary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors inline-flex items-center justify-center"
+        >
+          Apply Now
+          <svg
+            class="ml-2 w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Grant Card 2 -->
+      <div
+        class="bg-white rounded-2xl shadow-lg p-6 grant-card"
+        data-category="government"
+      >
+        <div class="flex justify-between items-start mb-4">
+          <span
+            class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full"
+            >Subsidy</span
+          >
+          <span class="text-sm text-gray-500">Deadline: Jan 15, 2026</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">
+          Drip Irrigation Subsidy
+        </h3>
+        <p class="text-gray-600 mb-4">
+          Get up to 50% subsidy on drip irrigation systems to conserve water and
+          improve efficiency.
+        </p>
+        <div class="space-y-2 mb-4">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Subsidy:</span>
+            <span class="font-medium">Up to 50%</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Max Amount:</span>
+            <span class="font-medium">₹50,000</span>
+          </div>
+        </div>
+        <a
+          href="#"
+          class="w-full bg-primary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors inline-flex items-center justify-center"
+        >
+          Apply Now
+          <svg
+            class="ml-2 w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Grant Card 3 -->
+      <div
+        class="bg-white rounded-2xl shadow-lg p-6 grant-card"
+        data-category="private"
+      >
+        <div class="flex justify-between items-start mb-4">
+          <span
+            class="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-full"
+            >Private</span
+          >
+          <span class="text-sm text-gray-500">Limited Time</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">
+          Agritech Startup Fund
+        </h3>
+        <p class="text-gray-600 mb-4">
+          Funding opportunity for innovative agriculture technology startups and
+          modernization projects.
+        </p>
+        <div class="space-y-2 mb-4">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Amount:</span>
+            <span class="font-medium">₹5L - ₹50L</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Interest:</span>
+            <span class="font-medium">Low interest</span>
+          </div>
+        </div>
+        <a
+          href="#"
+          class="w-full bg-secondary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-secondary-700 transition-colors inline-flex items-center justify-center"
+        >
+          Learn More
+          <svg
+            class="ml-2 w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Grant Card 4 -->
+      <div
+        class="bg-white rounded-2xl shadow-lg p-6 grant-card"
+        data-category="equipment"
+      >
+        <div class="flex justify-between items-start mb-4">
+          <span
+            class="bg-orange-100 text-orange-800 text-sm font-medium px-3 py-1 rounded-full"
+            >Equipment</span
+          >
+          <span class="text-sm text-gray-500">Apply Anytime</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">
+          Tractor Purchase Loan
+        </h3>
+        <p class="text-gray-600 mb-4">
+          Low-interest loans for purchasing new tractors and other agricultural
+          machinery.
+        </p>
+        <div class="space-y-2 mb-4">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Loan Amount:</span>
+            <span class="font-medium">Up to ₹25L</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Interest Rate:</span>
+            <span class="font-medium">8.5% p.a.</span>
+          </div>
+        </div>
+        <a
+          href="#"
+          class="w-full bg-primary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors inline-flex items-center justify-center"
+        >
+          Apply Now
+          <svg
+            class="ml-2 w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Grant Card 5 -->
+      <div
+        class="bg-white rounded-2xl shadow-lg p-6 grant-card"
+        data-category="government"
+      >
+        <div class="flex justify-between items-start mb-4">
+          <span
+            class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full"
+            >Government</span
+          >
+          <span class="text-sm text-gray-500">Deadline: Mar 31, 2026</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">
+          Soil Health Card Scheme
+        </h3>
+        <p class="text-gray-600 mb-4">
+          Free soil testing and recommendations for optimal fertilizer use and
+          soil management.
+        </p>
+        <div class="space-y-2 mb-4">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Cost:</span>
+            <span class="font-medium">Free</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Coverage:</span>
+            <span class="font-medium">All farmers</span>
+          </div>
+        </div>
+        <a
+          href="#"
+          class="w-full bg-primary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors inline-flex items-center justify-center"
+        >
+          Register Now
+          <svg
+            class="ml-2 w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Grant Card 6 -->
+      <div
+        class="bg-white rounded-2xl shadow-lg p-6 grant-card"
+        data-category="private"
+      >
+        <div class="flex justify-between items-start mb-4">
+          <span
+            class="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-full"
+            >Private</span
+          >
+          <span class="text-sm text-gray-500">Special Offer</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">
+          Organic Certification Support
+        </h3>
+        <p class="text-gray-600 mb-4">
+          Financial assistance and guidance for obtaining organic farming
+          certification.
+        </p>
+        <div class="space-y-2 mb-4">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Support:</span>
+            <span class="font-medium">₹10,000</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Duration:</span>
+            <span class="font-medium">3 years</span>
+          </div>
+        </div>
+        <a
+          href="#"
+          class="w-full bg-secondary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-secondary-700 transition-colors inline-flex items-center justify-center"
+        >
+          Get Started
+          <svg
+            class="ml-2 w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Application Process -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 mb-12">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">
+        How to Apply
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div
+            class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <span class="text-2xl font-bold text-primary-600">1</span>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">Choose Grant</h3>
+          <p class="text-sm text-gray-600">
+            Select the grant or offer that best fits your farming needs.
+          </p>
+        </div>
+        <div class="text-center">
+          <div
+            class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <span class="text-2xl font-bold text-primary-600">2</span>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">Check Eligibility</h3>
+          <p class="text-sm text-gray-600">
+            Review the eligibility criteria and required documents.
+          </p>
+        </div>
+        <div class="text-center">
+          <div
+            class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <span class="text-2xl font-bold text-primary-600">3</span>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">Submit Application</h3>
+          <p class="text-sm text-gray-600">
+            Complete the online application with all required information.
+          </p>
+        </div>
+        <div class="text-center">
+          <div
+            class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <span class="text-2xl font-bold text-primary-600">4</span>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">Track Status</h3>
+          <p class="text-sm text-gray-600">
+            Monitor your application status and receive updates.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Need Help Section -->
+    <div class="bg-primary-600 rounded-2xl shadow-xl p-8 text-center">
+      <h2 class="text-2xl font-bold text-white mb-4">
+        Need Help with Applications?
+      </h2>
+      <p class="text-primary-100 mb-6 max-w-2xl mx-auto">
+        Our experts can guide you through the application process and help you
+        find the best grants for your farming needs.
+      </p>
+      <a
+        href="#"
+        class="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-flex items-center"
+      >
+        Contact Our Experts
+        <svg
+          class="ml-2 w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          />
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const filterTabs = document.querySelectorAll(".filter-tab, .active-tab");
+    const grantCards = document.querySelectorAll(".grant-card");
+
+    filterTabs.forEach((tab) => {
+      tab.addEventListener("click", function () {
+        // Remove active class from all tabs
+        filterTabs.forEach((t) => {
+          t.classList.remove("bg-primary-600", "text-white");
+          t.classList.add("bg-white", "text-gray-700");
+        });
+
+        // Add active class to clicked tab
+        this.classList.remove("bg-white", "text-gray-700");
+        this.classList.add("bg-primary-600", "text-white");
+
+        const filterValue = this.textContent.toLowerCase();
+
+        // Filter cards
+        grantCards.forEach((card) => {
+          if (filterValue === "all") {
+            card.style.display = "block";
+          } else {
+            const category = card.getAttribute("data-category");
+            if (category === filterValue) {
+              card.style.display = "block";
+            } else {
+              card.style.display = "none";
+            }
+          }
+        });
+
+        // Animate cards
+        setTimeout(() => {
+          grantCards.forEach((card) => {
+            if (card.style.display !== "none") {
+              card.style.opacity = "0";
+              card.style.transform = "translateY(20px)";
+              setTimeout(() => {
+                card.style.transition = "all 0.3s ease";
+                card.style.opacity = "1";
+                card.style.transform = "translateY(0)";
+              }, 100);
+            }
+          });
+        }, 50);
+      });
+    });
+
+    // Animate cards on load
+    grantCards.forEach((card, index) => {
+      card.style.opacity = "0";
+      card.style.transform = "translateY(20px)";
+      setTimeout(() => {
+        card.style.transition = "all 0.3s ease";
+        card.style.opacity = "1";
+        card.style.transform = "translateY(0)";
+      }, index * 100);
+    });
+  });
+</script>
+{% endblock %}
