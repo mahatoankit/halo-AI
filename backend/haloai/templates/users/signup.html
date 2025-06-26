@@ -1,6 +1,6 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Sign Up - Halo AI{%
-endblock %} {% block main_class %}pt-0{% endblock %} {% block navigation %}{%
-endblock %} {% block footer %}{% endblock %} {% block content %}
+{% extends 'base.html' %} {% load static %} {% block title %}Sign Up - Halo AI
+{% endblock %} {% block main_class %}pt-0{% endblock %} {% block navigation %}
+{% endblock %} {% block footer %}{% endblock %} {% block content %}
 <div
   class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 py-12 px-4 sm:px-6 lg:px-8"
 >
@@ -105,22 +105,42 @@ endblock %} {% block footer %}{% endblock %} {% block content %}
             id="phone"
             name="phone"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-            placeholder="+91 98765 43210"
+            placeholder="+977 98765 43210"
           />
+        </div>
+
+        <!-- Assigned Region Field -->
+        <div>
+          <label
+            for="assigned_region"
+            class="block text-sm font-medium text-gray-700 mb-2"
+            >Assigned Sub-Metropolitan Area</label
+          >
+          <input
+            type="text"
+            id="assigned_region"
+            name="assigned_region"
+            required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+            placeholder="e.g., Bhaktapur Municipality, Ward 5"
+          />
+          <p class="text-sm text-gray-500 mt-1">
+            The sub-metropolitan area you will serve as Community Administrator
+          </p>
         </div>
 
         <!-- Password Fields -->
         <div>
           <label
-            for="password1"
+            for="password"
             class="block text-sm font-medium text-gray-700 mb-2"
             >Password</label
           >
           <div class="relative">
             <input
               type="password"
-              id="password1"
-              name="password1"
+              id="password"
+              name="password"
               required
               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors pr-12"
               placeholder="Create a password"
@@ -128,7 +148,7 @@ endblock %} {% block footer %}{% endblock %} {% block content %}
             <button
               type="button"
               class="absolute inset-y-0 right-0 pr-3 flex items-center toggle-password"
-              data-target="password1"
+              data-target="password"
             >
               <svg
                 class="h-5 w-5 text-gray-400"
@@ -155,15 +175,15 @@ endblock %} {% block footer %}{% endblock %} {% block content %}
 
         <div>
           <label
-            for="password2"
+            for="confirm_password"
             class="block text-sm font-medium text-gray-700 mb-2"
             >Confirm Password</label
           >
           <div class="relative">
             <input
               type="password"
-              id="password2"
-              name="password2"
+              id="confirm_password"
+              name="confirm_password"
               required
               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors pr-12"
               placeholder="Confirm your password"
@@ -171,7 +191,7 @@ endblock %} {% block footer %}{% endblock %} {% block content %}
             <button
               type="button"
               class="absolute inset-y-0 right-0 pr-3 flex items-center toggle-password"
-              data-target="password2"
+              data-target="confirm_password"
             >
               <svg
                 class="h-5 w-5 text-gray-400"
@@ -293,9 +313,9 @@ endblock %} {% block footer %}{% endblock %} {% block content %}
         <p class="text-sm text-gray-600">
           Already have an account?
           <a
-            href="#"
+            href="{% url 'users:login' %}"
             class="font-medium text-primary-600 hover:text-primary-500"
-            >Sign in here</a
+            >Login here</a
           >
         </p>
       </div>

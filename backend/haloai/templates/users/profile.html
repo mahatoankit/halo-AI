@@ -1,0 +1,294 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Enhanced Profile -
+Halo AI{% endblock %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">User Profile</h1>
+        <div class="flex items-center space-x-2">
+          {% if firestore_available %}
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+          >
+            <svg class="w-2 h-2 mr-1" fill="currentColor" viewBox="0 0 8 8">
+              <circle cx="4" cy="4" r="3" />
+            </svg>
+            Firestore Connected
+          </span>
+          {% else %}
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
+          >
+            <svg class="w-2 h-2 mr-1" fill="currentColor" viewBox="0 0 8 8">
+              <circle cx="4" cy="4" r="3" />
+            </svg>
+            Local Only
+          </span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Django Profile Data -->
+        <div class="space-y-6">
+          <h2 class="text-xl font-semibold text-gray-900 border-b pb-2">
+            Django Profile
+          </h2>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Username</label
+              >
+              <p class="mt-1 text-sm text-gray-900">{{ user.username }}</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Email</label
+              >
+              <p class="mt-1 text-sm text-gray-900">{{ user.email }}</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700"
+                  >First Name</label
+                >
+                <p class="mt-1 text-sm text-gray-900">
+                  {{ user.first_name|default:"Not set" }}
+                </p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700"
+                  >Last Name</label
+                >
+                <p class="mt-1 text-sm text-gray-900">
+                  {{ user.last_name|default:"Not set" }}
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Role</label
+              >
+              <span
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if user.role == 'admin' %}bg-red-100 text-red-800{% elif user.role == 'community_admin' %}bg-blue-100 text-blue-800{% else %}bg-green-100 text-green-800{% endif %}"
+              >
+                {{ user.get_role_display|default:user.role|capfirst }}
+              </span>
+            </div>
+
+            {% if user.phone %}
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Phone</label
+              >
+              <p class="mt-1 text-sm text-gray-900">{{ user.phone }}</p>
+            </div>
+            {% endif %} {% if user.assigned_region %}
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Assigned Region</label
+              >
+              <p class="mt-1 text-sm text-gray-900">
+                {{ user.assigned_region }}
+              </p>
+            </div>
+            {% endif %}
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Member Since</label
+              >
+              <p class="mt-1 text-sm text-gray-900">
+                {{ user.date_joined|date:"F d, Y" }}
+              </p>
+            </div>
+
+            {% if user.last_login %}
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Last Login</label
+              >
+              <p class="mt-1 text-sm text-gray-900">
+                {{ user.last_login|date:"F d, Y g:i A" }}
+              </p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Firestore Profile Data -->
+        <div class="space-y-6">
+          <h2 class="text-xl font-semibold text-gray-900 border-b pb-2">
+            Firestore Profile {% if not firestore_available %}
+            <span class="text-sm text-gray-500">(Unavailable)</span>
+            {% endif %}
+          </h2>
+
+          {% if firestore_available %} {% if firestore_profile %}
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Profile Type</label
+              >
+              <p class="mt-1 text-sm text-gray-900">
+                {{ firestore_profile.profile_type|default:"Not set" }}
+              </p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Sync Source</label
+              >
+              <p class="mt-1 text-sm text-gray-900">
+                {{ firestore_profile.sync_source|default:"Not set" }}
+              </p>
+            </div>
+
+            {% if firestore_profile.created_at %}
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Firestore Created</label
+              >
+              <p class="mt-1 text-sm text-gray-900">
+                {{ firestore_profile.created_at|date:"F d, Y g:i A" }}
+              </p>
+            </div>
+            {% endif %} {% if firestore_profile.updated_at %}
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Last Updated</label
+              >
+              <p class="mt-1 text-sm text-gray-900">
+                {{ firestore_profile.updated_at|date:"F d, Y g:i A" }}
+              </p>
+            </div>
+            {% endif %} {% if firestore_profile.last_sync %}
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Last Sync</label
+              >
+              <p class="mt-1 text-sm text-gray-900">
+                {{ firestore_profile.last_sync|date:"F d, Y g:i A" }}
+              </p>
+            </div>
+            {% endif %}
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Approval Status</label
+              >
+              {% if firestore_profile.is_approved %}
+              <span
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+              >
+                ✓ Approved
+              </span>
+              {% else %}
+              <span
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
+              >
+                ⏳ Pending
+              </span>
+              {% endif %}
+            </div>
+          </div>
+          {% else %}
+          <div class="text-center py-8">
+            <div class="text-gray-400 mb-4">
+              <svg
+                class="mx-auto h-12 w-12"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-8l-4 4m0 0l-4-4m4 4V3"
+                ></path>
+              </svg>
+            </div>
+            <p class="text-gray-600">No Firestore profile found</p>
+            <p class="text-sm text-gray-500 mt-2">
+              Profile will be created on next login
+            </p>
+          </div>
+          {% endif %} {% else %}
+          <div class="text-center py-8">
+            <div class="text-gray-400 mb-4">
+              <svg
+                class="mx-auto h-12 w-12"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                ></path>
+              </svg>
+            </div>
+            <p class="text-gray-600">Firestore Not Available</p>
+            <p class="text-sm text-gray-500 mt-2">
+              Configure Firebase to enable cloud profiles
+            </p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="mt-8 pt-6 border-t border-gray-200">
+        <div class="flex justify-between">
+          <a
+            href="{% url 'dashboard:home' %}"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+          >
+            <svg
+              class="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              ></path>
+            </svg>
+            Back to Dashboard
+          </a>
+
+          <button
+            onclick="window.location.reload()"
+            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+          >
+            <svg
+              class="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              ></path>
+            </svg>
+            Refresh Profile
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

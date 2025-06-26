@@ -1,0 +1,294 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Dashboard - Halo
+AI{% endblock %} {% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Welcome Header -->
+  <div
+    class="bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg p-6 mb-8 text-white"
+  >
+    <h1 class="text-3xl font-bold mb-2">
+      Welcome back, {{ user.get_full_name|default:user.username }}!
+    </h1>
+    <p class="text-primary-100">
+      {% if user.role == 'community_admin' %} Community Admin Dashboard - {{
+      user.assigned_region|default:"Your Region" }} {% elif user.role ==
+      'farmer' %} Farmer Dashboard - Let's optimize your farm today {% else %}
+      Admin Dashboard - System Overview {% endif %}
+    </p>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    {% if user.role == 'community_admin' %}
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-primary-100">
+          <svg
+            class="w-8 h-8 text-primary-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2v6a2 2 0 002 2h2a2 2 0 002 2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Active Sensors</p>
+          <p class="text-2xl font-semibold text-gray-900">3</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-green-100">
+          <svg
+            class="w-8 h-8 text-green-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+            />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Managed Farmers</p>
+          <p class="text-2xl font-semibold text-gray-900">3</p>
+        </div>
+      </div>
+    </div>
+    {% elif user.role == 'farmer' %}
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-secondary-100">
+          <svg
+            class="w-8 h-8 text-secondary-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+            />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Crop Predictions</p>
+          <p class="text-2xl font-semibold text-gray-900">5</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-blue-100">
+          <svg
+            class="w-8 h-8 text-blue-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Weather</p>
+          <p class="text-2xl font-semibold text-gray-900">26°C</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-purple-100">
+          <svg
+            class="w-8 h-8 text-purple-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Available Grants</p>
+          <p class="text-2xl font-semibold text-gray-900">7</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+      <div class="space-y-3">
+        <a
+          href="{% url 'crops:dashboard' %}"
+          class="flex items-center p-3 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
+        >
+          <svg
+            class="w-5 h-5 text-primary-600 mr-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+            />
+          </svg>
+          Get Crop Recommendation
+        </a>
+
+        {% if user.role == 'community_admin' %}
+        <a
+          href="{% url 'sensors:dashboard' %}"
+          class="flex items-center p-3 bg-secondary-50 rounded-lg hover:bg-secondary-100 transition-colors"
+        >
+          <svg
+            class="w-5 h-5 text-secondary-600 mr-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2v6a2 2 0 002 2h2a2 2 0 002 2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
+          </svg>
+          Manage Sensors
+        </a>
+        {% endif %}
+
+        <a
+          href="{% url 'grants:grants_and_offers' %}"
+          class="flex items-center p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+        >
+          <svg
+            class="w-5 h-5 text-green-600 mr-3"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          View Grants & Offers
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">
+        Recent Activities
+      </h3>
+      <div class="space-y-3">
+        <div class="flex items-start">
+          <div class="w-2 h-2 bg-primary-600 rounded-full mt-2 mr-3"></div>
+          <div>
+            <p class="text-sm text-gray-900">
+              New sensor reading from Bhairahawa-Field-01
+            </p>
+            <p class="text-xs text-gray-500">2 hours ago</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <div class="w-2 h-2 bg-green-600 rounded-full mt-2 mr-3"></div>
+          <div>
+            <p class="text-sm text-gray-900">
+              Crop prediction completed successfully
+            </p>
+            <p class="text-xs text-gray-500">1 day ago</p>
+          </div>
+        </div>
+        <div class="flex items-start">
+          <div class="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3"></div>
+          <div>
+            <p class="text-sm text-gray-900">
+              Weather alert: Rain expected tomorrow
+            </p>
+            <p class="text-xs text-gray-500">2 days ago</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weather Widget -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Weather Forecast</h3>
+      <div class="text-center">
+        <div class="flex items-center justify-center mb-4">
+          <svg
+            class="w-12 h-12 text-yellow-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+        </div>
+        <p class="text-2xl font-bold text-gray-900">26°C</p>
+        <p class="text-sm text-gray-600">Sunny</p>
+        <p class="text-xs text-gray-500 mt-2">Humidity: 68% | Wind: 5 km/h</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Status -->
+  <div class="bg-white rounded-lg shadow-lg p-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">System Status</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="flex items-center">
+        <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+        <span class="text-sm text-gray-600">IoT Sensors: Online</span>
+      </div>
+      <div class="flex items-center">
+        <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+        <span class="text-sm text-gray-600">AI Models: Operational</span>
+      </div>
+      <div class="flex items-center">
+        <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+        <span class="text-sm text-gray-600">Weather API: Connected</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

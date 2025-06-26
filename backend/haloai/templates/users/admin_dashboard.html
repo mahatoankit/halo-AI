@@ -1,0 +1,246 @@
+{% extends 'base.html' %} {% block title %}System Admin Dashboard - HaloAI{%
+endblock %} {% block content %}
+<div class="min-h-screen bg-gray-50">
+  <div class="bg-white shadow">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">
+          System Administration Dashboard
+        </h1>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600">Welcome, {{ user.first_name }}!</span>
+          <a
+            href="{% url 'users:logout' %}"
+            class="text-red-600 hover:text-red-800"
+            >Logout</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-6 py-8">
+    <!-- Statistics Cards -->
+    <div class="grid md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="bg-blue-100 p-3 rounded-full">
+            <svg
+              class="w-6 h-6 text-blue-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <div class="text-2xl font-bold text-gray-800">
+              {{ stats.total_users }}
+            </div>
+            <div class="text-gray-600">Total Users</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="bg-green-100 p-3 rounded-full">
+            <svg
+              class="w-6 h-6 text-green-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"
+              ></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <div class="text-2xl font-bold text-gray-800">
+              {{ stats.community_admins }}
+            </div>
+            <div class="text-gray-600">Community Admins</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="bg-purple-100 p-3 rounded-full">
+            <svg
+              class="w-6 h-6 text-purple-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"
+              ></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <div class="text-2xl font-bold text-gray-800">
+              {{ stats.farmers }}
+            </div>
+            <div class="text-gray-600">Farmers</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="bg-yellow-100 p-3 rounded-full">
+            <svg
+              class="w-6 h-6 text-yellow-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <div class="text-2xl font-bold text-gray-800">
+              {{ stats.pending_approvals }}
+            </div>
+            <div class="text-gray-600">Pending Approvals</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">Quick Actions</h2>
+        <div class="space-y-3">
+          <a
+            href="{% url 'users:manage_community_admins' %}"
+            class="block bg-blue-600 text-white px-4 py-3 rounded hover:bg-blue-700 transition text-center"
+          >
+            Manage Community Administrators
+          </a>
+          <a
+            href="/admin/"
+            class="block bg-gray-600 text-white px-4 py-3 rounded hover:bg-gray-700 transition text-center"
+          >
+            Django Admin Panel
+          </a>
+          <a
+            href="{% url 'dashboard:home' %}"
+            class="block bg-green-600 text-white px-4 py-3 rounded hover:bg-green-700 transition text-center"
+          >
+            Platform Analytics
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">System Status</h2>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Platform Status</span>
+            <span class="text-green-600 font-semibold">Operational</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Database</span>
+            <span class="text-green-600 font-semibold">Connected</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">ML Models</span>
+            <span class="text-green-600 font-semibold">Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-xl font-semibold">Recent Users</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                User
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Role
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Region
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Status
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Joined
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {% for user in recent_users %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900">
+                  {{ user.get_full_name }}
+                </div>
+                <div class="text-sm text-gray-500">{{ user.username }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if user.role == 'admin' %}bg-red-100 text-red-800 {% elif user.role == 'community_admin' %}bg-blue-100 text-blue-800 {% else %}bg-green-100 text-green-800{% endif %}"
+                >
+                  {{ user.get_role_display }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ user.assigned_region|default:"-" }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {% if user.is_approved %}
+                <span
+                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                >
+                  Approved
+                </span>
+                {% else %}
+                <span
+                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"
+                >
+                  Pending
+                </span>
+                {% endif %}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ user.date_joined|date:"M d, Y" }}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                No users found
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

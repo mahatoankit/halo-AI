@@ -14,18 +14,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
-
+from apps.home.views import public_landing
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('apps.home.urls')),
-
-
-    path('community/', include('apps.community.urls')),
-    path('crop-prediction/', include('apps.crops.urls')),
-    path('dashboard/', include('apps.dashboard.urls')),
-    path('sensors/', include('apps.sensors.urls')),
-    path('users/', include('apps.users.urls')),
+    path("admin/", admin.site.urls),
+    path("", include("apps.home.urls", namespace="home")),
+    # Add 'index' pattern to resolve NoReverseMatch errors
+    path("index/", public_landing, name="index"),
+    path("grants-and-offers/", include("apps.grants.urls", namespace="grants")),
+    path("auth/", include("apps.users.urls", namespace="users")),
+    path("community/", include("apps.community.urls", namespace="community")),
+    path("crop-prediction/", include("apps.crops.urls", namespace="crops")),
+    path("dashboard/", include("apps.dashboard.urls", namespace="dashboard")),
+    path("sensors/", include("apps.sensors.urls", namespace="sensors")),
 ]

@@ -1,0 +1,262 @@
+{% extends 'base.html' %} {% block title %}Community Admin Dashboard - HaloAI
+{%endblock %} {% block content %}
+<div class="min-h-screen bg-gray-50">
+  <div class="bg-white shadow">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">
+          Community Administrator Dashboard
+        </h1>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-600">{{ stats.region }}</span>
+          <span class="text-gray-600">Welcome, {{ user.first_name }}!</span>
+          <a
+            href="{% url 'users:logout' %}"
+            class="text-red-600 hover:text-red-800"
+            >Logout</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-6 py-8">
+    {% if not user.is_approved %}
+    <div
+      class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-6"
+    >
+      <strong>Account Pending:</strong> Your Community Administrator account is
+      still awaiting approval from the system administrator.
+    </div>
+    {% endif %}
+
+    <!-- Statistics Cards -->
+    <div class="grid md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="bg-green-100 p-3 rounded-full">
+            <svg
+              class="w-6 h-6 text-green-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"
+              ></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <div class="text-2xl font-bold text-gray-800">
+              {{ stats.total_farmers }}
+            </div>
+            <div class="text-gray-600">Registered Farmers</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="bg-blue-100 p-3 rounded-full">
+            <svg
+              class="w-6 h-6 text-blue-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"
+              ></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <div class="text-2xl font-bold text-gray-800">
+              {{ stats.farmers_with_smartphones }}
+            </div>
+            <div class="text-gray-600">With Smartphones</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="bg-purple-100 p-3 rounded-full">
+            <svg
+              class="w-6 h-6 text-purple-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <div class="text-2xl font-bold text-gray-800">
+              {{ stats.digital_literate_farmers }}
+            </div>
+            <div class="text-gray-600">Digitally Literate</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="flex items-center">
+          <div class="bg-yellow-100 p-3 rounded-full">
+            <svg
+              class="w-6 h-6 text-yellow-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <div class="text-2xl font-bold text-gray-800">
+              {{ stats.region }}
+            </div>
+            <div class="text-gray-600">Assigned Region</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">Farmer Management</h2>
+        <div class="space-y-3">
+          {% if user.is_approved %}
+          <a
+            href="{% url 'users:register_farmer' %}"
+            class="block bg-green-600 text-white px-4 py-3 rounded hover:bg-green-700 transition text-center"
+          >
+            Register New Farmer
+          </a>
+          <a
+            href="{% url 'users:manage_farmers' %}"
+            class="block bg-blue-600 text-white px-4 py-3 rounded hover:bg-blue-700 transition text-center"
+          >
+            Manage Registered Farmers
+          </a>
+          {% else %}
+          <div class="text-gray-500 text-center py-4">
+            Actions will be available after account approval
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">Reports & Analytics</h2>
+        <div class="space-y-3">
+          {% if user.is_approved %}
+          <a
+            href="{% url 'dashboard:home' %}"
+            class="block bg-purple-600 text-white px-4 py-3 rounded hover:bg-purple-700 transition text-center"
+          >
+            Generate Seasonal Report
+          </a>
+          <a
+            href="{% url 'crops:dashboard' %}"
+            class="block bg-indigo-600 text-white px-4 py-3 rounded hover:bg-indigo-700 transition text-center"
+          >
+            Crop Recommendations
+          </a>
+          {% else %}
+          <div class="text-gray-500 text-center py-4">
+            Reports will be available after approval
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Farmers -->
+    {% if user.is_approved and recent_farmers %}
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-xl font-semibold">Recently Registered Farmers</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Farmer
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Location
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Farm Size
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Primary Crops
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Digital Status
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {% for farmer_profile in recent_farmers %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900">
+                  {{ farmer_profile.user.get_full_name }}
+                </div>
+                <div class="text-sm text-gray-500">
+                  {{ farmer_profile.user.phone|default:"-" }}
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ farmer_profile.farm_location }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {% if farmer_profile.farm_size_acres %} {{
+                farmer_profile.farm_size_acres }} acres {% else %} - {% endif %}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ farmer_profile.primary_crops|truncatechars:30 }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center space-x-2">
+                  {% if farmer_profile.has_smartphone %}
+                  <span
+                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+                  >
+                    📱 Smartphone
+                  </span>
+                  {% endif %}
+                  <span
+                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {% if farmer_profile.digital_literacy_level == 'advanced' %}bg-green-100 text-green-800 {% elif farmer_profile.digital_literacy_level == 'intermediate' %}bg-blue-100 text-blue-800 {% elif farmer_profile.digital_literacy_level == 'basic' %}bg-yellow-100 text-yellow-800 {% else %}bg-red-100 text-red-800{% endif %}"
+                  >
+                    {{ farmer_profile.get_digital_literacy_level_display }}
+                  </span>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

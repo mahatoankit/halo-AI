@@ -15,6 +15,10 @@ import os
 import firebase_admin
 from firebase_admin import credentials
 from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv(Path(__file__).resolve().parent.parent.parent.parent / ".env")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-me1%-d(#egr(sebkjx^1&c3$k%8^vp6pzy2#=dd@qq)t3_w4l*'
+SECRET_KEY = "django-insecure-me1%-d(#egr(sebkjx^1&c3$k%8^vp6pzy2#=dd@qq)t3_w4l*"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -35,60 +39,62 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     # Custom apps
-    'apps.analytics',
-    'apps.crops',
-    'apps.community',
-    'apps.dashboard',
-    'apps.sensors',
-    'apps.users',
-    'apps.home',
+    "apps.analytics",
+    "apps.crops",
+    "apps.community",
+    "apps.dashboard",
+    "apps.sensors",
+    "apps.users",
+    "apps.home",
+    "apps.grants",
+    "apps.experts",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'haloai.urls'
+ROOT_URLCONF = "haloai.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.static',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.static",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'haloai.wsgi.application'
+WSGI_APPLICATION = "haloai.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -98,16 +104,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -115,9 +121,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -127,46 +133,105 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # Project-level static files
+    BASE_DIR / "static",  # Project-level static files
 ]
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # For production
+STATIC_ROOT = BASE_DIR / "staticfiles"  # For production
 
 # Media files (user uploads)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-# # Firebase Configuration
-# def get_env_variable(var_name):
-#     try:
-#         return os.environ[var_name]
-#     except KeyError:
-#         error_msg = f"Set the {var_name} environment variable"
-#         raise ImproperlyConfigured(error_msg)
+# Firebase Configuration for IoT Data
+def get_env_variable(var_name, default=None):
+    try:
+        return os.environ.get(var_name, default)
+    except KeyError:
+        if default is None:
+            error_msg = f"Set the {var_name} environment variable"
+            raise ImproperlyConfigured(error_msg)
+        return default
 
-# # Firebase setup
-# FIREBASE_CONFIG = {
-#     'type': get_env_variable('FIREBASE_TYPE'),
-#     'project_id': get_env_variable('FIREBASE_PROJECT_ID'),
-#     'private_key_id': get_env_variable('FIREBASE_PRIVATE_KEY_ID'),
-#     'private_key': get_env_variable('FIREBASE_PRIVATE_KEY').replace('\\n', '\n'),
-#     'client_email': get_env_variable('FIREBASE_CLIENT_EMAIL'),
-#     'client_id': get_env_variable('FIREBASE_CLIENT_ID'),
-#     'auth_uri': get_env_variable('FIREBASE_AUTH_URI'),
-#     'token_uri': get_env_variable('FIREBASE_TOKEN_URI'),
-#     'auth_provider_x509_cert_url': get_env_variable('FIREBASE_AUTH_PROVIDER_X509_CERT_URL'),
-#     'client_x509_cert_url': get_env_variable('FIREBASE_CLIENT_X509_CERT_URL'),
-# }
 
-# # Initialize Firebase Admin SDK
-# if not firebase_admin._apps:
-#     cred = credentials.Certificate(FIREBASE_CONFIG)
-#     firebase_admin.initialize_app(cred)
+# Initialize Firebase for IoT sensor data
+FIREBASE_DATABASE_URL = get_env_variable("FIREBASE_DATABASE_URL")
+FIREBASE_PROJECT_ID = get_env_variable("FIREBASE_PROJECT_ID")
+FIREBASE_SERVICE_ACCOUNT_KEY = get_env_variable("FIREBASE_SERVICE_ACCOUNT_KEY")
 
+# Initialize Firebase Admin SDK
+if FIREBASE_DATABASE_URL:
+    try:
+        if not firebase_admin._apps:
+            # Try to use service account key file for production
+            if FIREBASE_SERVICE_ACCOUNT_KEY and os.path.exists(
+                FIREBASE_SERVICE_ACCOUNT_KEY
+            ):
+                cred = credentials.Certificate(FIREBASE_SERVICE_ACCOUNT_KEY)
+                firebase_admin.initialize_app(
+                    cred,
+                    {
+                        "databaseURL": FIREBASE_DATABASE_URL,
+                        "projectId": FIREBASE_PROJECT_ID,
+                    },
+                )
+                print("✅ Firebase initialized with service account credentials")
+                print(f"📡 Database URL: {FIREBASE_DATABASE_URL}")
+                print(f"🆔 Project ID: {FIREBASE_PROJECT_ID}")
+                print("🔥 Firestore client available for user profiles")
+            else:
+                # Use service account from project root
+                service_account_path = BASE_DIR.parent / "firebase-service-account.json"
+                if service_account_path.exists():
+                    cred = credentials.Certificate(str(service_account_path))
+                    firebase_admin.initialize_app(
+                        cred,
+                        {
+                            "databaseURL": FIREBASE_DATABASE_URL,
+                            "projectId": FIREBASE_PROJECT_ID,
+                        },
+                    )
+                    print("✅ Firebase initialized with local service account")
+                    print(f"📡 Database URL: {FIREBASE_DATABASE_URL}")
+                    print(f"🆔 Project ID: {FIREBASE_PROJECT_ID}")
+                    print("🔥 Firestore client available for user profiles")
+                else:
+                    # Development mode: use database URL only (requires minimal permissions)
+                    firebase_admin.initialize_app(
+                        options={
+                            "databaseURL": FIREBASE_DATABASE_URL,
+                            "projectId": FIREBASE_PROJECT_ID,
+                        }
+                    )
+                    print(
+                        "⚠️ Firebase initialized in development mode (limited functionality)"
+                    )
+                    print(
+                        "💡 For full functionality, set FIREBASE_SERVICE_ACCOUNT_KEY in .env"
+                    )
+    except Exception as e:
+        print(f"❌ Firebase initialization failed: {e}")
+        print("🔄 Application will fall back to mock service for IoT data")
+        print("📖 Check FIREBASE_SETUP.md for configuration help")
+else:
+    print("⚠️ FIREBASE_DATABASE_URL not set in environment variables")
+    print("🔄 Application will use mock service for IoT data")
+    print("📖 Check FIREBASE_SETUP.md for configuration help")
+
+# Custom User Model
+AUTH_USER_MODEL = "users.CustomUser"
+
+# Authentication settings
+LOGIN_URL = "/auth/login/"
+LOGIN_REDIRECT_URL = "/dashboard/"
+LOGOUT_REDIRECT_URL = "/"
+
+# Session settings
+SESSION_COOKIE_AGE = 1209600  # 2 weeks
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False

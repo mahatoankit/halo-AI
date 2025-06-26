@@ -1,0 +1,267 @@
+{% extends 'base.html' %} {% block title %}{{ page_title }}{% endblock %} {%
+block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'sensors:dashboard' %}">Sensor Dashboard</a>
+          </li>
+          <li class="breadcrumb-item active">{{ farm_id|title }}</li>
+        </ol>
+      </nav>
+      <h2 class="mb-4">{{ page_title }}</h2>
+    </div>
+  </div>
+
+  {% if farm_data %}
+  <!-- Farm Overview -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Farm Overview</h5>
+          <small class="text-muted"
+            >Last Updated: {{ farm_data.last_updated|date:"M d, Y H:i:s"
+            }}</small
+          >
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <h6>Farm ID:</h6>
+              <p>{{ farm_data.farm_id }}</p>
+            </div>
+            <div class="col-md-4">
+              <h6>Active Sensors:</h6>
+              <p>{{ farm_data.latest_sensors|length }}</p>
+            </div>
+            <div class="col-md-4">
+              <h6>Status:</h6>
+              <span class="badge bg-success">Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sensor Data -->
+  <div class="row">
+    {% for sensor_name, sensor_data in farm_data.latest_sensors.items %}
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">{{ sensor_name|title }} Sensor</h6>
+          <small class="text-muted"
+            >{{ sensor_data.timestamp|date:"M d, Y H:i:s" }}</small
+          >
+        </div>
+        <div class="card-body">
+          {% for key, value in sensor_data.data.items %}
+          <div class="row mb-2">
+            <div class="col-6">
+              <strong>{{ key|title }}:</strong>
+            </div>
+            <div class="col-6">
+              {% if key == 'temperature' %} {{ value }}°C {% elif key ==
+              'humidity' or key == 'moisture' %} {{ value }}% {% elif key ==
+              'ph' %} {{ value }} {% elif key == 'conductivity' %} {{ value }}
+              µS/cm {% elif key == 'light_intensity' %} {{ value }} lux {% elif
+              key == 'pressure' %} {{ value }} hPa {% elif key == 'wind_speed'
+              %} {{ value }} m/s {% elif key == 'rainfall' %} {{ value }} mm {%
+              else %} {{ value }} {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="card-footer">
+          <button
+            class="btn btn-sm btn-primary"
+            onclick="loadSensorHistory('{{ sensor_name }}')"
+          >
+            View History
+          </button>
+          <button
+            class="btn btn-sm btn-outline-secondary"
+            onclick="refreshSensor('{{ sensor_name }}')"
+          >
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">No Sensor Data</h4>
+        <p>No recent sensor data is available for this farm.</p>
+        <hr />
+        <p class="mb-0">
+          Please check sensor connectivity or run a sensor test.
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Latest Prediction -->
+  {% if farm_data.latest_prediction %}
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card border-info">
+        <div class="card-header bg-info text-white">
+          <h5 class="mb-0">Latest Crop Prediction</h5>
+          <small
+            >{{ farm_data.latest_prediction.timestamp|date:"M d, Y H:i:s"
+            }}</small
+          >
+        </div>
+        <div class="card-body">
+          <div class="row">
+            {% for key, value in farm_data.latest_prediction.prediction.items %}
+            <div class="col-md-4 mb-2">
+              <strong>{{ key|title }}:</strong> {{ value }}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Actions -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Actions</h5>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-success me-2" onclick="generatePrediction()">
+            <i class="fas fa-brain"></i> Generate New Prediction
+          </button>
+          <button class="btn btn-info me-2" onclick="exportData()">
+            <i class="fas fa-download"></i> Export Data
+          </button>
+          <a
+            href="{% url 'sensors:real_time' %}?farm={{ farm_id }}"
+            class="btn btn-primary"
+          >
+            <i class="fas fa-eye"></i> Real-time Monitor
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">Farm Not Found</h4>
+    <p>No data available for farm ID: {{ farm_id }}</p>
+    <hr />
+    <a href="{% url 'sensors:dashboard' %}" class="btn btn-primary"
+      >Back to Dashboard</a
+    >
+  </div>
+  {% endif %}
+</div>
+
+<!-- History Modal -->
+<div class="modal fade" id="historyModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Sensor History</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div id="historyContent">
+          <p>Loading...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function loadSensorHistory(sensorType) {
+    const modal = new bootstrap.Modal(document.getElementById("historyModal"));
+    const content = document.getElementById("historyContent");
+
+    content.innerHTML = "<p>Loading sensor history...</p>";
+    modal.show();
+
+    fetch(`/sensors/api/{{ farm_id }}/${sensorType}/history/`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          let html =
+            '<div class="table-responsive"><table class="table table-striped">';
+          html +=
+            "<thead><tr><th>Timestamp</th><th>Data</th></tr></thead><tbody>";
+
+          data.data.forEach((entry) => {
+            html += `<tr><td>${new Date(
+              entry.timestamp
+            ).toLocaleString()}</td>`;
+            html += "<td><small>";
+            Object.entries(entry.data).forEach(([key, value]) => {
+              html += `${key}: ${value}<br>`;
+            });
+            html += "</small></td></tr>";
+          });
+
+          html += "</tbody></table></div>";
+          content.innerHTML = html;
+        } else {
+          content.innerHTML =
+            '<p class="text-danger">Error loading history: ' +
+            data.error +
+            "</p>";
+        }
+      })
+      .catch((error) => {
+        content.innerHTML =
+          '<p class="text-danger">Error loading history: ' + error + "</p>";
+      });
+  }
+
+  function refreshSensor(sensorType) {
+    fetch(`/sensors/api/{{ farm_id }}/${sensorType}/`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Sensor data refreshed successfully!");
+          location.reload();
+        } else {
+          alert("Error refreshing sensor: " + data.message);
+        }
+      })
+      .catch((error) => {
+        alert("Error refreshing sensor: " + error);
+      });
+  }
+
+  function generatePrediction() {
+    if (
+      confirm("Generate a new crop prediction based on current sensor data?")
+    ) {
+      // This would call a prediction API endpoint
+      alert("Prediction generation initiated. This may take a few moments.");
+    }
+  }
+
+  function exportData() {
+    if (confirm("Export all sensor data for this farm?")) {
+      // This would trigger a data export
+      alert("Data export initiated. You will receive a download link shortly.");
+    }
+  }
+</script>
+{% endblock %}

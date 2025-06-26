@@ -1,0 +1,863 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Halo AI - Smart
+Agriculture Platform{% endblock %} {% block main_class %}{% endblock %} 
+{% block content %}
+<!-- Hero Section -->
+<section
+  class="relative bg-gradient-to-br from-primary-50 to-secondary-50 min-h-screen flex items-center"
+>
+  <div class="absolute inset-0 bg-black opacity-10"></div>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="text-center lg:text-left">
+        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          <span class="text-primary-600">सही निर्णय,</span><br />
+          <span class="text-secondary-600">उन्नत कृषि</span><br />
+          <span class="text-2xl md:text-3xl">— Halo AI सग्गै</span>
+        </h1>
+        <p class="text-xl text-gray-600 mb-8 max-w-2xl">
+          Empowering farmers with AI-driven insights for better yields and
+          sustainable agriculture through IoT sensors and machine learning.
+        </p>
+        <div
+          class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+        >
+          {% if user.is_authenticated %}
+          <a
+            href="{% url 'home:home' %}"
+            class="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors inline-flex items-center justify-center"
+          >
+            Go to Dashboard
+            <svg
+              class="ml-2 w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+          </a>
+          {% else %}
+          <a
+            href="{% url 'users:login' %}"
+            class="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors inline-flex items-center justify-center"
+          >
+            Get Started
+            <svg
+              class="ml-2 w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+          </a>
+          <a
+            href="{% url 'users:signup' %}"
+            class="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold border-2 border-primary-600 hover:bg-primary-50 transition-colors inline-flex items-center justify-center"
+          >
+            Sign Up Free
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="relative">
+        <div
+          class="bg-white rounded-2xl shadow-2xl p-8 transform rotate-3 hover:rotate-0 transition-transform duration-300"
+        >
+          <img
+            src="{% static 'images/agriculture-dashboard.jpg' %}"
+            alt="Smart Agriculture Dashboard"
+            class="w-full h-64 object-cover rounded-lg mb-4"
+            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDQwMCAyNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjU2IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMDAgMTI4QzIwMCAxNTkgMTc1IDE4NCAxNDQgMTg0QzExMyAxODQgODggMTU5IDg4IDEyOEM4OCA5NyAxMTMgNzIgMTQ0IDcyQzE3NSA3MiAyMDAgOTcgMjAwIDEyOFoiIGZpbGw9IiM5Q0E0QUYiLz4KPHBhdGggZD0iTTI1NiAxMjhDMjU2IDE1OSAyMzEgMTg0IDIwMCAxODRDMTY5IDE4NCAxNDQgMTU5IDE0NCAxMjhDMTQ0IDk3IDE2OSA3MiAyMDAgNzJDMjMxIDcyIDI1NiA5NyAyNTYgMTI4WiIgZmlsbD0iIzY4NzI4MCIvPgo8cGF0aCBkPSJNMzEyIDEyOEMzMTIgMTU5IDI4NyAxODQgMjU2IDE4NEMyMjUgMTg0IDIwMCAxNTkgMjAwIDEyOEMyMDAgOTcgMjI1IDcyIDI1NiA3MkMyODcgNzIgMzEyIDk3IDMxMiAxMjhaIiBmaWxsPSIjOUNBNEFGIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMjIwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2ODcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPklvVCBTZW5zb3IgRGFzaGJvYXJkPC90ZXh0Pgo8L3N2Zz4K'"
+          />
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">
+            Real-time IoT Monitoring
+          </h3>
+          <p class="text-gray-600 text-sm">
+            Monitor soil conditions, weather, and crop health in real-time
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Comprehensive Smart Agriculture Solutions
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Our AI-powered platform combines IoT sensors, machine learning, and
+        local expertise to revolutionize farming in Nepal.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Feature 1: AI Crop Prediction -->
+      <div
+        class="bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl p-8 text-center"
+      >
+        <div
+          class="bg-primary-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6"
+        >
+          <svg
+            class="w-8 h-8 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">AI Crop Prediction</h3>
+        <p class="text-gray-600">
+          Machine learning algorithms analyze soil, weather, and historical data
+          to recommend the best crops for maximum yield.
+        </p>
+      </div>
+
+      <!-- Feature 2: IoT Sensor Network -->
+      <div
+        class="bg-gradient-to-br from-secondary-50 to-secondary-100 rounded-xl p-8 text-center"
+      >
+        <div
+          class="bg-secondary-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6"
+        >
+          <svg
+            class="w-8 h-8 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">IoT Sensor Network</h3>
+        <p class="text-gray-600">
+          Real-time monitoring of soil moisture, pH, temperature, humidity, and
+          light levels across your farm.
+        </p>
+      </div>
+
+      <!-- Feature 3: Expert Consultation -->
+      <div
+        class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-8 text-center"
+      >
+        <div
+          class="bg-green-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6"
+        >
+          <svg
+            class="w-8 h-8 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">
+          Expert Consultation
+        </h3>
+        <p class="text-gray-600">
+          Connect with agricultural experts and community admins for
+          personalized advice and support.
+        </p>
+      </div>
+
+      <!-- Feature 4: Market Intelligence -->
+      <div
+        class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-8 text-center"
+      >
+        <div
+          class="bg-blue-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6"
+        >
+          <svg
+            class="w-8 h-8 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">
+          Market Intelligence
+        </h3>
+        <p class="text-gray-600">
+          Get insights on crop pricing, demand trends, and optimal selling times
+          to maximize profits.
+        </p>
+      </div>
+
+      <!-- Feature 5: Government Grants -->
+      <div
+        class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-8 text-center"
+      >
+        <div
+          class="bg-purple-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6"
+        >
+          <svg
+            class="w-8 h-8 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Grants & Subsidies</h3>
+        <p class="text-gray-600">
+          Access information about government grants, subsidies, and financial
+          support programs for farmers.
+        </p>
+      </div>
+
+      <!-- Feature 6: Community Support -->
+      <div
+        class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-8 text-center"
+      >
+        <div
+          class="bg-indigo-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6"
+        >
+          <svg
+            class="w-8 h-8 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Community Network</h3>
+        <p class="text-gray-600">
+          Join a community of farmers, share experiences, and learn from others
+          in your region.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="py-20 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Simple, Transparent Pricing
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Choose the plan that fits your farm size and needs. All plans include
+        our core AI recommendations.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Basic Plan -->
+      <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
+        <div class="mb-6">
+          <span class="text-4xl font-bold text-primary-600">Free</span>
+          <span class="text-gray-600">/month</span>
+        </div>
+        <ul class="text-left mb-8 space-y-3">
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-green-500 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Basic crop recommendations
+          </li>
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-green-500 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Weather information
+          </li>
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-green-500 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Community access
+          </li>
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-green-500 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Up to 1 hectare
+          </li>
+        </ul>
+        <a
+          href="{% url 'users:signup' %}"
+          class="w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-colors inline-block"
+        >
+          Get Started
+        </a>
+      </div>
+
+      <!-- Professional Plan -->
+      <div
+        class="bg-primary-600 text-white rounded-xl shadow-lg p-8 text-center transform scale-105"
+      >
+        <div
+          class="bg-secondary-400 text-primary-900 px-4 py-1 rounded-full text-sm font-semibold inline-block mb-4"
+        >
+          Most Popular
+        </div>
+        <h3 class="text-2xl font-bold mb-4">Professional</h3>
+        <div class="mb-6">
+          <span class="text-4xl font-bold">NPR 2,500</span>
+          <span class="text-primary-200">/month</span>
+        </div>
+        <ul class="text-left mb-8 space-y-3">
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-secondary-400 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Everything in Basic
+          </li>
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-secondary-400 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            IoT sensor kit included
+          </li>
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-secondary-400 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Real-time monitoring
+          </li>
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-secondary-400 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Expert consultation
+          </li>
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-secondary-400 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Up to 5 hectares
+          </li>
+        </ul>
+        <a
+          href="{% url 'users:signup' %}"
+          class="w-full bg-white text-primary-600 py-3 px-6 rounded-lg font-semibold hover:bg-gray-50 transition-colors inline-block"
+        >
+          Choose Professional
+        </a>
+      </div>
+
+      <!-- Enterprise Plan -->
+      <div class="bg-white rounded-xl shadow-lg p-8 text-center">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Enterprise</h3>
+        <div class="mb-6">
+          <span class="text-4xl font-bold text-primary-600">Custom</span>
+          <span class="text-gray-600">/month</span>
+        </div>
+        <ul class="text-left mb-8 space-y-3">
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-green-500 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Everything in Professional
+          </li>
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-green-500 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Multiple sensor networks
+          </li>
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-green-500 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            API access
+          </li>
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-green-500 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Dedicated support
+          </li>
+          <li class="flex items-center">
+            <svg
+              class="w-5 h-5 text-green-500 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Unlimited hectares
+          </li>
+        </ul>
+        <a
+          href="#contact"
+          class="w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition-colors inline-block"
+        >
+          Contact Sales
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Roadmap Section -->
+<section class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Product Roadmap
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Our vision for the future of smart agriculture in Nepal and beyond.
+      </p>
+    </div>
+
+    <div class="space-y-8">
+      <!-- Current Phase -->
+      <div class="flex items-start">
+        <div
+          class="flex-shrink-0 w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center"
+        >
+          <svg
+            class="w-4 h-4 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-xl font-bold text-gray-900 mb-2">
+            Phase 1: Core Platform (Current)
+          </h3>
+          <p class="text-gray-600 mb-2">
+            AI crop recommendation system, IoT sensor integration, and community
+            admin dashboard.
+          </p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Machine learning crop prediction models</li>
+            <li>• Real-time IoT sensor monitoring</li>
+            <li>• Community-based user management</li>
+            <li>• Basic weather integration</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="flex items-start">
+        <div
+          class="flex-shrink-0 w-8 h-8 bg-secondary-600 rounded-full flex items-center justify-center"
+        >
+          <span class="text-white text-sm font-bold">2</span>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-xl font-bold text-gray-900 mb-2">
+            Phase 2: Market Integration (Q2 2025)
+          </h3>
+          <p class="text-gray-600 mb-2">
+            Connect farmers directly with buyers and integrate market pricing
+            data.
+          </p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Marketplace for direct farmer-to-buyer sales</li>
+            <li>• Real-time crop pricing integration</li>
+            <li>• Supply chain tracking</li>
+            <li>• Cooperative formation tools</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="flex items-start">
+        <div
+          class="flex-shrink-0 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center"
+        >
+          <span class="text-white text-sm font-bold">3</span>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-xl font-bold text-gray-900 mb-2">
+            Phase 3: Financial Services (Q4 2025)
+          </h3>
+          <p class="text-gray-600 mb-2">
+            Integrate microfinance, insurance, and loan services tailored for
+            farmers.
+          </p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Crop insurance integration</li>
+            <li>• Microfinance partnerships</li>
+            <li>• Automated loan applications</li>
+            <li>• Financial literacy modules</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Phase 4 -->
+      <div class="flex items-start">
+        <div
+          class="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center"
+        >
+          <span class="text-white text-sm font-bold">4</span>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-xl font-bold text-gray-900 mb-2">
+            Phase 4: Regional Expansion (2026)
+          </h3>
+          <p class="text-gray-600 mb-2">
+            Expand beyond Nepal to other South Asian countries with similar
+            agricultural challenges.
+          </p>
+          <ul class="text-sm text-gray-500 space-y-1">
+            <li>• Multi-language support</li>
+            <li>• Regional crop databases</li>
+            <li>• Cross-border market integration</li>
+            <li>• Government partnership programs</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Current Projects Section -->
+<section class="py-20 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Current Projects
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Real-world implementations driving agricultural innovation across Nepal.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <!-- Project 1: Bhairahawa Pilot -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div
+          class="h-48 bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center"
+        >
+          <div class="text-center text-white">
+            <svg
+              class="w-16 h-16 mx-auto mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            <h3 class="text-xl font-bold">Bhairahawa-Butwal Pilot</h3>
+          </div>
+        </div>
+        <div class="p-6">
+          <h4 class="text-lg font-semibold text-gray-900 mb-3">
+            Smart Agriculture Implementation
+          </h4>
+          <p class="text-gray-600 mb-4">
+            Our flagship pilot project covering 50+ farms in the
+            Bhairahawa-Butwal region, demonstrating 25% yield improvement
+            through AI-driven crop recommendations.
+          </p>
+          <div class="grid grid-cols-2 gap-4 text-center">
+            <div>
+              <div class="text-2xl font-bold text-primary-600">50+</div>
+              <div class="text-sm text-gray-500">Active Farms</div>
+            </div>
+            <div>
+              <div class="text-2xl font-bold text-secondary-600">25%</div>
+              <div class="text-sm text-gray-500">Yield Increase</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2: Government Partnership -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div
+          class="h-48 bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center"
+        >
+          <div class="text-center text-white">
+            <svg
+              class="w-16 h-16 mx-auto mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+              />
+            </svg>
+            <h3 class="text-xl font-bold">Government Initiative</h3>
+          </div>
+        </div>
+        <div class="p-6">
+          <h4 class="text-lg font-semibold text-gray-900 mb-3">
+            Ministry of Agriculture Partnership
+          </h4>
+          <p class="text-gray-600 mb-4">
+            Collaborating with the Nepal Ministry of Agriculture to integrate
+            our platform with national agricultural databases and subsidy
+            programs.
+          </p>
+          <div class="grid grid-cols-2 gap-4 text-center">
+            <div>
+              <div class="text-2xl font-bold text-green-600">5</div>
+              <div class="text-sm text-gray-500">Districts</div>
+            </div>
+            <div>
+              <div class="text-2xl font-bold text-blue-600">1000+</div>
+              <div class="text-sm text-gray-500">Farmers Reached</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-20 bg-primary-600 text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl md:text-4xl font-bold mb-4">
+      Ready to Transform Your Farm?
+    </h2>
+    <p class="text-xl text-primary-100 mb-8 max-w-3xl mx-auto">
+      Join thousands of farmers already using Halo AI to increase yields and
+      reduce risks.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      {% if not user.is_authenticated %}
+      <a
+        href="{% url 'users:signup' %}"
+        class="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors inline-flex items-center justify-center"
+      >
+        Start Free Trial
+        <svg
+          class="ml-2 w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 7l5 5m0 0l-5 5m5-5H6"
+          />
+        </svg>
+      </a>
+      {% endif %}
+      <a
+        href="mailto:haloaiagriculture@gmail.com"
+        class="bg-primary-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-800 transition-colors inline-flex items-center justify-center border-2 border-primary-400"
+      >
+        Contact Sales
+      </a>
+    </div>
+    <div class="mt-8">
+      <p class="text-primary-200">
+        Email: haloaiagriculture@gmail.com | Phone: +91 123 456 7890
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

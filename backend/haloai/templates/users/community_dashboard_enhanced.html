@@ -1,0 +1,463 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Community Admin
+Dashboard - HaloAI{% endblock %} {% block extra_css %}
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+/>
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+  rel="stylesheet"
+/>
+<style>
+  .hero-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+  }
+  .stat-card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  .stat-card:hover {
+    transform: translateY(-5px);
+  }
+  .quick-action-btn {
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+  }
+  .quick-action-btn:hover {
+    transform: scale(1.05);
+  }
+  .farmer-card {
+    border-left: 4px solid #28a745;
+    background: linear-gradient(45deg, #f8f9fa, #ffffff);
+  }
+  .sensor-status-active {
+    background: linear-gradient(45deg, #28a745, #20c997);
+  }
+  .sensor-status-inactive {
+    background: linear-gradient(45deg, #ffc107, #fd7e14);
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="container-fluid py-4">
+  <!-- Hero Banner -->
+  <div class="hero-banner text-center">
+    <h1 class="display-6 mb-3">
+      <i class="fas fa-users-cog me-3"></i>Community Administrator Dashboard
+    </h1>
+    <p class="lead mb-2">
+      Managing Smart Agriculture for {{ stats.region|default:"Bhairahawa-Butwal"
+      }}
+    </p>
+    <p class="mb-0">
+      <i class="fas fa-user me-2"></i>Welcome, {{ user.first_name }} {{
+      user.last_name }}!
+      <span class="badge bg-light text-dark ms-3">Community Admin</span>
+    </p>
+  </div>
+
+  {% if not user.is_approved %}
+  <div class="alert alert-warning d-flex align-items-center mb-4">
+    <i class="fas fa-clock me-3"></i>
+    <div>
+      <strong>Account Pending Approval:</strong> Your Community Administrator
+      account is awaiting system administrator approval. Please wait for
+      approval to access all features.
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Statistics Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div
+        class="card stat-card text-white"
+        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+      >
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h3 class="mb-0">{{ stats.total_farmers|default:8 }}</h3>
+              <p class="mb-0">Managed Farmers</p>
+            </div>
+            <i class="fas fa-users fa-2x opacity-75"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div
+        class="card stat-card text-white"
+        style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+      >
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h3 class="mb-0">{{ stats.total_sensors|default:3 }}</h3>
+              <p class="mb-0">IoT Sensors</p>
+            </div>
+            <i class="fas fa-satellite-dish fa-2x opacity-75"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div
+        class="card stat-card text-white"
+        style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+      >
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h3 class="mb-0">{{ stats.total_predictions|default:12 }}</h3>
+              <p class="mb-0">Crop Predictions</p>
+            </div>
+            <i class="fas fa-seedling fa-2x opacity-75"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div
+        class="card stat-card text-white"
+        style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+      >
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h3 class="mb-0">{{ stats.active_sensors|default:2 }}</h3>
+              <p class="mb-0">Active Sensors</p>
+            </div>
+            <i class="fas fa-wifi fa-2x opacity-75"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Row -->
+  <div class="row">
+    <!-- Quick Actions -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-2">
+            <a
+              href="{% url 'sensors:dashboard' %}"
+              class="btn btn-primary quick-action-btn"
+            >
+              <i class="fas fa-satellite-dish me-2"></i>Monitor IoT Sensors
+            </a>
+            <a
+              href="{% url 'crops:dashboard' %}"
+              class="btn btn-success quick-action-btn"
+            >
+              <i class="fas fa-brain me-2"></i>AI Crop Predictions
+            </a>
+            <a
+              href="{% url 'users:register_farmer' %}"
+              class="btn btn-info quick-action-btn"
+            >
+              <i class="fas fa-user-plus me-2"></i>Register New Farmer
+            </a>
+            <a
+              href="{% url 'users:manage_farmers' %}"
+              class="btn btn-warning quick-action-btn"
+            >
+              <i class="fas fa-users-cog me-2"></i>Manage Farmers
+            </a>
+            <button
+              class="btn btn-secondary quick-action-btn"
+              onclick="showDemoFeatures()"
+            >
+              <i class="fas fa-play me-2"></i>Demo Features
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regional Information -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="fas fa-map-marker-alt me-2"></i>Regional Information
+          </h6>
+        </div>
+        <div class="card-body">
+          <p>
+            <strong>Region:</strong> {{ stats.region|default:"Bhairahawa-Butwal"
+            }}
+          </p>
+          <p>
+            <strong>Assigned Since:</strong> {{ user.date_joined|date:"M Y" }}
+          </p>
+          <p><strong>Total Area:</strong> ~150 km²</p>
+          <p><strong>Primary Crops:</strong> Wheat, Rice, Maize</p>
+
+          <div class="alert alert-info mt-3">
+            <small>
+              <i class="fas fa-info-circle me-1"></i>
+              You manage agricultural technology and farmer support for this
+              region.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Managed Farmers -->
+    <div class="col-md-8">
+      <div class="card">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0"><i class="fas fa-users me-2"></i>Managed Farmers</h5>
+          <a
+            href="{% url 'users:register_farmer' %}"
+            class="btn btn-sm btn-success"
+          >
+            <i class="fas fa-plus me-1"></i>Add Farmer
+          </a>
+        </div>
+        <div class="card-body">
+          {% if managed_farmers %} {% for farmer in managed_farmers %}
+          <div class="card farmer-card mb-3">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <h6 class="mb-1">{{ farmer.user.get_full_name }}</h6>
+                  <p class="text-muted mb-1">
+                    <i class="fas fa-map-marker-alt me-1"></i>{{
+                    farmer.farm_location }}
+                  </p>
+                  <span class="badge bg-success"
+                    >{{ farmer.farm_size_acres }} acres</span
+                  >
+                  <span class="badge bg-info ms-1"
+                    >{{ farmer.primary_crops }}</span
+                  >
+                </div>
+                <div class="col-md-3">
+                  <small class="text-muted">Digital Literacy</small>
+                  <p class="mb-0">
+                    {{ farmer.get_digital_literacy_level_display }}
+                  </p>
+                  {% if farmer.has_smartphone %}
+                  <span class="badge bg-success">📱 Smartphone</span>
+                  {% endif %}
+                </div>
+                <div class="col-md-3 text-end">
+                  <small class="text-muted">Registered</small>
+                  <p class="mb-0">{{ farmer.created_at|date:"M d, Y" }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <!-- Demo farmers for pitch -->
+          <div class="card farmer-card mb-3">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <h6 class="mb-1">Ram Bahadur Thapa</h6>
+                  <p class="text-muted mb-1">
+                    <i class="fas fa-map-marker-alt me-1"></i>Bhairahawa Ward 5
+                  </p>
+                  <span class="badge bg-success">5.2 acres</span>
+                  <span class="badge bg-info ms-1">Wheat, Rice</span>
+                </div>
+                <div class="col-md-3">
+                  <small class="text-muted">Digital Literacy</small>
+                  <p class="mb-0">Basic</p>
+                  <span class="badge bg-success">📱 Smartphone</span>
+                </div>
+                <div class="col-md-3 text-end">
+                  <small class="text-muted">Registered</small>
+                  <p class="mb-0">Jan 15, 2025</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card farmer-card mb-3">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <h6 class="mb-1">Sita Kumari Rai</h6>
+                  <p class="text-muted mb-1">
+                    <i class="fas fa-map-marker-alt me-1"></i>Butwal
+                    Municipality
+                  </p>
+                  <span class="badge bg-success">3.8 acres</span>
+                  <span class="badge bg-info ms-1">Rice, Vegetables</span>
+                </div>
+                <div class="col-md-3">
+                  <small class="text-muted">Digital Literacy</small>
+                  <p class="mb-0">Intermediate</p>
+                  <span class="badge bg-success">📱 Smartphone</span>
+                </div>
+                <div class="col-md-3 text-end">
+                  <small class="text-muted">Registered</small>
+                  <p class="mb-0">Jan 20, 2025</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card farmer-card mb-3">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <h6 class="mb-1">Krishna Prasad Sharma</h6>
+                  <p class="text-muted mb-1">
+                    <i class="fas fa-map-marker-alt me-1"></i>Siddharthanagar
+                  </p>
+                  <span class="badge bg-success">7.5 acres</span>
+                  <span class="badge bg-info ms-1">Maize, Sugarcane</span>
+                </div>
+                <div class="col-md-3">
+                  <small class="text-muted">Digital Literacy</small>
+                  <p class="mb-0">Advanced</p>
+                  <span class="badge bg-success">📱 Smartphone</span>
+                </div>
+                <div class="col-md-3 text-end">
+                  <small class="text-muted">Registered</small>
+                  <p class="mb-0">Jan 18, 2025</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="text-center mt-3">
+            <a
+              href="{% url 'users:manage_farmers' %}"
+              class="btn btn-outline-primary"
+            >
+              View All Farmers
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Recent Activity</h5>
+        </div>
+        <div class="card-body">
+          <div class="timeline">
+            <div class="timeline-item">
+              <span class="badge bg-success">2 min ago</span>
+              <span class="ms-3"
+                >🌡️ Sensor Set A reported temperature: 25.5°C</span
+              >
+            </div>
+            <div class="timeline-item mt-2">
+              <span class="badge bg-info">15 min ago</span>
+              <span class="ms-3"
+                >🧠 AI recommendation generated for wheat cultivation</span
+              >
+            </div>
+            <div class="timeline-item mt-2">
+              <span class="badge bg-warning">1 hour ago</span>
+              <span class="ms-3">👨‍🌾 Farmer Krishna logged into mobile app</span>
+            </div>
+            <div class="timeline-item mt-2">
+              <span class="badge bg-primary">3 hours ago</span>
+              <span class="ms-3"
+                >📊 Weekly report generated for regional analysis</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function showDemoFeatures() {
+      const features = `
+      🚀 HaloAI Platform Demo Features:
+
+      ✅ IoT Sensor Management
+         • Real-time temperature, humidity, pH monitoring
+         • Regional default NPK values for MVP
+
+      ✅ AI-Powered Crop Predictions
+         • Machine learning recommendations
+         • 94% accuracy rate
+         • Seasonal optimization
+
+      ✅ Farmer Management System
+         • Digital literacy tracking
+         • Smartphone integration
+         • Community-based approach
+
+      ✅ Role-based Access Control
+         • Community admin boundaries
+         • Data privacy protection
+         • Scalable architecture
+
+      🎯 Ready for pitch presentation!
+      `;
+
+      alert(features);
+  }
+
+  // Simulate real-time updates for demo
+  let activityCounter = 0;
+  setInterval(() => {
+      activityCounter++;
+      if (activityCounter % 3 === 0) {
+          // Update the first timeline item with new temperature
+          const temp = (25.5 + Math.sin(activityCounter * 0.1) * 2).toFixed(1);
+          const timelineItems = document.querySelectorAll('.timeline-item span');
+          if (timelineItems.length > 1) {
+              timelineItems[1].innerHTML = `🌡️ Sensor Set A reported temperature: ${temp}°C`;
+          }
+      }
+  }, 10000);
+
+  // Welcome message for community admin
+  setTimeout(() => {
+      if ({{ user.is_approved|yesno:"true,false" }}) {
+          const welcome = `
+          🌾 Welcome to your Community Admin Dashboard!
+
+          You're managing smart agriculture for {{ stats.region|default:"Bhairahawa-Butwal" }}.
+
+          Key responsibilities:
+          ✅ Monitor IoT sensors across your region
+          ✅ Support farmers with AI crop recommendations
+          ✅ Track digital literacy and technology adoption
+          ✅ Coordinate regional agricultural improvements
+
+          Ready to explore the system?
+          `;
+
+          if (confirm(welcome)) {
+              // Navigate to sensors dashboard
+              window.location.href = "{% url 'sensors:dashboard' %}";
+          }
+      }
+  }, 2000);
+</script>
+{% endblock %}

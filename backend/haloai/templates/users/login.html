@@ -1,6 +1,6 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Login - Halo AI{%
-endblock %} {% block main_class %}pt-0{% endblock %} {% block navigation %}{%
-endblock %} {% block footer %}{% endblock %} {% block content %}
+{% extends 'base.html' %} {% load static %} {% block title %}Login - Halo AI
+{% endblock %} {% block main_class %}pt-0{% endblock %} {% block navigation %}
+{% endblock %} {% block footer %}{% endblock %} {% block content %}
 <div
   class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50 py-12 px-4 sm:px-6 lg:px-8"
 >
@@ -164,7 +164,7 @@ endblock %} {% block footer %}{% endblock %} {% block content %}
         <p class="text-sm text-gray-600">
           Don't have an account?
           <a
-            href="#"
+            href="{% url 'users:signup' %}"
             class="font-medium text-primary-600 hover:text-primary-500"
             >Sign up here</a
           >

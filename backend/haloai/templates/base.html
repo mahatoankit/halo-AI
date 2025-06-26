@@ -71,9 +71,12 @@
         <div class="flex justify-between items-center h-16">
           <!-- Logo -->
           <div class="flex items-center">
-            <a href="{% url 'home:home' %}" class="flex items-center space-x-2">
+            <a
+              href="{% if user.is_authenticated %}{% url 'home:home' %}{% else %}{% url 'home:public_landing' %}{% endif %}"
+              class="flex items-center space-x-2"
+            >
               <img
-                src="{% static 'images/halo.jpg' %}"
+                src="{% static 'images/Halo-logo.svg' %}"
                 alt="Halo AI"
                 class="h-10 w-10 rounded-full"
               />
@@ -84,31 +87,73 @@
           <!-- Desktop Navigation -->
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-8">
+              {% if user.is_authenticated %}
+              <!-- Authenticated User Navigation -->
               <a
                 href="{% url 'home:home' %}"
                 class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Home</a
+                >Dashboard</a
               >
               <a
-                href="{% url 'crops:crop_prediction' %}"
+                href="{% url 'crops:dashboard' %}"
                 class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >Crop Prediction</a
               >
               <a
-                href="{% url 'grants:offers' %}"
+                href="{% url 'grants:grants_and_offers' %}"
                 class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >Grants & Offers</a
               >
+              {% if user.role == 'community_admin' or user.role == 'admin' %}
+              <a
+                href="{% url 'sensors:dashboard' %}"
+                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Sensors</a
+              >
+              {% endif %}
               <a
                 href="#"
                 class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >Connect with Expert</a
               >
               <a
-                href="#"
+                href="{% url 'users:logout' %}"
+                class="bg-primary-600 text-white hover:bg-primary-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                >Logout ({{ user.username }})</a
+              >
+              {% else %}
+              <!-- Public Navigation -->
+              <a
+                href="{% url 'home:public_landing' %}"
+                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Home</a
+              >
+              <a
+                href="#features"
+                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Features</a
+              >
+              <a
+                href="#pricing"
+                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Pricing</a
+              >
+              <a
+                href="#contact"
                 class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >Contact</a
               >
+              <a
+                href="{% url 'users:login' %}"
+                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >Login</a
+              >
+              <a
+                href="{% url 'users:signup' %}"
+                class="bg-primary-600 text-white hover:bg-primary-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                >Sign Up</a
+              >
+              {% endif %}
             </div>
           </div>
 
@@ -142,31 +187,73 @@
       <!-- Mobile menu -->
       <div class="mobile-menu hidden md:hidden">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+          {% if user.is_authenticated %}
+          <!-- Authenticated Mobile Navigation -->
           <a
             href="{% url 'home:home' %}"
             class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
-            >Home</a
+            >Dashboard</a
           >
           <a
-            href="#"
+            href="{% url 'crops:dashboard' %}"
             class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
             >Crop Prediction</a
           >
           <a
-            href="#"
+            href="{% url 'grants:grants_and_offers' %}"
             class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
             >Grants & Offers</a
           >
+          {% if user.role == 'community_admin' or user.role == 'admin' %}
+          <a
+            href="{% url 'sensors:dashboard' %}"
+            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            >Sensors</a
+          >
+          {% endif %}
           <a
             href="#"
             class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
             >Connect with Expert</a
           >
           <a
-            href="#"
+            href="{% url 'users:logout' %}"
+            class="bg-primary-600 text-white hover:bg-primary-700 block px-3 py-2 rounded-md text-base font-medium"
+            >Logout ({{ user.username }})</a
+          >
+          {% else %}
+          <!-- Public Mobile Navigation -->
+          <a
+            href="{% url 'home:public_landing' %}"
+            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            >Home</a
+          >
+          <a
+            href="#features"
+            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            >Features</a
+          >
+          <a
+            href="#pricing"
+            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            >Pricing</a
+          >
+          <a
+            href="#contact"
             class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
             >Contact</a
           >
+          <a
+            href="{% url 'users:login' %}"
+            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            >Login</a
+          >
+          <a
+            href="{% url 'users:signup' %}"
+            class="bg-primary-600 text-white hover:bg-primary-700 block px-3 py-2 rounded-md text-base font-medium"
+            >Sign Up</a
+          >
+          {% endif %}
         </div>
       </div>
     </nav>
