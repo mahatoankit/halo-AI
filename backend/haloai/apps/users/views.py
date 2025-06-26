@@ -157,14 +157,30 @@ def login_view(request):
             if not remember_me:
                 request.session.set_expiry(0)
 
-            # Role-based redirect
+            # Handle redirect after login
+            next_url = request.GET.get("next") or request.POST.get("next")
+
+            # Role-based redirect - prioritize role-specific dashboards over 'next' parameter
             user_role = getattr(user, "role", "farmer")
             if user_role == "admin":
                 return redirect("users:admin_dashboard")
             elif user_role == "community_admin":
                 return redirect("users:community_dashboard")
+            elif user_role == "farmer":
+                # For farmers, check if next URL is appropriate, otherwise use farmer dashboard
+                if next_url and (
+                    "/dashboard/farmer/" in next_url
+                    or "/dashboard/redirect/" in next_url
+                ):
+                    return redirect(next_url)
+                else:
+                    return redirect("dashboard:farmer_dashboard")
             else:
-                return redirect("home:home")
+                # Default fallback for any other role
+                if next_url:
+                    return redirect(next_url)
+                else:
+                    return redirect("dashboard:farmer_dashboard")
 
         else:
             messages.error(request, "Invalid username or password.")

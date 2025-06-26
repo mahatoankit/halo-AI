@@ -61,7 +61,8 @@
     />
 
     <!-- Additional CSS -->
-    {% block extra_css %}{% endblock %}
+    {% block extra_css %}
+    {% endblock %}
   </head>
   <body class="font-manrope bg-gray-50">
     <!-- Navigation -->
@@ -90,12 +91,12 @@
               {% if user.is_authenticated %}
               <!-- Authenticated User Navigation -->
               <a
-                href="{% url 'home:home' %}"
+                href="{% url 'dashboard:redirect' %}"
                 class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >Dashboard</a
               >
               <a
-                href="{% url 'crops:dashboard' %}"
+                href="{% url 'crops:prediction' %}"
                 class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >Crop Prediction</a
               >
@@ -190,7 +191,7 @@
           {% if user.is_authenticated %}
           <!-- Authenticated Mobile Navigation -->
           <a
-            href="{% url 'home:home' %}"
+            href="{% url 'dashboard:redirect' %}"
             class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
             >Dashboard</a
           >

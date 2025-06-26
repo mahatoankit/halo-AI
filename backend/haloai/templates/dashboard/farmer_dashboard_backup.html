@@ -1,0 +1,524 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Farmer Dashboard -
+Halo AI{% endblock %} {% block content %}
+<div class="bg-gray-50 min-h-screen">
+  <!-- Dashboard Header -->
+  <div class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Farmer Dashboard</h1>
+          <p class="text-gray-600">
+            Welcome back, {{ user.first_name|default:"Farmer" }}! {% if subscription %}
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 ml-2"
+            >
+              {{ subscription.plan.display_name }} Plan
+            </span>
+            {% endif %}
+          </p>
+        </div>
+        <div class="flex space-x-4">
+          {% if can_create_prediction %}
+          <a
+            href="{% url 'dashboard:manual_input' %}"
+            class="bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition-colors"
+          >
+            New Prediction
+          </a>
+          {% else %}
+          <button
+            disabled
+            class="bg-gray-400 text-white px-4 py-2 rounded-lg font-medium cursor-not-allowed"
+          >
+            No Predictions Left
+          </button>
+          {% endif %} {% if has_expert_access %}
+          <a
+            href="{% url 'dashboard:expert_consultation' %}"
+            class="bg-secondary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-secondary-700 transition-colors"
+          >
+            Ask Expert
+          </a>
+          {% endif %}
+
+          <button
+            class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+          >
+            Export Data
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Navigation Tabs -->
+    <div class="mb-8">
+      <nav class="flex space-x-8" aria-label="Tabs">
+        <a
+          href="#overview"
+          class="tab-link active border-primary-500 text-primary-600 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm"
+        >
+          Overview
+        </a>
+        <a
+          href="#predictions"
+          class="tab-link border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm"
+        >
+          Crop Recommendations
+        </a>
+        <a
+          href="#sensors"
+          class="tab-link border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm"
+        >
+          Sensor Data
+        </a>
+        <a
+          href="#subscription"
+          class="tab-link border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm"
+        >
+          Plan & Usage
+        </a>
+        <a
+          href="#profile"
+          class="tab-link border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm"
+        >
+          Field Profile
+        </a>
+      </nav>
+    </div>
+
+    <!-- Tab Content -->
+
+    <!-- Overview Tab -->
+    <div id="overview-content" class="tab-content">
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Predictions -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="flex items-center">
+            <div class="p-3 bg-primary-100 rounded-lg">
+              <svg
+                class="w-6 h-6 text-primary-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                />
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600">Total Predictions</p>
+              <p class="text-2xl font-bold text-gray-900">
+                {{ total_predictions }}
+              </p>
+              {% if subscription %}
+              <p class="text-xs text-gray-500">
+                {{ subscription.predictions_remaining }} remaining
+              </p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Farm Area -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="flex items-center">
+            <div class="p-3 bg-secondary-100 rounded-lg">
+              <svg
+                class="w-6 h-6 text-secondary-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                />
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600">Total Farm Area</p>
+              <p class="text-2xl font-bold text-gray-900">
+                {{ farm_area }} <span class="text-sm text-gray-600">acres</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Success Rate -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="flex items-center">
+            <div class="p-3 bg-green-100 rounded-lg">
+              <svg
+                class="w-6 h-6 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600">Success Rate</p>
+              <p class="text-2xl font-bold text-gray-900">
+                {{ success_rate }}%
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monthly Savings -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="flex items-center">
+            <div class="p-3 bg-blue-100 rounded-lg">
+              <svg
+                class="w-6 h-6 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600">Est. Savings</p>
+              <p class="text-2xl font-bold text-gray-900">
+                ₹{{ monthly_savings|floatformat:0 }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Recent Predictions -->
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-xl shadow-sm">
+            <div class="p-6 border-b border-gray-200">
+              <div class="flex justify-between items-center">
+                <h2 class="text-lg font-semibold text-gray-900">
+                  Recent Predictions
+                </h2>
+                <a
+                  href="{% url 'dashboard:prediction_history' %}"
+                  class="text-primary-600 text-sm font-medium hover:text-primary-700"
+                  >View All</a
+                >
+              </div>
+            </div>
+            <div class="p-6">
+              {% if recent_predictions %}
+              <div class="space-y-4">
+                {% for prediction in recent_predictions %}
+                <div
+                  class="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                >
+                  <div class="flex items-center space-x-4">
+                    <div
+                      class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center"
+                    >
+                      <span class="text-primary-600 font-semibold">🌾</span>
+                    </div>
+                    <div>
+                      <h3 class="font-medium text-gray-900">
+                        {% if prediction.predicted_crops and prediction.predicted_crops|length > 0 %} {{ prediction.predicted_crops.0.crop|title|default:"Crop Prediction" }} {% else %} Processing... {% endif %}
+                      </h3>
+                      <p class="text-sm text-gray-600">
+                        {% if prediction.sensor_set.name %} {{ prediction.sensor_set.name }} {% else %}
+                        Field Data 
+                        {%endif %} • {{ prediction.requested_at|date:"M j" }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    {% if prediction.predicted_crops and
+                    prediction.predicted_crops|length > 0 and
+                    prediction.predicted_crops.0.confidence %}
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if prediction.predicted_crops.0.confidence > 0.8 %}bg-green-100 text-green-800 {% elif prediction.predicted_crops.0.confidence > 0.6 %}bg-yellow-100 text-yellow-800 {% else %}bg-red-100 text-red-800{% endif %}"
+                    >
+                      {{ prediction.predicted_crops.0.confidence|floatformat:0 }}% Match
+                    </span>
+                    {% elif prediction.confidence_score %}
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if prediction.confidence_score > 0.8 %}bg-green-100 text-green-800 {% elif prediction.confidence_score > 0.6 %}bg-yellow-100 text-yellow-800 {% else %}bg-red-100 text-red-800{% endif %}"
+                    >
+                      {{ prediction.confidence_score|floatformat:0 }}% Match
+                    </span>
+                    {% else %}
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                    >
+                      Processing
+                    </span>
+                    {% endif %}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="text-center py-8">
+                <svg
+                  class="mx-auto h-12 w-12 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                  />
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">
+                  No predictions yet
+                </h3>
+                <p class="mt-1 text-sm text-gray-500">
+                  Get started by creating your first crop prediction.
+                </p>
+                {% if can_create_prediction %}
+                <div class="mt-6">
+                  <a
+                    href="{% url 'dashboard:manual_input' %}"
+                    class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+                  >
+                    Create Prediction
+                  </a>
+                </div>
+                {% endif %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="space-y-6">
+          <!-- Weather Widget -->
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              Weather Forecast
+            </h3>
+            {% if weather_data %}
+            <div class="space-y-3">
+              {% for weather in weather_data|slice:":3" %}
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600">
+                  {% if forloop.first %}Today {% elif forloop.counter == 2
+                  %}Tomorrow {% else %}{{ weather.date|date:"M j" }}{% endif %}
+                </span>
+                <div class="flex items-center space-x-2">
+                  <span class="text-sm">
+                    {% if weather.rainfall > 5 %}🌧️ {% elif weather.humidity >
+                    80 %}⛅ {% else %}☀️{% endif %}
+                  </span>
+                  <span class="text-sm font-medium"
+                    >{{ weather.temperature_max|floatformat:0 }}°C</span
+                  >
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% if weather_data.0.rainfall > 5 %}
+            <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+              <p class="text-sm text-blue-800">
+                Rain expected. Consider irrigation timing.
+              </p>
+            </div>
+            {% endif %} {% else %}
+            <p class="text-sm text-gray-500">Weather data not available</p>
+            {% endif %}
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              Quick Actions
+            </h3>
+            <div class="space-y-3">
+              {% if can_create_prediction %}
+              <a
+                href="{% url 'dashboard:manual_input' %}"
+                class="block w-full text-left p-3 bg-primary-50 hover:bg-primary-100 rounded-lg transition-colors"
+              >
+                <div class="flex items-center space-x-3">
+                  <div
+                    class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center"
+                  >
+                    <svg
+                      class="w-4 h-4 text-primary-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                      />
+                    </svg>
+                  </div>
+                  <span class="text-sm font-medium text-primary-800"
+                    >New Prediction</span
+                  >
+                </div>
+              </a>
+              {% endif %} {% if has_expert_access %}
+              <a
+                href="{% url 'dashboard:expert_consultation' %}"
+                class="block w-full text-left p-3 bg-secondary-50 hover:bg-secondary-100 rounded-lg transition-colors"
+              >
+                <div class="flex items-center space-x-3">
+                  <div
+                    class="w-8 h-8 bg-secondary-100 rounded-lg flex items-center justify-center"
+                  >
+                    <svg
+                      class="w-4 h-4 text-secondary-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      />
+                    </svg>
+                  </div>
+                  <span class="text-sm font-medium text-secondary-800"
+                    >Expert Consultation</span
+                  >
+                </div>
+              </a>
+              {% endif %}
+
+              <a
+                href="#"
+                class="block w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
+              >
+                <div class="flex items-center space-x-3">
+                  <div
+                    class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"
+                  >
+                    <svg
+                      class="w-4 h-4 text-green-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <span class="text-sm font-medium text-green-800"
+                    >View Grants</span
+                  >
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Soil Health Status -->
+          {% if soil_reports %}
+          <div class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              Latest Soil Health
+            </h3>
+            {% with soil_reports.0 as latest_report %}
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span class="text-sm text-gray-600">pH Level</span>
+                <span class="text-sm font-medium"
+                  >{{ latest_report.ph|floatformat:1 }}</span
+                >
+              </div>
+              <div class="flex justify-between">
+                <span class="text-sm text-gray-600">Nitrogen</span>
+                <span class="text-sm font-medium"
+                  >{{ latest_report.nitrogen|floatformat:1 }}</span
+                >
+              </div>
+              <div class="flex justify-between">
+                <span class="text-sm text-gray-600">Health Score</span>
+                <span class="text-sm font-medium"
+                  >{{ latest_report.health_score|floatformat:0 }}%</span
+                >
+              </div>
+            </div>
+            <div class="mt-4 text-xs text-gray-500">
+              Last updated: {{ latest_report.test_date|date:"M j, Y" }}
+            </div>
+            {% endwith %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Other Tab Contents (Predictions, Sensors, Subscription, Profile) -->
+    <!-- These would be loaded via AJAX or separate pages -->
+  </div>
+</div>
+
+<script>
+  // Tab switching functionality
+  document.addEventListener("DOMContentLoaded", function () {
+    const tabLinks = document.querySelectorAll(".tab-link");
+    const tabContents = document.querySelectorAll(".tab-content");
+
+    tabLinks.forEach((link) => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        // Remove active class from all tabs
+        tabLinks.forEach((l) =>
+          l.classList.remove("active", "border-primary-500", "text-primary-600")
+        );
+        tabLinks.forEach((l) =>
+          l.classList.add("border-transparent", "text-gray-500")
+        );
+
+        // Add active class to clicked tab
+        this.classList.add("active", "border-primary-500", "text-primary-600");
+        this.classList.remove("border-transparent", "text-gray-500");
+
+        // Show corresponding content
+        const targetId = this.getAttribute("href").substring(1) + "-content";
+        tabContents.forEach((content) => (content.style.display = "none"));
+
+        const targetContent = document.getElementById(targetId);
+        if (targetContent) {
+          targetContent.style.display = "block";
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

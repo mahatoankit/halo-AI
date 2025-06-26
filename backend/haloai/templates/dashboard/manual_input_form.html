@@ -1,0 +1,504 @@
+{% extends 'base.html' %} {% load static %} {% block title %}New Crop Prediction
+- Halo AI{% endblock %} {% block content %}
+<div class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <div class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+              <li class="inline-flex items-center">
+                <a
+                  href="{% url 'dashboard:farmer_dashboard' %}"
+                  class="text-gray-700 hover:text-gray-900"
+                  >Dashboard</a
+                >
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <svg
+                    class="w-4 h-4 text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span class="text-gray-500 ml-1 md:ml-2">New Prediction</span>
+                </div>
+              </li>
+            </ol>
+          </nav>
+          <h1 class="text-2xl font-bold text-gray-900 mt-2">
+            Create New Crop Prediction
+          </h1>
+          <p class="text-gray-600">
+            Enter your soil and environmental parameters to get crop
+            recommendations
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Information Card -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg
+            class="h-5 w-5 text-blue-400"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-blue-800">
+            Bhairahawa Region - Pre-filled Defaults
+          </h3>
+          <div class="mt-2 text-sm text-blue-700">
+            <ul class="list-disc list-inside space-y-1">
+              <li>
+                <strong>Soil NPK:</strong> N=30, P=22.5, K=60 kg/ha (regional
+                averages)
+              </li>
+              <li>
+                <strong>pH:</strong> 6.0 (ideal for most crops in this region)
+              </li>
+              <li><strong>Climate:</strong> 25°C temperature, 70% humidity</li>
+              <li><strong>Rainfall:</strong> 150mm/month (monsoon average)</li>
+              <li>
+                Adjust these values based on your specific field conditions
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prediction Form -->
+    <form id="predictionForm" class="space-y-8">
+      {% csrf_token %}
+
+      <!-- Soil Parameters Section -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6">
+          Soil Parameters
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Nitrogen -->
+          <div>
+            <label
+              for="nitrogen"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Nitrogen (N) <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                max="140"
+                id="nitrogen"
+                name="nitrogen"
+                required
+                value="30"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Regional average: 30 kg/ha"
+              />
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <span class="text-gray-500 text-sm">kg/ha</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">
+              Bhairahawa region average: 30 kg/ha
+            </p>
+          </div>
+
+          <!-- Phosphorus -->
+          <div>
+            <label
+              for="phosphorus"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Phosphorus (P) <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <input
+                type="number"
+                step="0.1"
+                min="5"
+                max="145"
+                id="phosphorus"
+                name="phosphorus"
+                required
+                value="22.5"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Regional average: 22.5 kg/ha"
+              />
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <span class="text-gray-500 text-sm">kg/ha</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">
+              Bhairahawa region average: 22.5 kg/ha
+            </p>
+          </div>
+
+          <!-- Potassium -->
+          <div>
+            <label
+              for="potassium"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Potassium (K) <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <input
+                type="number"
+                step="0.1"
+                min="5"
+                max="205"
+                id="potassium"
+                name="potassium"
+                required
+                value="60"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Regional average: 60 kg/ha"
+              />
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <span class="text-gray-500 text-sm">kg/ha</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">
+              Bhairahawa region average: 60 kg/ha
+            </p>
+          </div>
+
+          <!-- pH -->
+          <div>
+            <label
+              for="ph"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Soil pH <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              step="0.1"
+              min="3.5"
+              max="10"
+              id="ph"
+              name="ph"
+              required
+              value="6.0"
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Regional average: 6.0"
+            />
+            <p class="text-xs text-gray-500 mt-1">
+              Bhairahawa region average: 6.0 (ideal for most crops)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Environmental Parameters Section -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6">
+          Environmental Parameters
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Temperature -->
+          <div>
+            <label
+              for="temperature"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Temperature <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                max="50"
+                id="temperature"
+                name="temperature"
+                required
+                value="25"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Regional average: 25°C"
+              />
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <span class="text-gray-500 text-sm">°C</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">
+              Bhairahawa average: 25°C during growing season
+            </p>
+          </div>
+
+          <!-- Humidity -->
+          <div>
+            <label
+              for="humidity"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Humidity <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <input
+                type="number"
+                step="0.1"
+                min="14"
+                max="100"
+                id="humidity"
+                name="humidity"
+                required
+                value="70"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Regional average: 70%"
+              />
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <span class="text-gray-500 text-sm">%</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">
+              Bhairahawa average: 70% relative humidity
+            </p>
+          </div>
+
+          <!-- Rainfall -->
+          <div>
+            <label
+              for="rainfall"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Rainfall <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <input
+                type="number"
+                step="0.1"
+                min="20"
+                max="300"
+                id="rainfall"
+                name="rainfall"
+                required
+                value="150"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Monthly average: 150mm"
+              />
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <span class="text-gray-500 text-sm">mm</span>
+              </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">
+              Bhairahawa average: 150mm/month during monsoon
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Field Information Section -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6">
+          Field Information (Optional)
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Field Area -->
+          <div>
+            <label
+              for="field_area"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Field Area
+            </label>
+            <div class="relative">
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                id="field_area"
+                name="field_area"
+                value="{% if field_profile %}{{ field_profile.total_area }}{% endif %}"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="e.g., 2.5"
+              />
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                <span class="text-gray-500 text-sm">acres</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Field Notes -->
+          <div>
+            <label
+              for="notes"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Additional Notes
+            </label>
+            <textarea
+              id="notes"
+              name="notes"
+              rows="3"
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Any additional information about the field or crop preferences..."
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Section -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-medium text-gray-900">
+              Ready to get recommendations?
+            </h3>
+            <p class="text-sm text-gray-600">
+              This will use 1 prediction from your monthly quota.
+            </p>
+          </div>
+          <div class="flex space-x-4">
+            <a
+              href="{% url 'dashboard:farmer_dashboard' %}"
+              class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </a>
+            <button
+              type="submit"
+              class="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              id="submitBtn"
+            >
+              Get Crop Recommendations
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Loading Modal -->
+<div
+  id="loadingModal"
+  class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50"
+>
+  <div
+    class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+  >
+    <div class="mt-3 text-center">
+      <div
+        class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-primary-100 mb-4"
+      >
+        <svg
+          class="animate-spin h-6 w-6 text-primary-600"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-medium text-gray-900">Processing Your Request</h3>
+      <p class="text-sm text-gray-500 mt-2">
+        Our AI is analyzing your soil and environmental data to provide the best
+        crop recommendations...
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('predictionForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const loadingModal = document.getElementById('loadingModal');
+
+      form.addEventListener('submit', function(e) {
+          e.preventDefault();
+
+          // Show loading modal
+          loadingModal.classList.remove('hidden');
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Processing...';
+
+          // Prepare form data
+          const formData = new FormData(form);
+
+          // Submit via AJAX
+          fetch('{% url "dashboard:manual_input" %}', {
+              method: 'POST',
+              body: formData,
+              headers: {
+                  'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+              }
+          })
+          .then(response => response.json())
+          .then(data => {
+              loadingModal.classList.add('hidden');
+
+              if (data.success) {
+                  // Show success message and redirect
+                  alert('Prediction request submitted successfully! You will receive results shortly.');
+                  window.location.href = '{% url "dashboard:farmer_dashboard" %}';
+              } else {
+                  alert('Error: ' + (data.error || 'Something went wrong'));
+                  submitBtn.disabled = false;
+                  submitBtn.textContent = 'Get Crop Recommendations';
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              loadingModal.classList.add('hidden');
+              alert('Network error. Please try again.');
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Get Crop Recommendations';
+          });
+      });
+
+      // Auto-fill with reasonable defaults for demo
+      {% if field_profile %}
+      // Auto-fill from field profile if available
+      const regionDefaults = {
+          'temperature': 25,
+          'humidity': 70,
+          'rainfall': 150
+      };
+
+      Object.keys(regionDefaults).forEach(field => {
+          const input = document.getElementById(field);
+          if (input && !input.value) {
+              input.placeholder = 'Suggested: ' + regionDefaults[field];
+          }
+      });
+      {% endif %}
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,413 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Prediction History
+- Halo AI{% endblock %} {% block content %}
+<div class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <div class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+              <li class="inline-flex items-center">
+                <a
+                  href="{% url 'dashboard:farmer_dashboard' %}"
+                  class="text-gray-700 hover:text-gray-900"
+                  >Dashboard</a
+                >
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <svg
+                    class="w-4 h-4 text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span class="text-gray-500 ml-1 md:ml-2"
+                    >Prediction History</span
+                  >
+                </div>
+              </li>
+            </ol>
+          </nav>
+          <h1 class="text-2xl font-bold text-gray-900 mt-2">
+            Crop Recommendation History
+          </h1>
+          <p class="text-gray-600">
+            View your past crop recommendations and their performance
+          </p>
+        </div>
+        <div class="flex space-x-4">
+          <button
+            class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+          >
+            <svg
+              class="w-4 h-4 inline mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+            Export CSV
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Filters -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Date Range</label
+          >
+          <select class="w-full border border-gray-300 rounded-md px-3 py-2">
+            <option>Last 30 days</option>
+            <option>Last 3 months</option>
+            <option>Last 6 months</option>
+            <option>All time</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Status</label
+          >
+          <select class="w-full border border-gray-300 rounded-md px-3 py-2">
+            <option>All statuses</option>
+            <option>Completed</option>
+            <option>Processing</option>
+            <option>Failed</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Crop Type</label
+          >
+          <input
+            type="text"
+            placeholder="Search crop..."
+            class="w-full border border-gray-300 rounded-md px-3 py-2"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >&nbsp;</label
+          >
+          <button
+            class="w-full bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700"
+          >
+            Apply Filters
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Predictions Table -->
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900">
+          Prediction History ({{ predictions.count }} total)
+        </h2>
+      </div>
+
+      {% if predictions %}
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Date & Time
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Input Parameters
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Recommended Crops
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Confidence
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Status
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {% for prediction in predictions %}
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">
+                  {{ prediction.requested_at|date:"M j, Y" }}
+                </div>
+                <div class="text-sm text-gray-500">
+                  {{ prediction.requested_at|time:"g:i A" }}
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-sm text-gray-900">
+                  <div class="grid grid-cols-2 gap-2">
+                    <span>N: {{ prediction.nitrogen }}</span>
+                    <span>P: {{ prediction.phosphorus }}</span>
+                    <span>K: {{ prediction.potassium }}</span>
+                    <span>pH: {{ prediction.ph }}</span>
+                  </div>
+                  <div class="text-xs text-gray-500 mt-1">
+                    Temp: {{ prediction.temperature }}°C, Humidity: {{
+                    prediction.humidity }}%
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                {% if prediction.predicted_crops %}
+                <div class="space-y-1">
+                  {% for crop in prediction.predicted_crops|slice:":3" %}
+                  <div class="text-sm text-gray-900">
+                    {{ crop.crop_name }} {% if crop.confidence %}
+                    <span class="text-xs text-gray-500"
+                      >({{ crop.confidence|floatformat:0 }}%)</span
+                    >
+                    {% endif %}
+                  </div>
+                  {% endfor %}
+                </div>
+                {% else %}
+                <span class="text-sm text-gray-500">Processing...</span>
+                {% endif %}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {% if prediction.confidence_score %}
+                <div class="flex items-center">
+                  <div class="flex-shrink-0">
+                    {% if prediction.confidence_score > 0.8 %}
+                    <div class="h-2 w-16 bg-gray-200 rounded-full">
+                      <div
+                        class="h-2 bg-green-500 rounded-full"
+                        style="width: {{ prediction.confidence_score|floatformat:0 }}%"
+                      ></div>
+                    </div>
+                    {% elif prediction.confidence_score > 0.6 %}
+                    <div class="h-2 w-16 bg-gray-200 rounded-full">
+                      <div
+                        class="h-2 bg-yellow-500 rounded-full"
+                        style="width: {{ prediction.confidence_score|floatformat:0 }}%"
+                      ></div>
+                    </div>
+                    {% else %}
+                    <div class="h-2 w-16 bg-gray-200 rounded-full">
+                      <div
+                        class="h-2 bg-red-500 rounded-full"
+                        style="width: {{ prediction.confidence_score|floatformat:0 }}%"
+                      ></div>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="ml-2 text-sm text-gray-900">
+                    {{ prediction.confidence_score|floatformat:0 }}%
+                  </div>
+                </div>
+                {% else %}
+                <span class="text-sm text-gray-500">-</span>
+                {% endif %}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {% if prediction.status == 'completed' %}
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                >
+                  Completed
+                </span>
+                {% elif prediction.status == 'processing' %}
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
+                >
+                  Processing
+                </span>
+                {% elif prediction.status == 'failed' %}
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+                >
+                  Failed
+                </span>
+                {% else %}
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                >
+                  {{ prediction.status|title }}
+                </span>
+                {% endif %}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <button class="text-primary-600 hover:text-primary-900">
+                    View Details
+                  </button>
+                  {% if prediction.status == 'completed' %}
+                  <button class="text-secondary-600 hover:text-secondary-900">
+                    Download Report
+                  </button>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div
+        class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
+      >
+        <div class="flex-1 flex justify-between sm:hidden">
+          <a
+            href="#"
+            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+          >
+            Previous
+          </a>
+          <a
+            href="#"
+            class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+          >
+            Next
+          </a>
+        </div>
+        <div
+          class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between"
+        >
+          <div>
+            <p class="text-sm text-gray-700">
+              Showing <span class="font-medium">1</span> to
+              <span class="font-medium">10</span> of
+              <span class="font-medium">{{ predictions.count }}</span> results
+            </p>
+          </div>
+          <div>
+            <nav
+              class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+              aria-label="Pagination"
+            >
+              <a
+                href="#"
+                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+              >
+                <span class="sr-only">Previous</span>
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >1</a
+              >
+              <a
+                href="#"
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >2</a
+              >
+              <a
+                href="#"
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >3</a
+              >
+              <a
+                href="#"
+                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+              >
+                <span class="sr-only">Next</span>
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      {% else %}
+      <!-- Empty State -->
+      <div class="text-center py-12">
+        <svg
+          class="mx-auto h-12 w-12 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+          />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">
+          No predictions found
+        </h3>
+        <p class="mt-1 text-sm text-gray-500">
+          Get started by creating your first crop prediction.
+        </p>
+        <div class="mt-6">
+          <a
+            href="{% url 'dashboard:manual_input' %}"
+            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+          >
+            <svg
+              class="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              ></path>
+            </svg>
+            Create New Prediction
+          </a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

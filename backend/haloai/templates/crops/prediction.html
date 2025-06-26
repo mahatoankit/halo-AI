@@ -16,7 +16,7 @@ Halo AI{% endblock %} {% block content %}
       <div class="lg:col-span-2">
         <div class="bg-white rounded-2xl shadow-xl p-8">
           <h2 class="text-2xl font-semibold text-gray-900 mb-6">
-            Enter Your Farm Details
+            Enter Farm Details
           </h2>
 
           <form id="crop-prediction-form" class="space-y-6" method="POST">
@@ -374,7 +374,7 @@ Halo AI{% endblock %} {% block content %}
           </ul>
         </div>
 
-        <!-- Sample Values -->
+        <!-- Real-Time Data Values -->
         <div class="bg-secondary-50 rounded-2xl shadow-lg p-6">
           <h3
             class="text-lg font-semibold text-gray-900 mb-4 flex items-center"
@@ -392,32 +392,48 @@ Halo AI{% endblock %} {% block content %}
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            Sample Values
+            Real-Time Data Sources
           </h3>
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between">
-              <span class="text-gray-600">Nitrogen:</span>
-              <span class="font-medium">50-120 mg/kg</span>
+          <div class="space-y-2 text-sm" id="real-time-data-display">
+            <div class="border-b border-gray-200 pb-2 mb-2">
+              <div class="font-medium text-gray-700 mb-1">
+                🌡️ IoT Sensors (Firebase)
+              </div>
+              <div class="text-gray-600 text-xs" id="firebase-data">
+                <span class="inline-block animate-pulse text-orange-500"
+                  >⋯ Loading real-time sensors data</span
+                >
+              </div>
             </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">Phosphorus:</span>
-              <span class="font-medium">20-80 mg/kg</span>
+
+            <div class="border-b border-gray-200 pb-2 mb-2">
+              <div class="font-medium text-gray-700 mb-1">
+                🌤️ Weather API (Open-Meteo)
+              </div>
+              <div class="text-gray-600 text-xs" id="weather-data">
+                <span class="inline-block animate-pulse text-orange-500"
+                  >⋯ Loading weather data</span
+                >
+              </div>
             </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">Potassium:</span>
-              <span class="font-medium">20-60 mg/kg</span>
+
+            <div class="border-b border-gray-200 pb-2 mb-2">
+              <div class="font-medium text-gray-700 mb-1">
+                🌱 Regional Averages (Bhairahawa)
+              </div>
+              <div class="text-gray-600 text-xs" id="regional-data">
+                <span class="inline-block animate-pulse text-orange-500"
+                  >⋯ Loading regional data</span
+                >
+              </div>
             </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">pH:</span>
-              <span class="font-medium">6.0-7.5</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">Temperature:</span>
-              <span class="font-medium">20-35°C</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">Humidity:</span>
-              <span class="font-medium">40-80%</span>
+
+            <div class="text-xs text-gray-500 mt-3">
+              <span class="text-green-600 font-semibold" id="data-timestamp"
+                >Last updated: Loading...</span
+              ><br />
+              💡 Click "Use Real-Time Data" to automatically fetch and fill
+              current values
             </div>
           </div>
           <button
@@ -426,6 +442,14 @@ Halo AI{% endblock %} {% block content %}
             class="mt-4 w-full bg-secondary-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-secondary-700 transition-colors"
           >
             Use Sample Data
+          </button>
+          <button
+            type="button"
+            onclick="fillRealTimeData()"
+            id="real-time-data-btn"
+            class="mt-2 w-full bg-primary-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
+          >
+            🔄 Use Real-Time IoT & Weather Data
           </button>
         </div>
 
@@ -522,16 +546,183 @@ Halo AI{% endblock %} {% block content %}
     document.getElementById("temperature").value = "25.5";
     document.getElementById("humidity").value = "65";
     document.getElementById("rainfall").value = "1200";
-    document.getElementById("location").value = "Delhi, India";
+    document.getElementById("location").value = "Bhairahawa, Nepal";
     document.getElementById("area").value = "2.5";
     document.getElementById("season").value = "kharif";
+  }
+
+  function fillRealTimeData() {
+    const btn = document.getElementById("real-time-data-btn");
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "🔄 Loading Real-Time Data...";
+    btn.disabled = true;
+
+    // Show loading state in display panels
+    document.getElementById("firebase-data").innerHTML =
+      '<span class="inline-block animate-pulse text-orange-500">⋯ Fetching from Firebase...</span>';
+    document.getElementById("weather-data").innerHTML =
+      '<span class="inline-block animate-pulse text-orange-500">⋯ Fetching weather data...</span>';
+    document.getElementById("regional-data").innerHTML =
+      '<span class="inline-block animate-pulse text-orange-500">⋯ Fetching regional data...</span>';
+
+    // Fetch real-time data from our API which connects to Firebase
+    fetch("/crop-prediction/api/real-time-data/?region=Bhairahawa-Butwal")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          const realData = data.data;
+
+          // Update display sections with real-time data
+          document.getElementById("firebase-data").innerHTML = `
+            pH: <span class="font-semibold text-green-700">${realData.ph.toFixed(
+              1
+            )}</span>, 
+            Temperature: <span class="font-semibold text-green-700">${realData.temperature.toFixed(
+              1
+            )}°C</span>
+          `;
+
+          document.getElementById("weather-data").innerHTML = `
+            Rainfall: <span class="font-semibold text-green-700">${realData.rainfall.toFixed(
+              1
+            )}mm</span>, 
+            Humidity: <span class="font-semibold text-green-700">${realData.humidity.toFixed(
+              0
+            )}%</span>
+          `;
+
+          document.getElementById("regional-data").innerHTML = `
+            N: <span class="font-semibold text-green-700">${realData.nitrogen}</span>, 
+            P: <span class="font-semibold text-green-700">${realData.phosphorus}</span>, 
+            K: <span class="font-semibold text-green-700">${realData.potassium}</span> mg/kg
+          `;
+
+          // Update timestamp
+          const timestamp = realData.timestamp
+            ? new Date(realData.timestamp).toLocaleString()
+            : new Date().toLocaleString();
+          document.getElementById(
+            "data-timestamp"
+          ).innerHTML = `Last updated: ${timestamp}`;
+
+          // Fill form with real-time data
+          document.getElementById("nitrogen").value = realData.nitrogen || 30;
+          document.getElementById("phosphorus").value =
+            realData.phosphorus || 22.5;
+          document.getElementById("potassium").value = realData.potassium || 60;
+          document.getElementById("ph").value = realData.ph || 6.5;
+          document.getElementById("temperature").value =
+            realData.temperature || 29.6;
+          document.getElementById("humidity").value = realData.humidity || 60;
+          document.getElementById("rainfall").value = realData.rainfall || 22.5;
+          document.getElementById("location").value = "Bhairahawa, Nepal";
+          document.getElementById("area").value = "2.5";
+          document.getElementById("season").value = "kharif";
+
+          // Show success message
+          showNotification(
+            "✅ Firebase real-time data loaded successfully!",
+            "success"
+          );
+
+          // Add real-time data indicator
+          addDataSourceIndicator(realData.data_sources);
+        } else {
+          document.getElementById("firebase-data").innerHTML =
+            'pH: 6.5, Temperature: 29.6°C <span class="text-red-600">(Default)</span>';
+          document.getElementById("weather-data").innerHTML =
+            'Rainfall: 22.5mm, Humidity: 60% <span class="text-red-600">(Default)</span>';
+          document.getElementById("regional-data").innerHTML =
+            'N: 30, P: 22.5, K: 60 mg/kg <span class="text-red-600">(Default)</span>';
+
+          showNotification(
+            "⚠️ Failed to load real-time data: " + data.message,
+            "error"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching real-time data:", error);
+        document.getElementById("firebase-data").innerHTML =
+          'pH: 6.5, Temperature: 29.6°C <span class="text-red-600">(Default)</span>';
+        document.getElementById("weather-data").innerHTML =
+          'Rainfall: 22.5mm, Humidity: 60% <span class="text-red-600">(Default)</span>';
+        document.getElementById("regional-data").innerHTML =
+          'N: 30, P: 22.5, K: 60 mg/kg <span class="text-red-600">(Default)</span>';
+
+        showNotification(
+          "❌ Error loading real-time data from Firebase. Using defaults.",
+          "error"
+        );
+        fillSampleData(); // Fallback to sample data
+      })
+      .finally(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      });
+  }
+
+  function addDataSourceIndicator(dataSources) {
+    // Remove existing indicators
+    const existingIndicator = document.querySelector(".data-source-indicator");
+    if (existingIndicator) {
+      existingIndicator.remove();
+    }
+
+    // Create new indicator
+    const indicator = document.createElement("div");
+    indicator.className =
+      "data-source-indicator mt-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm";
+    indicator.innerHTML = `
+      <div class="flex items-center mb-2">
+        <svg class="w-4 h-4 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span class="font-medium text-green-800">Real-Time Data Loaded</span>
+      </div>
+      <div class="text-green-700">
+        <div>� Firebase Realtime DB: <span class="bg-orange-100 text-orange-800 px-1 py-0.5 rounded text-xs">${dataSources.iot_sensors}</span></div>
+        <div>🌤️ Weather: <span class="bg-blue-100 text-blue-800 px-1 py-0.5 rounded text-xs">${dataSources.weather}</span></div>
+        <div>🌱 NPK Data: <span class="bg-green-100 text-green-800 px-1 py-0.5 rounded text-xs">${dataSources.npk}</span></div>
+      </div>
+      <div class="mt-2 text-xs text-gray-700">
+        <span class="font-medium">Data applied to all form fields</span> - Ready for prediction!
+      </div>
+    `;
+
+    // Insert after the "Use Real-Time Data" button
+    const realTimeButton = document.getElementById("real-time-data-btn");
+    realTimeButton.parentNode.insertBefore(
+      indicator,
+      realTimeButton.nextSibling
+    );
+  }
+
+  function showNotification(message, type) {
+    // Remove existing notifications
+    const existingNotif = document.querySelector(".notification");
+    if (existingNotif) {
+      existingNotif.remove();
+    }
+
+    const notification = document.createElement("div");
+    notification.className = `notification fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 ${
+      type === "success" ? "bg-green-500" : "bg-red-500"
+    } text-white`;
+    notification.textContent = message;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.remove();
+    }, 5000);
   }
 
   function closeModal() {
     document.getElementById("results-modal").classList.add("hidden");
   }
 
-  // Form submission handler
+  // Form submission handler - Updated to use real ML prediction API
   document
     .getElementById("crop-prediction-form")
     .addEventListener("submit", function (e) {
@@ -545,40 +736,57 @@ Halo AI{% endblock %} {% block content %}
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            Analyzing...
+            🤖 AI Analysis in Progress...
         `;
       submitBtn.disabled = true;
 
-      // Simulate API call (replace with actual AJAX call)
-      setTimeout(() => {
-        // Sample results (replace with actual API response)
-        const results = {
-          recommended_crops: [
-            {
-              name: "Rice",
-              confidence: 95,
-              reason:
-                "High humidity and rainfall are ideal for rice cultivation",
-            },
-            {
-              name: "Wheat",
-              confidence: 78,
-              reason: "Good soil nutrient balance supports wheat growth",
-            },
-            {
-              name: "Maize",
-              confidence: 65,
-              reason: "Temperature and pH levels are suitable for maize",
-            },
-          ],
-        };
+      // Collect form data
+      const formData = new FormData(this);
+      const requestData = {};
+      formData.forEach((value, key) => {
+        requestData[key] = value;
+      });
 
-        showResults(results);
+      // Make API call to real ML prediction service
+      fetch("/crop-prediction/api/predict/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]")
+            .value,
+        },
+        body: JSON.stringify(requestData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "success") {
+            showResults(data.data);
+          } else {
+            throw new Error(data.message || "Prediction failed");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          showNotification("❌ Prediction failed: " + error.message, "error");
 
-        // Restore button
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-      }, 2000);
+          // Show fallback results
+          const fallbackResults = {
+            recommended_crops: [
+              {
+                name: "Rice",
+                confidence: 75,
+                reason: "Fallback recommendation based on regional suitability",
+                type: "primary",
+              },
+            ],
+          };
+          showResults(fallbackResults);
+        })
+        .finally(() => {
+          // Restore button
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        });
     });
 
   function showResults(results) {
@@ -586,21 +794,22 @@ Halo AI{% endblock %} {% block content %}
     let html = `
             <div class="space-y-4">
                 <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <h3 class="text-lg font-semibold text-green-800 mb-2">✅ Analysis Complete</h3>
-                    <p class="text-green-700">Based on your farm conditions, here are our top crop recommendations:</p>
+                    <h3 class="text-lg font-semibold text-green-800 mb-2">🤖 AI Analysis Complete</h3>
+                    <p class="text-green-700">Our machine learning models have analyzed your farm conditions. Here are the recommendations:</p>
                 </div>
         `;
 
     results.recommended_crops.forEach((crop, index) => {
       const bgColor =
-        index === 0
+        crop.type === "primary"
           ? "bg-primary-50 border-primary-200"
           : "bg-gray-50 border-gray-200";
-      const textColor = index === 0 ? "text-primary-800" : "text-gray-800";
+      const textColor =
+        crop.type === "primary" ? "text-primary-800" : "text-gray-800";
       const badge =
-        index === 0
-          ? '<span class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-1 rounded-full">Best Match</span>'
-          : "";
+        crop.type === "primary"
+          ? '<span class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-1 rounded-full">🎯 AI Recommended</span>'
+          : '<span class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded-full">Alternative</span>';
 
       html += `
                 <div class="${bgColor} border rounded-lg p-4">
@@ -609,7 +818,7 @@ Halo AI{% endblock %} {% block content %}
                         ${badge}
                     </div>
                     <div class="flex items-center mb-2">
-                        <span class="text-sm text-gray-600">Confidence: </span>
+                        <span class="text-sm text-gray-600">AI Confidence: </span>
                         <div class="ml-2 flex-1 bg-gray-200 rounded-full h-2">
                             <div class="bg-primary-500 h-2 rounded-full" style="width: ${crop.confidence}%"></div>
                         </div>
@@ -620,10 +829,28 @@ Halo AI{% endblock %} {% block content %}
             `;
     });
 
+    // Add model details if available
+    if (results.model_details) {
+      html += `
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 class="text-sm font-semibold text-blue-800 mb-2">🔬 AI Model Details</h4>
+                    <div class="text-xs text-blue-700 space-y-1">
+                        <div>Models Used: ${
+                          results.model_details.supporting_models
+                            ? results.model_details.supporting_models.join(", ")
+                            : "XGBoost, Random Forest, SVM"
+                        }</div>
+                        <div>Data Sources: IoT Sensors, Weather API, Regional Data</div>
+                        <div>Analysis Method: Ensemble Machine Learning</div>
+                    </div>
+                </div>
+            `;
+    }
+
     html += `
                 <div class="flex space-x-4 pt-4">
                     <button onclick="downloadReport()" class="flex-1 bg-primary-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-700 transition-colors">
-                        Download Report
+                        📊 Download AI Report
                     </button>
                     <button onclick="closeModal()" class="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-lg font-medium hover:bg-gray-300 transition-colors">
                         Close
@@ -637,8 +864,98 @@ Halo AI{% endblock %} {% block content %}
   }
 
   function downloadReport() {
-    // Implement report download functionality
-    alert("Report download functionality will be implemented here");
+    // Enhanced report download functionality
+    showNotification("📊 Generating AI-powered crop report...", "success");
+
+    // In a real implementation, this would generate a PDF report
+    // For now, we'll show a notification
+    setTimeout(() => {
+      showNotification(
+        "📄 Report generation coming soon! Contact support for detailed reports.",
+        "success"
+      );
+    }, 2000);
+  }
+
+  // Auto-load real-time data on page load
+  document.addEventListener("DOMContentLoaded", function () {
+    // Fetch real-time data without filling the form fields
+    fetchRealtimeDataForDisplay();
+
+    // Uncomment the line below to auto-load real-time data when page loads
+    // fillRealTimeData();
+  });
+
+  // This function only updates the display panels without filling form fields
+  function fetchRealtimeDataForDisplay() {
+    // Show loading state in display panels
+    document.getElementById("firebase-data").innerHTML =
+      '<span class="inline-block animate-pulse text-orange-500">⋯ Connecting to Firebase...</span>';
+    document.getElementById("weather-data").innerHTML =
+      '<span class="inline-block animate-pulse text-orange-500">⋯ Fetching weather data...</span>';
+    document.getElementById("regional-data").innerHTML =
+      '<span class="inline-block animate-pulse text-orange-500">⋯ Fetching regional data...</span>';
+
+    fetch("/crop-prediction/api/real-time-data/?region=Bhairahawa-Butwal")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          const realData = data.data;
+
+          // Update display sections with real-time data
+          document.getElementById("firebase-data").innerHTML = `
+            pH: <span class="font-semibold text-green-700">${realData.ph.toFixed(
+              1
+            )}</span>,
+            Temperature: <span class="font-semibold text-green-700">${realData.temperature.toFixed(
+              1
+            )}°C</span>
+          `;
+
+          document.getElementById("weather-data").innerHTML = `
+            Rainfall: <span class="font-semibold text-green-700">${realData.rainfall.toFixed(
+              1
+            )}mm</span>,
+            Humidity: <span class="font-semibold text-green-700">${realData.humidity.toFixed(
+              0
+            )}%</span>
+          `;
+
+          document.getElementById("regional-data").innerHTML = `
+            N: <span class="font-semibold text-green-700">${realData.nitrogen}</span>,
+            P: <span class="font-semibold text-green-700">${realData.phosphorus}</span>,
+            K: <span class="font-semibold text-green-700">${realData.potassium}</span> mg/kg
+          `;
+
+          // Update timestamp
+          const timestamp = realData.timestamp
+            ? new Date(realData.timestamp).toLocaleString()
+            : new Date().toLocaleString();
+          document.getElementById(
+            "data-timestamp"
+          ).innerHTML = `Last updated: ${timestamp}`;
+        } else {
+          document.getElementById("firebase-data").innerHTML =
+            "pH: 6.5, Temperature: 29.6°C";
+          document.getElementById("weather-data").innerHTML =
+            "Rainfall: 22.5mm, Humidity: 60%";
+          document.getElementById("regional-data").innerHTML =
+            "N: 30, P: 22.5, K: 60 mg/kg";
+          document.getElementById("data-timestamp").innerHTML =
+            "Last updated: Not available";
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching real-time data for display:", error);
+        document.getElementById("firebase-data").innerHTML =
+          "pH: 6.5, Temperature: 29.6°C";
+        document.getElementById("weather-data").innerHTML =
+          "Rainfall: 22.5mm, Humidity: 60%";
+        document.getElementById("regional-data").innerHTML =
+          "N: 30, P: 22.5, K: 60 mg/kg";
+        document.getElementById("data-timestamp").innerHTML =
+          "Last updated: Failed to connect";
+      });
   }
 </script>
 {% endblock %}

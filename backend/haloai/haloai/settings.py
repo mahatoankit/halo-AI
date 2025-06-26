@@ -33,7 +33,7 @@ SECRET_KEY = "django-insecure-me1%-d(#egr(sebkjx^1&c3$k%8^vp6pzy2#=dd@qq)t3_w4l*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["testserver", "127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -229,7 +229,8 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 # Authentication settings
 LOGIN_URL = "/auth/login/"
-LOGIN_REDIRECT_URL = "/dashboard/"
+# LOGIN_REDIRECT_URL is handled by custom role-based logic in login view
+# LOGIN_REDIRECT_URL = "/dashboard/farmer/"  # Commented out to allow role-based redirects
 LOGOUT_REDIRECT_URL = "/"
 
 # Session settings

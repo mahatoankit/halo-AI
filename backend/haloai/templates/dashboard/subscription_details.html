@@ -1,0 +1,581 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Subscription
+Details - Halo AI{% endblock %} {% block content %}
+<div class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <div class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+              <li class="inline-flex items-center">
+                <a
+                  href="{% url 'dashboard:farmer_dashboard' %}"
+                  class="text-gray-700 hover:text-gray-900"
+                  >Dashboard</a
+                >
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <svg
+                    class="w-4 h-4 text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span class="text-gray-500 ml-1 md:ml-2"
+                    >Subscription & Billing</span
+                  >
+                </div>
+              </li>
+            </ol>
+          </nav>
+          <h1 class="text-2xl font-bold text-gray-900 mt-2">
+            Plan & Usage Details
+          </h1>
+          <p class="text-gray-600">
+            Manage your subscription and view billing history
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    {% if subscription %}
+    <!-- Current Plan Section -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-semibold text-gray-900">Current Plan</h2>
+        {% if subscription.is_active %}
+        <span
+          class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"
+        >
+          Active
+        </span>
+        {% else %}
+        <span
+          class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800"
+        >
+          {{ subscription.status|title }}
+        </span>
+        {% endif %}
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Plan Info -->
+        <div class="col-span-2">
+          <div class="flex items-start space-x-4">
+            <div class="p-3 bg-primary-100 rounded-lg">
+              {% if subscription.plan.name == 'gold' %}
+              <svg
+                class="w-8 h-8 text-yellow-600"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                />
+              </svg>
+              {% elif subscription.plan.name == 'premium' %}
+              <svg
+                class="w-8 h-8 text-purple-600"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm8 0a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V8zm1 4a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              {% else %}
+              <svg
+                class="w-8 h-8 text-blue-600"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              {% endif %}
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900">
+                {{ subscription.plan.display_name }}
+              </h3>
+              <p class="text-gray-600 mt-1">
+                {{ subscription.plan.description }}
+              </p>
+              <div class="mt-4">
+                <div class="text-2xl font-bold text-gray-900">
+                  ₹{{ subscription.plan.price|floatformat:0 }}
+                  <span class="text-base font-normal text-gray-500"
+                    >/ {{ subscription.plan.billing_cycle_days }} days</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plan Duration -->
+        <div class="space-y-4">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Valid From</dt>
+            <dd class="text-lg font-semibold text-gray-900">
+              {{ subscription.start_date|date:"M j, Y" }}
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Valid Until</dt>
+            <dd class="text-lg font-semibold text-gray-900">
+              {{ subscription.end_date|date:"M j, Y" }}
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Community Admin</dt>
+            <dd class="text-sm text-gray-900">
+              {{ subscription.community_admin.get_full_name }}
+            </dd>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Usage Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Predictions Used -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Predictions Used</p>
+            <p class="text-2xl font-bold text-gray-900">
+              {{ subscription.predictions_used }}
+            </p>
+            <p class="text-xs text-gray-500">
+              of {{ subscription.plan.monthly_predictions }}
+            </p>
+          </div>
+          <div
+            class="h-8 w-8 bg-primary-100 rounded-lg flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 text-primary-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+        <!-- Progress Bar -->
+        <div class="mt-4">
+          <div class="bg-gray-200 rounded-full h-2">
+            <div
+              class="bg-primary-600 h-2 rounded-full"
+              style="width: {{ subscription.predictions_used|floatformat:0 }}%"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Predictions Remaining -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Remaining</p>
+            <p class="text-2xl font-bold text-green-600">
+              {{ subscription.predictions_remaining }}
+            </p>
+            <p class="text-xs text-gray-500">this month</p>
+          </div>
+          <div
+            class="h-8 w-8 bg-green-100 rounded-lg flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expert Consultation -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Expert Access</p>
+            <p class="text-lg font-bold text-gray-900">
+              {% if subscription.plan.expert_consultation %}
+              <span class="text-green-600">Available</span>
+              {% else %}
+              <span class="text-gray-400">Not Available</span>
+              {% endif %}
+            </p>
+          </div>
+          <div
+            class="h-8 w-8 {% if subscription.plan.expert_consultation %}bg-secondary-100{% else %}bg-gray-100{% endif %} rounded-lg flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 {% if subscription.plan.expert_consultation %}text-secondary-600{% else %}text-gray-400{% endif %}"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sensor Data -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Sensor Data</p>
+            <p class="text-lg font-bold text-gray-900">
+              {% if subscription.plan.sensor_data_access %}
+              <span class="text-green-600">Enabled</span>
+              {% else %}
+              <span class="text-gray-400">Not Available</span>
+              {% endif %}
+            </p>
+          </div>
+          <div
+            class="h-8 w-8 {% if subscription.plan.sensor_data_access %}bg-blue-100{% else %}bg-gray-100{% endif %} rounded-lg flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 {% if subscription.plan.sensor_data_access %}text-blue-600{% else %}text-gray-400{% endif %}"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plan Features -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Plan Features</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-3">
+          <div class="flex items-center">
+            <svg
+              class="w-5 h-5 text-green-500 mr-3"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-sm text-gray-700"
+              >{{ subscription.plan.monthly_predictions }} crop predictions per
+              month</span
+            >
+          </div>
+          <div class="flex items-center">
+            <svg
+              class="w-5 h-5 {% if subscription.plan.expert_consultation %}text-green-500{% else %}text-gray-300{% endif %} mr-3"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="{% if subscription.plan.expert_consultation %}M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z{% else %}M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z{% endif %}"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span
+              class="text-sm {% if subscription.plan.expert_consultation %}text-gray-700{% else %}text-gray-400{% endif %}"
+              >Expert consultation access</span
+            >
+          </div>
+          <div class="flex items-center">
+            <svg
+              class="w-5 h-5 {% if subscription.plan.sensor_data_access %}text-green-500{% else %}text-gray-300{% endif %} mr-3"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="{% if subscription.plan.sensor_data_access %}M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z{% else %}M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z{% endif %}"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span
+              class="text-sm {% if subscription.plan.sensor_data_access %}text-gray-700{% else %}text-gray-400{% endif %}"
+              >IoT sensor data access</span
+            >
+          </div>
+        </div>
+        <div class="space-y-3">
+          <div class="flex items-center">
+            <svg
+              class="w-5 h-5 {% if subscription.plan.soil_health_reports %}text-green-500{% else %}text-gray-300{% endif %} mr-3"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="{% if subscription.plan.soil_health_reports %}M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z{% else %}M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z{% endif %}"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span
+              class="text-sm {% if subscription.plan.soil_health_reports %}text-gray-700{% else %}text-gray-400{% endif %}"
+              >Soil health reports</span
+            >
+          </div>
+          <div class="flex items-center">
+            <svg
+              class="w-5 h-5 text-green-500 mr-3"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-sm text-gray-700"
+              >Weather alerts and forecasts</span
+            >
+          </div>
+          <div class="flex items-center">
+            <svg
+              class="w-5 h-5 text-green-500 mr-3"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <span class="text-sm text-gray-700">Mobile app access</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment History -->
+    {% if payments %}
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Payment History</h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Date
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Amount
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Method
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Status
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Invoice
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            {% for payment in payments|slice:":5" %}
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ payment.payment_date|date:"M j, Y" }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                ₹{{ payment.amount|floatformat:0 }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ payment.get_payment_method_display }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if payment.status == 'completed' %}bg-green-100 text-green-800 {% elif payment.status == 'pending' %}bg-yellow-100 text-yellow-800 {% else %}bg-red-100 text-red-800{% endif %}"
+                >
+                  {{ payment.get_status_display }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <button class="text-primary-600 hover:text-primary-900">
+                  Download
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %} {% else %}
+    <!-- No Subscription -->
+    <div class="bg-white rounded-lg shadow-sm p-8 text-center">
+      <div
+        class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 mb-4"
+      >
+        <svg
+          class="h-6 w-6 text-yellow-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.502 0L4.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+          ></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">
+        No Active Subscription
+      </h3>
+      <p class="text-gray-600 mb-6">
+        Contact your Community Administrator to activate a subscription plan.
+      </p>
+    </div>
+    {% endif %}
+
+    <!-- Available Plans -->
+    {% if available_plans and not subscription %}
+    <div class="mt-8">
+      <h2 class="text-xl font-bold text-gray-900 mb-6">Available Plans</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {% for plan in available_plans %}
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div class="text-center">
+            <h3 class="text-lg font-semibold text-gray-900">
+              {{ plan.display_name }}
+            </h3>
+            <div class="mt-4">
+              <span class="text-3xl font-bold text-gray-900"
+                >₹{{ plan.price|floatformat:0 }}</span
+              >
+              <span class="text-gray-500"
+                >/ {{ plan.billing_cycle_days }} days</span
+              >
+            </div>
+          </div>
+          <ul class="mt-6 space-y-3">
+            <li class="flex items-center">
+              <svg
+                class="w-4 h-4 text-green-500 mr-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              <span class="text-sm text-gray-700"
+                >{{ plan.monthly_predictions }} predictions/month</span
+              >
+            </li>
+            {% if plan.expert_consultation %}
+            <li class="flex items-center">
+              <svg
+                class="w-4 h-4 text-green-500 mr-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              <span class="text-sm text-gray-700">Expert consultation</span>
+            </li>
+            {% endif %} {% if plan.sensor_data_access %}
+            <li class="flex items-center">
+              <svg
+                class="w-4 h-4 text-green-500 mr-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              <span class="text-sm text-gray-700">Sensor data access</span>
+            </li>
+            {% endif %}
+          </ul>
+          <div class="mt-6">
+            <button
+              class="w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors"
+            >
+              Contact Admin
+            </button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

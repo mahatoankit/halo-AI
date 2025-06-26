@@ -12,7 +12,7 @@ from django.conf import settings
 from apps.crops.models import CropPredictionRequest, CropRecommendation, CropType
 from apps.sensors.models import IoTSensorSet, SensorReading
 from .firebase_service_refactored import firebase_service
-from .weather_service import WeatherAPIService
+from .enhanced_weather_service import enhanced_weather_service
 
 
 class EnhancedCropPredictionService:
@@ -20,7 +20,7 @@ class EnhancedCropPredictionService:
 
     def __init__(self):
         self.firebase_service = firebase_service
-        self.weather_service = WeatherAPIService()
+        self.weather_service = enhanced_weather_service
         self.models = {}
         self.load_ml_models()
 
@@ -95,11 +95,11 @@ class EnhancedCropPredictionService:
 
             # Get weather data for rainfall
             try:
-                weather_data = self.weather_service.get_current_weather(
+                weather_data = self.weather_service.get_current_weather_data(
                     sensor_set.region
                 )
                 if weather_data and "rainfall" in weather_data:
-                    prediction_data["rainfall"] = weather_data["rainfall"]
+                    prediction_data["rainfall"] = float(weather_data["rainfall"])
             except Exception as weather_error:
                 print(f"Weather API error: {weather_error}")
                 # Keep default rainfall value

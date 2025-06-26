@@ -1,14 +1,21 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Dashboard - Halo
-AI{% endblock %} {% block content %}
+{% extends 'base.html' %} {% load static %} {% block title %}Dashboard - Halo AI
+{% endblock %} {% block content %}
+<!-- Redirect farmers to the new farmer dashboard -->
+{% if user.is_farmer %}
+<script>
+  window.location.href = "{% url 'dashboard:farmer_dashboard' %}";
+</script>
+{% endif %}
+
 <div class="bg-gray-50 min-h-screen">
   <!-- Dashboard Header -->
   <div class="bg-white shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div class="flex justify-between items-center">
         <div>
-          <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <h1 class="text-2xl font-bold text-gray-900">Community Dashboard</h1>
           <p class="text-gray-600">
-            Welcome back, {{ user.first_name|default:"Farmer" }}!
+            Welcome back, {{ user.first_name|default:"Admin" }}!
           </p>
         </div>
         <div class="flex space-x-4">

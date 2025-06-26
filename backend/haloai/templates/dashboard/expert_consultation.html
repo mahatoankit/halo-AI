@@ -1,0 +1,405 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Expert Consultation
+- Halo AI{% endblock %} {% block content %}
+<div class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <div class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+              <li class="inline-flex items-center">
+                <a
+                  href="{% url 'dashboard:farmer_dashboard' %}"
+                  class="text-gray-700 hover:text-gray-900"
+                  >Dashboard</a
+                >
+              </li>
+              <li>
+                <div class="flex items-center">
+                  <svg
+                    class="w-4 h-4 text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  <span class="text-gray-500 ml-1 md:ml-2"
+                    >Expert Consultation</span
+                  >
+                </div>
+              </li>
+            </ol>
+          </nav>
+          <h1 class="text-2xl font-bold text-gray-900 mt-2">
+            Expert Consultation
+          </h1>
+          <p class="text-gray-600">
+            Get personalized advice from agricultural experts
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Information Card -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg
+            class="h-5 w-5 text-blue-400"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-blue-800">
+            Expert Consultation Service
+          </h3>
+          <div class="mt-2 text-sm text-blue-700">
+            <ul class="list-disc list-inside space-y-1">
+              <li>
+                Our agricultural experts will review your question within 24
+                hours
+              </li>
+              <li>You can upload photos of crops, soil, or field conditions</li>
+              <li>Mark urgent requests for priority handling</li>
+              <li>Experts may contact you via your preferred method</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Consultation Request Form -->
+    <form id="consultationForm" class="space-y-8">
+      {% csrf_token %}
+
+      <!-- Consultation Type -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6">
+          What do you need help with?
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {% for value, label in consultation_types %}
+          <label
+            class="relative flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50"
+          >
+            <input
+              type="radio"
+              name="consultation_type"
+              value="{{ value }}"
+              class="sr-only"
+              required
+            />
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center consultation-icon"
+              >
+                {% if value == 'crop_selection' %}
+                <span class="text-lg">🌾</span>
+                {% elif value == 'disease_diagnosis' %}
+                <span class="text-lg">🦠</span>
+                {% elif value == 'soil_health' %}
+                <span class="text-lg">🌱</span>
+                {% elif value == 'irrigation' %}
+                <span class="text-lg">💧</span>
+                {% elif value == 'pest_control' %}
+                <span class="text-lg">🐛</span>
+                {% elif value == 'fertilizer' %}
+                <span class="text-lg">🧪</span>
+                {% else %}
+                <span class="text-lg">❓</span>
+                {% endif %}
+              </div>
+              <div>
+                <div class="font-medium text-gray-900">{{ label }}</div>
+              </div>
+            </div>
+            <div
+              class="absolute inset-0 border-2 border-transparent rounded-lg pointer-events-none consultation-border"
+            ></div>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Subject and Description -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6">
+          Describe your question
+        </h2>
+
+        <div class="space-y-6">
+          <!-- Subject -->
+          <div>
+            <label
+              for="subject"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Subject <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              required
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Brief summary of your question"
+            />
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label
+              for="description"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Detailed Description <span class="text-red-500">*</span>
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              rows="6"
+              required
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Please provide as much detail as possible about your farming question or issue. Include information about:
+- Current crops or planned crops
+- Field conditions
+- Weather or seasonal factors
+- Any problems you're experiencing
+- Previous treatments or actions taken"
+            ></textarea>
+          </div>
+
+          <!-- Image Upload (Future Feature) -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Photos (Optional)
+            </label>
+            <div
+              class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center"
+            >
+              <svg
+                class="mx-auto h-12 w-12 text-gray-400"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 48 48"
+              >
+                <path
+                  d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <div class="mt-4">
+                <p class="text-sm text-gray-600">
+                  Upload photos of crops, soil, or field conditions
+                </p>
+                <p class="text-xs text-gray-500 mt-1">
+                  PNG, JPG up to 10MB each (Coming Soon)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Preferences -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6">
+          Contact Preferences
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Urgency -->
+          <div>
+            <label class="flex items-center">
+              <input
+                type="checkbox"
+                name="is_urgent"
+                class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              />
+              <span class="ml-2 text-sm text-gray-700">
+                <span class="font-medium text-red-600">Mark as Urgent</span>
+                <br />
+                <span class="text-gray-500"
+                  >For immediate attention (crop disease, pest attack,
+                  etc.)</span
+                >
+              </span>
+            </label>
+          </div>
+
+          <!-- Contact Method -->
+          <div>
+            <label
+              for="contact_method"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Preferred Contact Method <span class="text-red-500">*</span>
+            </label>
+            <select
+              id="contact_method"
+              name="contact_method"
+              required
+              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="">Select method...</option>
+              {% for value, label in contact_methods %}
+              <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Section -->
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-medium text-gray-900">
+              Submit Your Consultation Request
+            </h3>
+            <p class="text-sm text-gray-600">
+              Our experts will review and respond within 24 hours
+            </p>
+          </div>
+          <div class="flex space-x-4">
+            <a
+              href="{% url 'dashboard:farmer_dashboard' %}"
+              class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </a>
+            <button
+              type="submit"
+              class="px-6 py-2 bg-secondary-600 text-white rounded-md hover:bg-secondary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              id="submitBtn"
+            >
+              Submit Request
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- Previous Consultations -->
+    <div class="mt-12">
+      <h2 class="text-xl font-bold text-gray-900 mb-6">
+        Your Previous Consultations
+      </h2>
+
+      <!-- This would be populated with actual consultation data -->
+      <div class="bg-white rounded-lg shadow-sm">
+        <div class="p-6 text-center text-gray-500">
+          <svg
+            class="mx-auto h-12 w-12 text-gray-400 mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+            ></path>
+          </svg>
+          <p>No previous consultations found.</p>
+          <p class="text-sm mt-1">
+            Your consultation history will appear here.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("consultationForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    // Handle consultation type selection
+    const radioButtons = document.querySelectorAll(
+      'input[name="consultation_type"]'
+    );
+    radioButtons.forEach((radio) => {
+      radio.addEventListener("change", function () {
+        // Remove active state from all options
+        document.querySelectorAll(".consultation-border").forEach((border) => {
+          border.classList.remove("border-primary-500", "bg-primary-50");
+        });
+        document.querySelectorAll(".consultation-icon").forEach((icon) => {
+          icon.classList.remove("bg-primary-100");
+          icon.classList.add("bg-gray-100");
+        });
+
+        // Add active state to selected option
+        const selectedOption = this.closest("label");
+        const border = selectedOption.querySelector(".consultation-border");
+        const icon = selectedOption.querySelector(".consultation-icon");
+
+        border.classList.add("border-primary-500", "bg-primary-50");
+        icon.classList.remove("bg-gray-100");
+        icon.classList.add("bg-primary-100");
+      });
+    });
+
+    // Handle form submission
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+
+      // Prepare form data
+      const formData = new FormData(form);
+
+      // Submit via AJAX
+      fetch('{% url "dashboard:expert_consultation" %}', {
+        method: "POST",
+        body: formData,
+        headers: {
+          "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]")
+            .value,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert(
+              "Consultation request submitted successfully! You will receive a response within 24 hours."
+            );
+            window.location.href = '{% url "dashboard:farmer_dashboard" %}';
+          } else {
+            alert("Error: " + (data.error || "Something went wrong"));
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Submit Request";
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Network error. Please try again.");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Request";
+        });
+    });
+  });
+</script>
+{% endblock %}
