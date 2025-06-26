@@ -28,19 +28,19 @@ def check_device_access(user, device):
 
 @login_required
 def sensor_dashboard(request):
-    """Main sensor dashboard view with role-based access control"""
+    """Enhanced sensor dashboard view with role-based access control"""
 
     # Get devices accessible to the current user
     devices_queryset = get_user_accessible_devices(request.user)
 
     # Add statistics
-    total_devices = devices_queryset.count()
-    active_devices = devices_queryset.filter(status="active").count()
+    total_sensors = devices_queryset.count()
+    active_sensors = devices_queryset.filter(status="active").count()
     offline_devices = devices_queryset.filter(status="offline").count()
     maintenance_devices = devices_queryset.filter(status="maintenance").count()
 
-    # Get recent devices with their latest readings
-    recent_devices = devices_queryset.select_related("assigned_to").order_by(
+    # Get managed sensors (for the template)
+    managed_sensors = devices_queryset.select_related("assigned_to").order_by(
         "-updated_at"
     )[:10]
 
@@ -58,45 +58,39 @@ def sensor_dashboard(request):
 
     # Get recent alerts
     if request.user.is_admin:
-        recent_alerts = DataAlert.objects.filter(status="active").select_related(
-            "device"
-        )[:10]
+        alerts = DataAlert.objects.filter(status="active").select_related("device")[:10]
     elif request.user.is_community_admin:
-        recent_alerts = DataAlert.objects.filter(
+        alerts = DataAlert.objects.filter(
             device__region=request.user.assigned_region, status="active"
         ).select_related("device")[:10]
     else:
-        recent_alerts = DataAlert.objects.filter(
+        alerts = DataAlert.objects.filter(
             device__assigned_to=request.user, status="active"
         ).select_related("device")[:10]
 
-    # Location-based statistics for admins
-    region_stats = []
-    if request.user.is_admin:
-        region_stats = (
-            IoTDevice.objects.values("region")
-            .annotate(
-                total=Count("id"),
-                active=Count("id", filter=Q(status="active")),
-                offline=Count("id", filter=Q(status="offline")),
-            )
-            .order_by("region")
-        )
+    # Regional analytics placeholder
+    regional_analytics = {
+        "prediction_count": 5,  # Default for demo
+    }
+
+    # Determine user region
+    region = getattr(request.user, "assigned_region", "Bhairahawa-Butwal")
 
     context = {
         "page_title": "IoT Sensor Dashboard",
-        "user_role": request.user.role,
-        "total_devices": total_devices,
-        "active_devices": active_devices,
+        "user_role": getattr(request.user, "role", "farmer"),
+        "total_sensors": total_sensors,
+        "active_sensors": active_sensors,
         "offline_devices": offline_devices,
         "maintenance_devices": maintenance_devices,
-        "recent_devices": recent_devices,
+        "managed_sensors": managed_sensors,
         "device_groups": device_groups,
-        "recent_alerts": recent_alerts,
-        "region_stats": region_stats,
+        "alerts": alerts,
+        "regional_analytics": regional_analytics,
+        "region": region,
     }
 
-    return render(request, "sensors/dashboard.html", context)
+    return render(request, "sensors/dashboard_tailwind.html", context)
 
 
 @login_required
