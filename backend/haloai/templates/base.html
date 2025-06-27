@@ -13,6 +13,15 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Resizable Navbar CSS -->
+    <link rel="stylesheet" href="{% static 'css/resizable-navbar.css' %}" />
+
     <!-- Custom Tailwind Configuration -->
     <script>
       tailwind.config = {
@@ -66,209 +75,223 @@
   <body class="font-manrope bg-gray-50">
     <!-- Navigation -->
     {% block navigation %}
-    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <!-- Logo -->
-          <div class="flex items-center">
-            <a
-              href="{% if user.is_authenticated %}{% url 'home:home' %}{% else %}{% url 'home:public_landing' %}{% endif %}"
-              class="flex items-center space-x-2"
-            >
-              <img
-                src="{% static 'images/Halo-logo.svg' %}"
-                alt="Halo AI"
-                class="h-10 w-10 rounded-full"
-              />
-              <span class="text-xl font-bold text-primary-600">Halo AI</span>
-            </a>
-          </div>
-
-          <!-- Desktop Navigation -->
-          <div class="hidden md:block">
-            <div class="ml-10 flex items-baseline space-x-8">
-              {% if user.is_authenticated %}
-              <!-- Authenticated User Navigation -->
-              <a
-                href="{% url 'dashboard:redirect' %}"
-                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Dashboard</a
-              >
-              <a
-                href="{% url 'crops:prediction' %}"
-                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Crop Prediction</a
-              >
-              <a
-                href="{% url 'grants:grants_and_offers' %}"
-                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Grants & Offers</a
-              >
-              {% if user.role == 'community_admin' or user.role == 'admin' %}
-              <a
-                href="{% url 'sensors:dashboard' %}"
-                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Sensors</a
-              >
-              {% endif %}
-              <a
-                href="#"
-                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Connect with Expert</a
-              >
-              <a
-                href="{% url 'users:logout' %}"
-                class="bg-primary-600 text-white hover:bg-primary-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                >Logout ({{ user.username }})</a
-              >
-              {% if user.is_authenticated and user.is_farmer %}
-              <a
-                href="{% url 'marketplace:home' %}"
-                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >🛒 Marketplace</a
-              >
-              {% endif %} {% else %}
-              <!-- Public Navigation -->
-              <a
-                href="{% url 'home:public_landing' %}"
-                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Home</a
-              >
-              <a
-                href="#features"
-                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Features</a
-              >
-              <a
-                href="#pricing"
-                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Pricing</a
-              >
-              <a
-                href="#contact"
-                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Contact</a
-              >
-              <a
-                href="{% url 'users:login' %}"
-                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >Login</a
-              >
-              <a
-                href="{% url 'users:signup' %}"
-                class="bg-primary-600 text-white hover:bg-primary-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                >Sign Up</a
-              >
-              {% endif %}
-            </div>
-          </div>
-
-          <!-- Mobile menu button -->
-          <div class="md:hidden">
-            <button
-              type="button"
-              class="mobile-menu-button text-gray-700 hover:text-primary-600 focus:outline-none focus:text-primary-600"
-              aria-controls="mobile-menu"
-              aria-expanded="false"
-            >
-              <span class="sr-only">Open main menu</span>
-              <svg
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
-          </div>
+    <div class="navbar-container">
+      <nav class="navbar">
+        <!-- Logo -->
+        <div class="nav-brand flex items-center">
+          <a
+            href="{% if user.is_authenticated %}{% url 'home:home' %}{% else %}{% url 'home:public_landing' %}{% endif %}"
+            class="flex items-center space-x-2"
+          >
+            <img
+              src="{% static 'images/Halo-logo.svg' %}"
+              alt="Halo AI"
+              class="h-8 w-8 rounded-full"
+            />
+            <span class="text-lg font-bold text-primary-600">Halo AI</span>
+          </a>
         </div>
-      </div>
 
-      <!-- Mobile menu -->
-      <div class="mobile-menu hidden md:hidden">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+        <!-- Desktop Navigation Links -->
+        <div class="nav-links hidden lg:flex items-center space-x-1">
           {% if user.is_authenticated %}
-          <!-- Authenticated Mobile Navigation -->
+          <!-- Authenticated User Navigation -->
           <a
             href="{% url 'dashboard:redirect' %}"
-            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             >Dashboard</a
           >
           <a
-            href="{% url 'crops:dashboard' %}"
-            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            href="{% url 'crops:prediction' %}"
+            class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             >Crop Prediction</a
           >
           <a
             href="{% url 'grants:grants_and_offers' %}"
-            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             >Grants & Offers</a
           >
           {% if user.role == 'community_admin' or user.role == 'admin' %}
           <a
             href="{% url 'sensors:dashboard' %}"
-            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             >Sensors</a
           >
           {% endif %}
           <a
             href="#"
-            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             >Connect with Expert</a
-          >
-          <a
-            href="{% url 'users:logout' %}"
-            class="bg-primary-600 text-white hover:bg-primary-700 block px-3 py-2 rounded-md text-base font-medium"
-            >Logout ({{ user.username }})</a
           >
           {% if user.is_authenticated and user.is_farmer %}
           <a
             href="{% url 'marketplace:home' %}"
-            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             >🛒 Marketplace</a
           >
           {% endif %} {% else %}
-          <!-- Public Mobile Navigation -->
+          <!-- Public Navigation -->
           <a
             href="{% url 'home:public_landing' %}"
-            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             >Home</a
           >
           <a
             href="#features"
-            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             >Features</a
           >
           <a
             href="#pricing"
-            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             >Pricing</a
           >
           <a
             href="#contact"
-            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             >Contact</a
           >
+          {% endif %}
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="nav-actions flex items-center space-x-2">
+          {% if user.is_authenticated %}
+          <div class="user-menu relative">
+            <button
+              type="button"
+              class="user-menu-button flex items-center space-x-2 text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            >
+              <i class="fas fa-user-circle text-lg"></i>
+              <span class="hidden md:inline">{{ user.username }}</span>
+              <i class="fas fa-chevron-down text-xs"></i>
+            </button>
+            <div
+              class="user-dropdown absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden"
+            >
+              <a
+                href="{% url 'users:logout' %}"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >Logout</a
+              >
+            </div>
+          </div>
+          {% else %}
           <a
             href="{% url 'users:login' %}"
-            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             >Login</a
           >
           <a
             href="{% url 'users:signup' %}"
-            class="bg-primary-600 text-white hover:bg-primary-700 block px-3 py-2 rounded-md text-base font-medium"
+            class="bg-primary-600 text-white hover:bg-primary-700 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 shadow-sm"
             >Sign Up</a
           >
           {% endif %}
         </div>
+
+        <!-- Mobile Menu Button -->
+        <button
+          type="button"
+          class="mobile-menu-toggle lg:hidden text-gray-700 hover:text-primary-600 focus:outline-none focus:text-primary-600 p-2"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Open main menu</span>
+          <div class="hamburger">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </div>
+        </button>
+      </nav>
+
+      <!-- Mobile Navigation Menu -->
+      <div class="mobile-nav lg:hidden">
+        <div class="mobile-menu hidden">
+          <div
+            class="mobile-menu-content bg-white rounded-lg shadow-lg mx-4 mt-2 py-2"
+          >
+            {% if user.is_authenticated %}
+            <!-- Authenticated Mobile Navigation -->
+            <a
+              href="{% url 'dashboard:redirect' %}"
+              class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              >Dashboard</a
+            >
+            <a
+              href="{% url 'crops:prediction' %}"
+              class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              >Crop Prediction</a
+            >
+            <a
+              href="{% url 'grants:grants_and_offers' %}"
+              class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              >Grants & Offers</a
+            >
+            {% if user.role == 'community_admin' or user.role == 'admin' %}
+            <a
+              href="{% url 'sensors:dashboard' %}"
+              class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              >Sensors</a
+            >
+            {% endif %}
+            <a
+              href="#"
+              class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              >Connect with Expert</a
+            >
+            {% if user.is_authenticated and user.is_farmer %}
+            <a
+              href="{% url 'marketplace:home' %}"
+              class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              >🛒 Marketplace</a
+            >
+            {% endif %}
+            <div class="border-t border-gray-200 my-2"></div>
+            <a
+              href="{% url 'users:logout' %}"
+              class="mobile-nav-link block px-4 py-3 text-red-600 hover:bg-red-50 transition-colors"
+              >Logout ({{ user.username }})</a
+            >
+            {% else %}
+            <!-- Public Mobile Navigation -->
+            <a
+              href="{% url 'home:public_landing' %}"
+              class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              >Home</a
+            >
+            <a
+              href="#features"
+              class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              >Features</a
+            >
+            <a
+              href="#pricing"
+              class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              >Pricing</a
+            >
+            <a
+              href="#contact"
+              class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              >Contact</a
+            >
+            <div class="border-t border-gray-200 my-2"></div>
+            <a
+              href="{% url 'users:login' %}"
+              class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              >Login</a
+            >
+            <a
+              href="{% url 'users:signup' %}"
+              class="mobile-nav-link block px-4 py-3 bg-primary-600 text-white hover:bg-primary-700 transition-colors mx-4 rounded-md text-center"
+              >Sign Up</a
+            >
+            {% endif %}
+          </div>
+        </div>
       </div>
-    </nav>
+    </div>
     {% endblock %}
 
     <!-- Main Content -->
@@ -377,8 +400,45 @@
     </footer>
     {% endblock %}
 
-    <!-- JavaScript -->
-    <script src="{% static 'js/main.js' %}"></script>
-    {% block extra_js %}{% endblock %}
+    <!-- Resizable Navbar JavaScript -->
+    <script src="{% static 'js/resizable-navbar.js' %}"></script>
+    <script>
+      // Initialize the resizable navbar
+      document.addEventListener("DOMContentLoaded", function () {
+        new ResizableNavbar();
+
+        // Mobile menu toggle functionality
+        const mobileMenuButton = document.querySelector(".mobile-menu-toggle");
+        const mobileMenu = document.querySelector(".mobile-menu");
+
+        if (mobileMenuButton && mobileMenu) {
+          mobileMenuButton.addEventListener("click", function () {
+            mobileMenu.classList.toggle("hidden");
+            const hamburger = this.querySelector(".hamburger");
+            hamburger.classList.toggle("active");
+          });
+        }
+
+        // User menu dropdown functionality
+        const userMenuButton = document.querySelector(".user-menu-button");
+        const userDropdown = document.querySelector(".user-dropdown");
+
+        if (userMenuButton && userDropdown) {
+          userMenuButton.addEventListener("click", function () {
+            userDropdown.classList.toggle("hidden");
+          });
+
+          // Close dropdown when clicking outside
+          document.addEventListener("click", function (e) {
+            if (!e.target.closest(".user-menu")) {
+              userDropdown.classList.add("hidden");
+            }
+          });
+        }
+      });
+    </script>
+
+    <!-- Additional JavaScript -->
+    {% block extra_js %} {% endblock %}
   </body>
 </html>
