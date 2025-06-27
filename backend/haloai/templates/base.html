@@ -61,8 +61,7 @@
     />
 
     <!-- Additional CSS -->
-    {% block extra_css %}
-    {% endblock %}
+    {% block extra_css %} {% endblock %}
   </head>
   <body class="font-manrope bg-gray-50">
     <!-- Navigation -->
@@ -122,7 +121,13 @@
                 class="bg-primary-600 text-white hover:bg-primary-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
                 >Logout ({{ user.username }})</a
               >
-              {% else %}
+              {% if user.is_authenticated and user.is_farmer %}
+              <a
+                href="{% url 'marketplace:home' %}"
+                class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >🛒 Marketplace</a
+              >
+              {% endif %} {% else %}
               <!-- Public Navigation -->
               <a
                 href="{% url 'home:public_landing' %}"
@@ -222,7 +227,13 @@
             class="bg-primary-600 text-white hover:bg-primary-700 block px-3 py-2 rounded-md text-base font-medium"
             >Logout ({{ user.username }})</a
           >
-          {% else %}
+          {% if user.is_authenticated and user.is_farmer %}
+          <a
+            href="{% url 'marketplace:home' %}"
+            class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium"
+            >🛒 Marketplace</a
+          >
+          {% endif %} {% else %}
           <!-- Public Mobile Navigation -->
           <a
             href="{% url 'home:public_landing' %}"

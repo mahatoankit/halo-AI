@@ -93,6 +93,5 @@ figures/
 
 # Project Overview
 PROJECT-OVERVIEW.md
-
-backend/haloai/db.sqlite3
+CLEANUP_FINAL_SUMMARY.md
 firebase-service-account.json     

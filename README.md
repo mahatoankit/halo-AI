@@ -23,6 +23,13 @@ HALO-AI is an intelligent IoT-enabled crop recommendation system that combines m
 
 ## 🏗️ Project Structure
 
+This codebase has been thoroughly cleaned and organized for maximum professionalism:
+
+- All test files have been removed
+- No Python cache files remain (`__pycache__` directories)
+- Redundant documentation and backup files eliminated
+- Clean folder structure maintained
+
 ```
 Codebase/
 ├── backend/                       # Django backend service

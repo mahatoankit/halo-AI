@@ -16,6 +16,7 @@ import firebase_admin
 from firebase_admin import credentials
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
+import dj_database_url
 
 # Load environment variables from .env file
 load_dotenv(Path(__file__).resolve().parent.parent.parent.parent / ".env")
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     "apps.home",
     "apps.grants",
     "apps.experts",
+    "apps.marketplace",
 ]
 
 MIDDLEWARE = [
@@ -96,6 +98,15 @@ DATABASES = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
+}
+
+# Database Configuration
+DATABASES = {
+    "default": dj_database_url.parse(
+        os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 

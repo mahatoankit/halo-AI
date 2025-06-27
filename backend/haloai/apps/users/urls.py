@@ -1,7 +1,8 @@
 from django.urls import path
 from . import views
 from . import profile_views
-from . import test_views
+
+# Removing test_views import as the file doesn't exist
 
 app_name = "users"
 
@@ -11,9 +12,7 @@ urlpatterns = [
     path("signup/", views.signup_view, name="signup"),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
-    # Test routes (for debugging)
-    path("test-login/", test_views.test_login_page, name="test_login"),
-    path("test-auth/", test_views.test_auth_api, name="test_auth_api"),
+    # Test routes removed
     # Enhanced profile routes with Firestore
     path("profile/", profile_views.profile_view, name="profile"),
     path("profile/update/", profile_views.update_profile_view, name="update_profile"),

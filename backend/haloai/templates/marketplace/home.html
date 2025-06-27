@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Agricultural Marketplace - Halo AI{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen">
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-green-600 to-blue-600 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold mb-4">🛒 Agricultural Marketplace</h1>
+        <p class="text-xl mb-8">Find quality seeds, fertilizers, tools, and equipment for your farm</p>
+        <div class="flex justify-center space-x-4">
+          <a href="{% url 'marketplace:product_list' %}" class="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
+            Browse Products
+          </a>
+          <a href="{% url 'marketplace:cart' %}" class="bg-green-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-800">
+            View Cart (<span id="cart-count">0</span>)
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories Section -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-3xl font-bold text-gray-900 mb-8">Shop by Category</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+      {% for category in categories %}
+      <a href="{% url 'marketplace:product_list' %}?category={{ category.id }}" 
+         class="bg-white rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-shadow">
+        <div class="text-4xl mb-3">{{ category.icon }}</div>
+        <h3 class="font-semibold text-gray-900">{{ category.name }}</h3>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Featured Products -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-3xl font-bold text-gray-900 mb-8">Featured Products</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for product in featured_products %}
+      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="h-48 bg-gray-200 flex items-center justify-center">
+          {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="h-full w-full object-cover">
+          {% else %}
+            <span class="text-6xl">📦</span>
+          {% endif %}
+        </div>
+        <div class="p-6">
+          <h3 class="font-semibold text-lg mb-2">{{ product.name }}</h3>
+          <p class="text-gray-600 mb-4">{{ product.description|truncatechars:80 }}</p>
+          <div class="flex justify-between items-center">
+            <span class="text-2xl font-bold text-green-600">Rs.{{ product.price }}/{{ product.unit }}</span>
+            <a href="{% url 'marketplace:product_detail' product.id %}" 
+               class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+              View Details
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Recent Orders -->
+  {% if recent_orders %}
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-3xl font-bold text-gray-900 mb-8">Recent Orders</h2>
+    <div class="bg-white rounded-lg shadow">
+      {% for order in recent_orders %}
+      <div class="border-b border-gray-200 p-6 {% if forloop.last %}border-b-0{% endif %}">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="font-semibold">Order #{{ order.order_number }}</h3>
+            <p class="text-gray-600">{{ order.created_at|date:"M d, Y" }} - Rs.{{ order.total_amount }}</p>
+          </div>
+          <span class="px-3 py-1 rounded-full text-sm font-medium
+                       {% if order.status == 'delivered' %}bg-green-100 text-green-800
+                       {% elif order.status == 'shipped' %}bg-blue-100 text-blue-800
+                       {% elif order.status == 'processing' %}bg-yellow-100 text-yellow-800
+                       {% else %}bg-gray-100 text-gray-800{% endif %}">
+            {{ order.get_status_display }}
+          </span>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="p-6 bg-gray-50">
+        <a href="{% url 'marketplace:order_history' %}" class="text-green-600 hover:text-green-800 font-medium">
+          View All Orders →
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+// Update cart count on page load
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/marketplace/cart-count/')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('cart-count').textContent = data.count || 0;
+        });
+});
+</script>
+{% endblock %}
