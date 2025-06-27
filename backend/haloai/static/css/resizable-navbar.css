@@ -13,26 +13,31 @@
   width: 100%;
   max-width: 80rem;
   margin: 0 auto;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
   border-radius: 9999px;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08),
+              0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .navbar.scrolled {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 24px rgba(34, 42, 53, 0.06), 
-              0 1px 1px rgba(0, 0, 0, 0.05), 
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(34, 42, 53, 0.12), 
+              0 2px 8px rgba(0, 0, 0, 0.08), 
               0 0 0 1px rgba(34, 42, 53, 0.04), 
               0 0 4px rgba(34, 42, 53, 0.08), 
               0 16px 68px rgba(47, 48, 55, 0.05), 
               0 1px 0 rgba(255, 255, 255, 0.1) inset;
   width: 60%;
   min-width: 800px;
+  padding: 0.5rem 1.25rem;
   transform: translateY(20px);
 }
 
@@ -264,11 +269,12 @@
   }
   
   .navbar {
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.25rem;
   }
   
   .navbar.scrolled {
     width: 95%;
     min-width: auto;
+    padding: 0.4rem 1rem;
   }
 }
