@@ -80,7 +80,7 @@
         <!-- Logo -->
         <div class="nav-brand flex items-center">
           <a
-            href="{% if user.is_authenticated %}{% url 'home:home' %}{% else %}{% url 'home:public_landing' %}{% endif %}"
+            href="{% url 'home:public_landing' %}"
             class="flex items-center space-x-3"
           >
             <img
@@ -526,7 +526,7 @@
             marketplace: ["/marketplace/"],
             login: ["/auth/login/"],
             signup: ["/auth/signup/"],
-            home: ["/", "/home/"],
+            home: ["/", "/home/", "/index/"],
             features: ["#features"],
             pricing: ["#pricing"],
             contact: ["#contact"],
@@ -545,20 +545,28 @@
                 return currentUrl.includes(pattern);
               }
 
-              // Enhanced matching logic
-              const pathMatch = currentPath.includes(pattern);
+              // Enhanced matching logic with exact matching for home page
+              if (pattern === "/") {
+                // For home page, only match exact root path
+                const isExactHome = currentPath === "/" || currentPath === "";
+                console.log(
+                  `Home pattern check: currentPath="${currentPath}", isExactHome=${isExactHome}`
+                );
+                return isExactHome;
+              }
+
+              // For all other patterns, use exact match or starts-with logic
               const exactMatch = currentPath === pattern;
-              const homeMatch =
-                pattern === "/" && (currentPath === "/" || currentPath === "");
+              const startsWithMatch =
+                currentPath.startsWith(pattern) && pattern.length > 1;
 
               console.log(`Checking ${pageType} pattern "${pattern}":`, {
-                pathMatch,
                 exactMatch,
-                homeMatch,
-                result: pathMatch || exactMatch || homeMatch,
+                startsWithMatch,
+                result: exactMatch || startsWithMatch,
               });
 
-              return pathMatch || exactMatch || homeMatch;
+              return exactMatch || startsWithMatch;
             });
 
             if (matches) {
@@ -617,18 +625,23 @@
               { urls: ["/auth/login/"], text: ["Login"] },
               { urls: ["/auth/signup/"], text: ["Sign Up"] },
               {
-                urls: ["/", "/home/"],
+                urls: ["/", "/home/", "/index/"],
                 text: ["Home"],
               },
             ];
 
             for (const pattern of textPatterns) {
-              const matches = pattern.urls.some(
-                (url) =>
-                  currentPath.includes(url) ||
-                  currentUrl.includes(url) ||
-                  (url === "/" && (currentPath === "/" || currentPath === ""))
-              );
+              const matches = pattern.urls.some((url) => {
+                if (url === "/") {
+                  // For home page, only exact match
+                  return currentPath === "/" || currentPath === "";
+                }
+                // For other URLs, use exact match or starts-with logic
+                return (
+                  currentPath === url ||
+                  (currentPath.startsWith(url) && url.length > 1)
+                );
+              });
 
               if (matches) {
                 const allLinks = document.querySelectorAll(

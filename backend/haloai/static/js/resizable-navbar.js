@@ -179,7 +179,7 @@ class ResizableNavbar {
         keywords: ['sign up', 'signup']
       },
       { 
-        patterns: ['/', '/home/'], 
+        patterns: ['/', '/home/', '/index/'], 
         dataPage: 'home',
         keywords: ['home']
       }
@@ -199,14 +199,16 @@ class ResizableNavbar {
       
       const pathMatches = pattern.patterns.some(p => {
         if (p === '/') {
+          // For home page, only exact match
           const homeMatch = currentPath === '/' || currentPath === '';
           console.log(`  Home pattern "${p}": ${homeMatch}`);
           return homeMatch;
         }
-        const includesMatch = currentPath.includes(p) || currentUrl.includes(p);
+        // For other patterns, use exact match or starts-with logic
         const exactMatch = currentPath === p;
-        console.log(`  Pattern "${p}": includes=${includesMatch}, exact=${exactMatch}`);
-        return includesMatch || exactMatch;
+        const startsWithMatch = currentPath.startsWith(p) && p.length > 1;
+        console.log(`  Pattern "${p}": exact=${exactMatch}, startsWith=${startsWithMatch}`);
+        return exactMatch || startsWithMatch;
       });
       
       if (pathMatches) {
@@ -232,9 +234,11 @@ class ResizableNavbar {
       for (const pattern of urlPatterns) {
         const pathMatches = pattern.patterns.some(p => {
           if (p === '/') {
+            // For home page, only exact match
             return currentPath === '/' || currentPath === '';
           }
-          return currentPath.includes(p) || currentUrl.includes(p);
+          // For other patterns, use exact match or starts-with logic
+          return currentPath === p || (currentPath.startsWith(p) && p.length > 1);
         });
         
         if (pathMatches) {
@@ -244,8 +248,13 @@ class ResizableNavbar {
             const href = link.getAttribute('href') || '';
             const linkText = link.textContent.trim().toLowerCase();
             
-            // Check href patterns
-            const hrefMatches = pattern.patterns.some(p => href.includes(p));
+            // Check href patterns with same precise logic
+            const hrefMatches = pattern.patterns.some(p => {
+              if (p === '/') {
+                return href === '/' || href === '';
+              }
+              return href === p || (href.startsWith(p) && p.length > 1);
+            });
             
             // Check text content
             const textMatches = pattern.keywords.some(keyword => 
