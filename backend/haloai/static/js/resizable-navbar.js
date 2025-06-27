@@ -13,8 +13,8 @@ class ResizableNavbar {
     this.handleScroll();
     this.handleMobileMenu();
     
-    // Add scroll event listener
-    window.addEventListener('scroll', this.throttle(this.handleScroll.bind(this), 10));
+    // Add scroll event listener with better performance
+    window.addEventListener('scroll', this.throttle(this.handleScroll.bind(this), 16));
     
     // Add mobile menu toggle
     if (this.mobileMenuToggle) {
@@ -27,16 +27,27 @@ class ResizableNavbar {
         this.closeMobileMenu();
       }
     });
+    
+    // Close mobile menu when pressing Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.mobileMenu) {
+        this.closeMobileMenu();
+      }
+    });
   }
   
   handleScroll() {
     const currentScrollY = window.scrollY;
     
     if (this.navbar) {
-      if (currentScrollY > 100) {
+      // Apply glassmorphism effect when scrolled down more than 80px
+      if (currentScrollY > 80) {
         this.navbar.classList.add('scrolled');
+        // Add subtle animation class
+        this.navbar.style.setProperty('--scroll-progress', Math.min(currentScrollY / 200, 1));
       } else {
         this.navbar.classList.remove('scrolled');
+        this.navbar.style.removeProperty('--scroll-progress');
       }
     }
     
@@ -49,29 +60,40 @@ class ResizableNavbar {
   
   toggleMobileMenu() {
     if (this.mobileMenu) {
-      this.mobileMenu.classList.toggle('active');
+      const isActive = this.mobileMenu.classList.contains('active');
       
-      // Update toggle icon
-      const icon = this.mobileMenuToggle.querySelector('i');
-      if (icon) {
-        if (this.mobileMenu.classList.contains('active')) {
-          icon.className = 'fas fa-times';
-        } else {
-          icon.className = 'fas fa-bars';
-        }
+      if (isActive) {
+        this.mobileMenu.classList.remove('active');
+        this.mobileMenu.classList.add('hidden');
+      } else {
+        this.mobileMenu.classList.remove('hidden');
+        this.mobileMenu.classList.add('active');
       }
+      
+      // Update hamburger animation
+      const hamburger = this.mobileMenuToggle.querySelector('.hamburger');
+      if (hamburger) {
+        hamburger.classList.toggle('active', !isActive);
+      }
+      
+      // Update ARIA attributes
+      this.mobileMenuToggle.setAttribute('aria-expanded', !isActive);
     }
   }
   
   closeMobileMenu() {
     if (this.mobileMenu) {
       this.mobileMenu.classList.remove('active');
+      this.mobileMenu.classList.add('hidden');
       
-      // Update toggle icon
-      const icon = this.mobileMenuToggle?.querySelector('i');
-      if (icon) {
-        icon.className = 'fas fa-bars';
+      // Reset hamburger animation
+      const hamburger = this.mobileMenuToggle?.querySelector('.hamburger');
+      if (hamburger) {
+        hamburger.classList.remove('active');
       }
+      
+      // Update ARIA attributes
+      this.mobileMenuToggle?.setAttribute('aria-expanded', 'false');
     }
   }
   

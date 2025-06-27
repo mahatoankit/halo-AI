@@ -81,14 +81,14 @@
         <div class="nav-brand flex items-center">
           <a
             href="{% if user.is_authenticated %}{% url 'home:home' %}{% else %}{% url 'home:public_landing' %}{% endif %}"
-            class="flex items-center space-x-2"
+            class="flex items-center space-x-3"
           >
             <img
               src="{% static 'images/Halo-logo.svg' %}"
               alt="Halo AI"
-              class="h-8 w-8 rounded-full"
+              class="h-10 w-10 rounded-full object-cover shadow-sm"
             />
-            <span class="text-lg font-bold text-primary-600">Halo AI</span>
+            <span class="text-xl font-bold text-primary-600">Halo AI</span>
           </a>
         </div>
 
@@ -155,12 +155,12 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="nav-actions flex items-center space-x-2">
+        <div class="nav-actions flex items-center space-x-3">
           {% if user.is_authenticated %}
-          <div class="user-menu relative">
+          <div class="user-menu relative hidden lg:block">
             <button
               type="button"
-              class="user-menu-button flex items-center space-x-2 text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+              class="user-menu-button flex items-center space-x-2 text-gray-700 hover:text-primary-600 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200"
             >
               <i class="fas fa-user-circle text-lg"></i>
               <span class="hidden md:inline">{{ user.username }}</span>
@@ -176,10 +176,20 @@
               >
             </div>
           </div>
+          <!-- Mobile User Button -->
+          <div class="lg:hidden">
+            <a
+              href="{% url 'users:logout' %}"
+              class="flex items-center space-x-1 text-gray-700 hover:text-primary-600 px-2 py-1 rounded-full text-sm font-medium transition-all duration-200"
+            >
+              <i class="fas fa-user-circle text-base"></i>
+              <span class="text-xs">{{ user.username|truncatechars:8 }}</span>
+            </a>
+          </div>
           {% else %}
           <a
             href="{% url 'users:login' %}"
-            class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 hidden lg:inline-block"
             >Login</a
           >
           <a
@@ -295,7 +305,7 @@
     {% endblock %}
 
     <!-- Main Content -->
-    <main class="{% block main_class %}pt-16{% endblock %}">
+    <main class="{% block main_class %}pt-20{% endblock %}">
       <!-- Messages -->
       {% if messages %}
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
