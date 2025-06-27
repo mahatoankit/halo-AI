@@ -99,34 +99,40 @@
           <a
             href="{% url 'dashboard:redirect' %}"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            data-page="dashboard"
             >Dashboard</a
           >
           <a
             href="{% url 'crops:prediction' %}"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            data-page="crops"
             >Crop Prediction</a
           >
           <a
             href="{% url 'grants:grants_and_offers' %}"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            data-page="grants"
             >Grants & Offers</a
           >
           {% if user.role == 'community_admin' or user.role == 'admin' %}
           <a
             href="{% url 'sensors:dashboard' %}"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            data-page="sensors"
             >Sensors</a
           >
           {% endif %}
           <a
             href="#"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            data-page="expert"
             >Connect with Expert</a
           >
           {% if user.is_authenticated and user.is_farmer %}
           <a
             href="{% url 'marketplace:home' %}"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            data-page="marketplace"
             >🛒 Marketplace</a
           >
           {% endif %} {% else %}
@@ -134,21 +140,25 @@
           <a
             href="{% url 'home:public_landing' %}"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            data-page="home"
             >Home</a
           >
           <a
             href="#features"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            data-page="features"
             >Features</a
           >
           <a
             href="#pricing"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            data-page="pricing"
             >Pricing</a
           >
           <a
             href="#contact"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            data-page="contact"
             >Contact</a
           >
           {% endif %}
@@ -219,42 +229,46 @@
       <!-- Mobile Navigation Menu -->
       <div class="mobile-nav lg:hidden">
         <div class="mobile-menu hidden">
-          <div
-            class="mobile-menu-content bg-white rounded-lg shadow-lg mx-4 mt-2 py-2"
-          >
+          <div class="mobile-menu-content rounded-lg mx-4 mt-2 py-2">
             {% if user.is_authenticated %}
             <!-- Authenticated Mobile Navigation -->
             <a
               href="{% url 'dashboard:redirect' %}"
               class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              data-page="dashboard"
               >Dashboard</a
             >
             <a
               href="{% url 'crops:prediction' %}"
               class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              data-page="crops"
               >Crop Prediction</a
             >
             <a
               href="{% url 'grants:grants_and_offers' %}"
               class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              data-page="grants"
               >Grants & Offers</a
             >
             {% if user.role == 'community_admin' or user.role == 'admin' %}
             <a
               href="{% url 'sensors:dashboard' %}"
               class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              data-page="sensors"
               >Sensors</a
             >
             {% endif %}
             <a
               href="#"
               class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              data-page="expert"
               >Connect with Expert</a
             >
             {% if user.is_authenticated and user.is_farmer %}
             <a
               href="{% url 'marketplace:home' %}"
               class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              data-page="marketplace"
               >🛒 Marketplace</a
             >
             {% endif %}
@@ -269,32 +283,38 @@
             <a
               href="{% url 'home:public_landing' %}"
               class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              data-page="home"
               >Home</a
             >
             <a
               href="#features"
               class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              data-page="features"
               >Features</a
             >
             <a
               href="#pricing"
               class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              data-page="pricing"
               >Pricing</a
             >
             <a
               href="#contact"
               class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              data-page="contact"
               >Contact</a
             >
             <div class="border-t border-gray-200 my-2"></div>
             <a
               href="{% url 'users:login' %}"
               class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
+              data-page="login"
               >Login</a
             >
             <a
               href="{% url 'users:signup' %}"
               class="mobile-nav-link block px-4 py-3 bg-primary-600 text-white hover:bg-primary-700 transition-colors mx-4 rounded-md text-center"
+              data-page="signup"
               >Sign Up</a
             >
             {% endif %}
@@ -415,19 +435,230 @@
     <script>
       // Initialize the resizable navbar
       document.addEventListener("DOMContentLoaded", function () {
-        new ResizableNavbar();
+        try {
+          new ResizableNavbar();
+        } catch (error) {
+          console.error("Error initializing ResizableNavbar:", error);
+        }
 
         // Mobile menu toggle functionality
         const mobileMenuButton = document.querySelector(".mobile-menu-toggle");
         const mobileMenu = document.querySelector(".mobile-menu");
 
+        console.log("Mobile menu button:", mobileMenuButton);
+        console.log("Mobile menu:", mobileMenu);
+
         if (mobileMenuButton && mobileMenu) {
-          mobileMenuButton.addEventListener("click", function () {
-            mobileMenu.classList.toggle("hidden");
+          mobileMenuButton.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Mobile menu button clicked");
+
+            const isHidden = mobileMenu.classList.contains("hidden");
+            console.log("Is hidden:", isHidden);
+            console.log("Current classes:", mobileMenu.className);
+
+            if (isHidden) {
+              mobileMenu.classList.remove("hidden");
+              mobileMenu.classList.add("active");
+              console.log("Menu should be visible now");
+              console.log("New classes:", mobileMenu.className);
+            } else {
+              mobileMenu.classList.remove("active");
+              mobileMenu.classList.add("hidden");
+              console.log("Menu should be hidden now");
+              console.log("New classes:", mobileMenu.className);
+            }
+
             const hamburger = this.querySelector(".hamburger");
-            hamburger.classList.toggle("active");
+            if (hamburger) {
+              hamburger.classList.toggle("active");
+              console.log("Hamburger toggled, classes:", hamburger.className);
+            }
+
+            // Update ARIA attributes
+            this.setAttribute("aria-expanded", isHidden ? "true" : "false");
           });
+
+          // Close mobile menu when clicking outside
+          document.addEventListener("click", function (e) {
+            if (
+              !e.target.closest(".mobile-nav") &&
+              !mobileMenu.classList.contains("hidden")
+            ) {
+              mobileMenu.classList.remove("active");
+              mobileMenu.classList.add("hidden");
+              const hamburger = mobileMenuButton.querySelector(".hamburger");
+              if (hamburger) {
+                hamburger.classList.remove("active");
+              }
+              mobileMenuButton.setAttribute("aria-expanded", "false");
+            }
+          });
+        } else {
+          console.error("Could not find mobile menu elements");
         }
+
+        // Enhanced current page detection
+        function highlightCurrentPage() {
+          const currentPath = window.location.pathname;
+          const currentUrl = window.location.href;
+
+          // Remove existing active classes
+          document
+            .querySelectorAll(
+              ".nav-link.active-page, .mobile-nav-link.active-page"
+            )
+            .forEach((link) => {
+              link.classList.remove("active-page");
+            });
+
+          // URL to data-page mapping - Updated with actual Django URLs from server logs
+          const pageMapping = {
+            dashboard: [
+              "/dashboard/",
+              "/dashboard/redirect/",
+              "/dashboard/farmer/",
+            ],
+            crops: ["/crop-prediction/", "/crop-prediction/prediction/"],
+            grants: ["/grants-and-offers/"],
+            sensors: ["/sensors/"],
+            marketplace: ["/marketplace/"],
+            login: ["/auth/login/"],
+            signup: ["/auth/signup/"],
+            home: ["/", "/home/"],
+            features: ["#features"],
+            pricing: ["#pricing"],
+            contact: ["#contact"],
+            expert: ["#expert"],
+          };
+
+          // Find current page with enhanced debugging
+          let currentPageType = null;
+          console.log("🔍 Detecting current page...");
+          console.log("Current path:", currentPath);
+          console.log("Current URL:", currentUrl);
+
+          for (const [pageType, patterns] of Object.entries(pageMapping)) {
+            const matches = patterns.some((pattern) => {
+              if (pattern.startsWith("#")) {
+                return currentUrl.includes(pattern);
+              }
+
+              // Enhanced matching logic
+              const pathMatch = currentPath.includes(pattern);
+              const exactMatch = currentPath === pattern;
+              const homeMatch =
+                pattern === "/" && (currentPath === "/" || currentPath === "");
+
+              console.log(`Checking ${pageType} pattern "${pattern}":`, {
+                pathMatch,
+                exactMatch,
+                homeMatch,
+                result: pathMatch || exactMatch || homeMatch,
+              });
+
+              return pathMatch || exactMatch || homeMatch;
+            });
+
+            if (matches) {
+              currentPageType = pageType;
+              console.log(`✅ Found match: ${pageType}`);
+              break;
+            }
+          }
+
+          // Apply active class to matching links
+          if (currentPageType) {
+            const matchingLinks = document.querySelectorAll(
+              `[data-page="${currentPageType}"]`
+            );
+            matchingLinks.forEach((link) => {
+              if (
+                link.classList.contains("nav-link") ||
+                link.classList.contains("mobile-nav-link")
+              ) {
+                link.classList.add("active-page");
+                console.log(
+                  `Added active-page to ${currentPageType}:`,
+                  link.textContent.trim()
+                );
+              }
+            });
+          }
+
+          // Fallback: if no data-page match, use text matching
+          if (!currentPageType) {
+            console.log(
+              "No data-page match found, using fallback text matching"
+            );
+            const textPatterns = [
+              {
+                urls: [
+                  "/dashboard/",
+                  "/dashboard/redirect/",
+                  "/dashboard/farmer/",
+                ],
+                text: ["Dashboard"],
+              },
+              {
+                urls: ["/crop-prediction/", "/crop-prediction/prediction/"],
+                text: ["Crop Prediction", "Crop"],
+              },
+              {
+                urls: ["/grants-and-offers/"],
+                text: ["Grants", "Offers"],
+              },
+              { urls: ["/sensors/"], text: ["Sensors"] },
+              {
+                urls: ["/marketplace/"],
+                text: ["Marketplace"],
+              },
+              { urls: ["/auth/login/"], text: ["Login"] },
+              { urls: ["/auth/signup/"], text: ["Sign Up"] },
+              {
+                urls: ["/", "/home/"],
+                text: ["Home"],
+              },
+            ];
+
+            for (const pattern of textPatterns) {
+              const matches = pattern.urls.some(
+                (url) =>
+                  currentPath.includes(url) ||
+                  currentUrl.includes(url) ||
+                  (url === "/" && (currentPath === "/" || currentPath === ""))
+              );
+
+              if (matches) {
+                const allLinks = document.querySelectorAll(
+                  ".nav-link, .mobile-nav-link"
+                );
+                allLinks.forEach((link) => {
+                  const linkText = link.textContent.trim();
+                  const textMatches = pattern.text.some((text) =>
+                    linkText.toLowerCase().includes(text.toLowerCase())
+                  );
+
+                  if (textMatches) {
+                    link.classList.add("active-page");
+                    console.log("Fallback: Added active-page to:", linkText);
+                  }
+                });
+                break;
+              }
+            }
+          }
+
+          console.log("Current path:", currentPath);
+          console.log("Current page type:", currentPageType);
+        }
+
+        // Run current page detection
+        highlightCurrentPage();
+
+        // Re-run on navigation (for SPA-like behavior)
+        window.addEventListener("popstate", highlightCurrentPage);
 
         // User menu dropdown functionality
         const userMenuButton = document.querySelector(".user-menu-button");

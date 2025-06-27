@@ -23,17 +23,18 @@
 }
 
 .navbar.scrolled {
-  background: rgba(255, 255, 255, 0.85);
+  /* Match body bg-gray-50 (#f9fafb) with glassmorphism effect */
+  background: rgba(249, 250, 251, 0.85);
   backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px rgba(34, 42, 53, 0.12), 
-              0 4px 16px rgba(0, 0, 0, 0.08), 
-              0 0 0 1px rgba(34, 42, 53, 0.04), 
-              0 2px 8px rgba(34, 42, 53, 0.06), 
-              0 16px 68px rgba(47, 48, 55, 0.05), 
-              0 1px 0 rgba(255, 255, 255, 0.15) inset;
-  width: 65%;
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(249, 250, 251, 0.3);
+  box-shadow: 0 8px 32px rgba(34, 42, 53, 0.08), 
+              0 4px 16px rgba(0, 0, 0, 0.04), 
+              0 0 0 1px rgba(34, 42, 53, 0.02), 
+              0 2px 8px rgba(34, 42, 53, 0.03), 
+              0 16px 68px rgba(47, 48, 55, 0.02), 
+              0 1px 0 rgba(255, 255, 255, 0.2) inset;
+  width: 55%;
   min-width: 800px;
   padding: 0.5rem 1.25rem;
   transform: translateY(16px);
@@ -48,16 +49,17 @@
 }
 
 .dark .navbar.scrolled {
+  /* Match dark mode body background with glassmorphism */
   background: rgba(9, 9, 11, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
-              0 4px 16px rgba(0, 0, 0, 0.2), 
-              0 0 0 1px rgba(255, 255, 255, 0.05), 
-              0 2px 8px rgba(0, 0, 0, 0.15), 
-              0 16px 68px rgba(0, 0, 0, 0.1), 
-              0 1px 0 rgba(255, 255, 255, 0.05) inset;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(39, 39, 42, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 
+              0 4px 16px rgba(0, 0, 0, 0.15), 
+              0 0 0 1px rgba(255, 255, 255, 0.03), 
+              0 2px 8px rgba(0, 0, 0, 0.1), 
+              0 16px 68px rgba(0, 0, 0, 0.05), 
+              0 1px 0 rgba(255, 255, 255, 0.02) inset;
 }
 
 .nav-items {
@@ -170,37 +172,323 @@
 .nav-link {
   position: relative;
   white-space: nowrap;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+  border-radius: 1px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.05) 0%, 
+    rgba(34, 197, 94, 0.02) 100%);
+  border-radius: 0.5rem;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
 }
 
 .nav-link:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  color: #16a34a;
+  text-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
+}
+
+.nav-link:hover::before {
+  width: 80%;
+}
+
+.nav-link:hover::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Enhanced Current Page Indicator */
+.nav-link.current-page,
+.nav-link.active-page {
+  color: #16a34a !important;
+  font-weight: 600;
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.12) 0%, 
+    rgba(34, 197, 94, 0.06) 100%);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 12px rgba(34, 197, 94, 0.15),
+              0 0 0 1px rgba(34, 197, 94, 0.2),
+              0 1px 3px rgba(34, 197, 94, 0.1);
+  position: relative;
+  overflow: visible;
+}
+
+/* Persistent glow effect */
+.nav-link.current-page::before,
+.nav-link.active-page::before {
+  width: 90% !important;
+  background: linear-gradient(90deg, #16a34a, #22c55e, #16a34a);
+  background-size: 200% 100%;
+  animation: gentle-pulse 3s ease-in-out infinite, 
+             gradient-shift 4s ease-in-out infinite;
+  box-shadow: 0 0 4px rgba(34, 197, 94, 0.4);
+}
+
+.nav-link.current-page::after,
+.nav-link.active-page::after {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.08) 0%, 
+    rgba(34, 197, 94, 0.04) 100%);
+}
+
+/* Enhanced active state that persists on hover */
+.nav-link.current-page:hover,
+.nav-link.active-page:hover {
+  color: #15803d !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.2),
+              0 0 0 1px rgba(34, 197, 94, 0.3),
+              0 2px 8px rgba(34, 197, 94, 0.15);
+}
+
+.nav-link.current-page:hover::before,
+.nav-link.active-page:hover::before {
+  width: 100% !important;
+  animation: active-pulse 2s ease-in-out infinite, 
+             gradient-shift 3s ease-in-out infinite;
+}
+
+/* Enhanced Mobile current page indicator */
+.mobile-nav-link.current-page,
+.mobile-nav-link.active-page {
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.15) 0%, 
+    rgba(34, 197, 94, 0.08) 100%) !important;
+  color: #16a34a !important;
+  font-weight: 600;
+  box-shadow: 0 3px 12px rgba(34, 197, 94, 0.2),
+              0 0 0 1px rgba(34, 197, 94, 0.15),
+              0 1px 3px rgba(34, 197, 94, 0.1);
+  transform: translateX(6px);
+  border-left: 3px solid #16a34a;
+  position: relative;
+}
+
+.mobile-nav-link.current-page::before,
+.mobile-nav-link.active-page::before {
+  width: 4px !important;
+  height: 100%;
+  top: 0;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(180deg, #16a34a, #22c55e);
+  animation: gentle-pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+}
+
+/* Persistent mobile active state */
+.mobile-nav-link.current-page:hover,
+.mobile-nav-link.active-page:hover {
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.18) 0%, 
+    rgba(34, 197, 94, 0.10) 100%) !important;
+  transform: translateX(8px);
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.25),
+              0 0 0 1px rgba(34, 197, 94, 0.2);
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: translateX(-50%) scaleX(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scaleX(1.05);
+  }
+}
+
+@keyframes active-pulse {
+  0%, 100% {
+    opacity: 0.9;
+    transform: translateX(-50%) scaleX(1);
+    box-shadow: 0 0 4px rgba(34, 197, 94, 0.4);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scaleX(1.08);
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+  }
+}
+
+/* Add smooth transitions for active state changes */
+.nav-link {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.2s ease,
+              background 0.3s ease,
+              box-shadow 0.3s ease !important;
+}
+
+.mobile-nav-link {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.3s ease,
+              transform 0.3s ease,
+              box-shadow 0.3s ease !important;
+}
+
+/* Enhanced Focus States for Accessibility */
+.nav-link:focus {
+  outline: none;
+  transform: translateY(-2px);
+  color: #16a34a;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3),
+              0 4px 12px rgba(34, 197, 94, 0.15);
+}
+
+.nav-link:focus::before {
+  width: 100%;
+}
+
+.nav-link:focus::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.mobile-menu-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3),
+              0 4px 12px rgba(34, 197, 94, 0.15);
+}
+
+.user-menu-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3),
+              0 4px 12px rgba(34, 197, 94, 0.15);
+}
+
+.mobile-nav-link:focus {
+  outline: none;
+  transform: translateX(8px);
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.08) 0%, 
+    rgba(34, 197, 94, 0.02) 100%);
+  color: #16a34a;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3),
+              0 2px 8px rgba(34, 197, 94, 0.1);
+}
+
+.mobile-nav-link:focus::before {
+  width: 4px;
+}
+
+/* Active states */
+.nav-link:active {
+  transform: translateY(0);
+  transition-duration: 0.1s;
+}
+
+.mobile-nav-link:active {
+  transform: translateX(4px);
+  transition-duration: 0.1s;
+}
+
+.mobile-menu-toggle:active {
+  transform: scale(0.98);
+  transition-duration: 0.1s;
 }
 
 /* Enhanced Mobile Menu */
 .mobile-menu-content {
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15),
-              0 8px 16px rgba(0, 0, 0, 0.1);
+  /* Match body bg-gray-50 with enhanced glassmorphism */
+  background: rgba(249, 250, 251, 0.95);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  border: 1px solid rgba(249, 250, 251, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08),
+              0 8px 16px rgba(0, 0, 0, 0.04),
+              0 0 0 1px rgba(34, 42, 53, 0.02);
 }
 
 .mobile-nav-link {
   font-weight: 500;
-  transition: all 0.3s ease;
-  border-radius: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0.75rem;
   margin: 0 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-nav-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+  border-radius: 1px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-50%);
 }
 
 .mobile-nav-link:hover {
-  transform: translateX(4px);
-  background: linear-gradient(90deg, rgba(34, 197, 94, 0.1), transparent);
+  transform: translateX(8px);
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.08) 0%, 
+    rgba(34, 197, 94, 0.02) 100%);
+  color: #16a34a;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1),
+              0 0 0 1px rgba(34, 197, 94, 0.05);
 }
 
-/* Mobile User Actions */
-@media (max-width: 1024px) {
-  .nav-actions .lg\\:hidden {
-    margin-right: 0.5rem;
+.mobile-nav-link:hover::before {
+  width: 4px;
+}
+
+/* Subtle loading effect for menu interactions */
+.mobile-menu.active .mobile-nav-link {
+  animation: slide-in-left 0.3s ease-out forwards;
+}
+
+.mobile-menu.active .mobile-nav-link:nth-child(1) { animation-delay: 0.05s; }
+.mobile-menu.active .mobile-nav-link:nth-child(2) { animation-delay: 0.1s; }
+.mobile-menu.active .mobile-nav-link:nth-child(3) { animation-delay: 0.15s; }
+.mobile-menu.active .mobile-nav-link:nth-child(4) { animation-delay: 0.2s; }
+.mobile-menu.active .mobile-nav-link:nth-child(5) { animation-delay: 0.25s; }
+.mobile-menu.active .mobile-nav-link:nth-child(6) { animation-delay: 0.3s; }
+
+@keyframes slide-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
@@ -214,19 +502,22 @@
 }
 
 .navbar.scrolled .mobile-menu-toggle {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Match body background with subtle glassmorphism */
+  background: rgba(249, 250, 251, 0.6);
+  border: 1px solid rgba(249, 250, 251, 0.4);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
 .mobile-menu-toggle:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: scale(1.02);
+  background: rgba(249, 250, 251, 0.8);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
 }
 
 .navbar.scrolled .mobile-menu-toggle:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(249, 250, 251, 0.9);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.2);
 }
 
 .hamburger {
@@ -263,21 +554,39 @@
 /* Mobile Menu */
 .mobile-menu {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Default state should be hidden since HTML starts with 'hidden' class */
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
-}
-
-.mobile-menu.active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+  pointer-events: none;
+  display: block;
 }
 
 .mobile-menu.hidden {
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translateY(-10px) !important;
+  pointer-events: none !important;
+  display: none !important;
+}
+
+.mobile-menu.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+  display: block !important;
+}
+
+/* Ensure mobile nav is visible on mobile screens */
+@media (max-width: 1024px) {
+  .mobile-nav {
+    display: block !important;
+  }
+  
+  .mobile-menu-toggle {
+    display: block !important;
+  }
 }
 
 @keyframes slideDown {
@@ -333,6 +642,85 @@
   }
 }
 
+/* Enhanced User Menu & Action Buttons */
+.user-menu-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.user-menu-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.1) 0%, 
+    rgba(34, 197, 94, 0.05) 100%);
+  border-radius: inherit;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.user-menu-button:hover {
+  transform: translateY(-1px);
+  color: #16a34a;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+}
+
+.user-menu-button:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Enhanced Sign Up Button */
+.bg-primary-600 {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bg-primary-600::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.2), 
+    transparent);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bg-primary-600:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3),
+              0 4px 12px rgba(34, 197, 94, 0.2);
+}
+
+.bg-primary-600:hover::before {
+  left: 100%;
+}
+
+/* Logo Hover Effect */
+.nav-brand a {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 1rem;
+  padding: 0.25rem;
+}
+
+.nav-brand a:hover {
+  transform: scale(1.05);
+  background: rgba(34, 197, 94, 0.05);
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.1);
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .navbar-container {
@@ -351,13 +739,14 @@
 }
 
 /* Fallback for browsers without backdrop-filter support */
-@supports not (backdrop-filter: blur(16px)) {
+@supports not (backdrop-filter: blur(12px)) {
   .navbar.scrolled {
-    background: rgba(255, 255, 255, 0.95);
+    /* Match body bg-gray-50 for seamless integration */
+    background: rgba(249, 250, 251, 0.98);
   }
   
   .dark .navbar.scrolled {
-    background: rgba(9, 9, 11, 0.95);
+    background: rgba(9, 9, 11, 0.98);
   }
 }
 
@@ -368,7 +757,7 @@
 }
 
 /* Glassmorphism enhancement */
-@supports (backdrop-filter: blur(16px)) {
+@supports (backdrop-filter: blur(12px)) {
   .navbar.scrolled::before {
     content: '';
     position: absolute;
@@ -376,16 +765,114 @@
     left: 0;
     right: 0;
     bottom: 0;
+    /* Subtle gradient that matches bg-gray-50 theme */
     background: linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.1) 0%, 
-      rgba(255, 255, 255, 0.05) 100%);
+      rgba(249, 250, 251, 0.1) 0%, 
+      rgba(249, 250, 251, 0.05) 100%);
     border-radius: inherit;
     pointer-events: none;
   }
   
   .dark .navbar.scrolled::before {
     background: linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.05) 0%, 
-      rgba(255, 255, 255, 0.02) 100%);
+      rgba(39, 39, 42, 0.08) 0%, 
+      rgba(9, 9, 11, 0.04) 100%);
+  }
+}
+
+/* Enhanced active state for scrolled navbar */
+.navbar.scrolled .nav-link.active-page,
+.navbar.scrolled .nav-link.current-page {
+  color: #15803d !important;
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.18) 0%, 
+    rgba(34, 197, 94, 0.12) 100%);
+  box-shadow: 0 2px 16px rgba(34, 197, 94, 0.2),
+              0 0 0 1px rgba(34, 197, 94, 0.25),
+              0 1px 4px rgba(34, 197, 94, 0.15);
+}
+
+.navbar.scrolled .nav-link.active-page::before,
+.navbar.scrolled .nav-link.current-page::before {
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+}
+
+/* Ensure active state is visible on different backgrounds */
+.nav-link.active-page,
+.nav-link.current-page {
+  /* High contrast for better visibility */
+  text-shadow: 0 1px 2px rgba(34, 197, 94, 0.3);
+}
+
+/* Dark mode enhancements */
+.dark .nav-link.active-page,
+.dark .nav-link.current-page {
+  color: #22c55e !important;
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.15) 0%, 
+    rgba(34, 197, 94, 0.08) 100%);
+  box-shadow: 0 2px 12px rgba(34, 197, 94, 0.2),
+              0 0 0 1px rgba(34, 197, 94, 0.3);
+}
+
+.dark .mobile-nav-link.active-page,
+.dark .mobile-nav-link.current-page {
+  background: linear-gradient(135deg, 
+    rgba(34, 197, 94, 0.2) 0%, 
+    rgba(34, 197, 94, 0.12) 100%) !important;
+  color: #22c55e !important;
+  border-left-color: #22c55e;
+}
+
+/* Persistent indicator dot for extra clarity */
+.nav-link.active-page::after,
+.nav-link.current-page::after {
+  position: relative;
+}
+
+.nav-link.active-page::after::before,
+.nav-link.current-page::after::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 6px;
+  height: 6px;
+  background: #16a34a;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(34, 197, 94, 0.6);
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Smooth state transitions */
+.nav-link.active-page,
+.nav-link.current-page,
+.mobile-nav-link.active-page,
+.mobile-nav-link.current-page {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Ensure visibility across all viewport sizes */
+@media (max-width: 768px) {
+  .mobile-nav-link.active-page,
+  .mobile-nav-link.current-page {
+    border-left-width: 4px;
+    padding-left: 16px;
+  }
+  
+  .mobile-nav-link.active-page::before,
+  .mobile-nav-link.current-page::before {
+    width: 6px !important;
   }
 }
