@@ -189,7 +189,7 @@
                 <div class="space-y-1">
                   {% for crop in crops %}
                   <div class="text-sm text-gray-900">
-                    {{ crop.crop_name|default:crop.name }} 
+                    {% if crop.crop_name %}{{ crop.crop_name }}{% elif crop.name %}{{ crop.name }}{% endif %}
                     {% if crop.confidence is not None %}
                     <span class="text-xs text-gray-500">
                       ({% if crop.confidence < 1 %}{% widthratio crop.confidence 1 100 as percent %}{{ percent|floatformat:0 }}{% else %}{{ crop.confidence|floatformat:0 }}{% endif %}%)
