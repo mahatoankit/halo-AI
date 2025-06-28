@@ -1,0 +1,323 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Shopping Cart -
+Agricultural Marketplace{% endblock %} {% block content %}
+<div class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <h1 class="text-3xl font-bold text-gray-900">🛒 Shopping Cart</h1>
+        <a
+          href="{% url 'marketplace:product_list' %}"
+          class="text-green-600 hover:text-green-800 font-medium"
+        >
+          ← Continue Shopping
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    {% if cart_items %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Cart Items -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">
+              Items in your cart
+            </h2>
+          </div>
+
+          <div class="divide-y divide-gray-200">
+            {% for item in cart_items %}
+            <div
+              class="p-6 flex items-center space-x-4"
+              data-product-id="{{ item.product.id }}"
+            >
+              <!-- Product Image -->
+              <div
+                class="flex-shrink-0 w-20 h-20 bg-gradient-to-br from-green-100 to-blue-100 rounded-lg overflow-hidden"
+              >
+                {% if item.product.image_url %}
+                <img
+                  src="{{ item.product.image_url }}"
+                  alt="{{ item.product.name }}"
+                  class="w-full h-full object-cover"
+                />
+                {% else %}
+                <div class="w-full h-full flex items-center justify-center">
+                  <span class="text-2xl">📦</span>
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Product Details -->
+              <div class="flex-1">
+                <h3 class="text-lg font-semibold text-gray-900">
+                  {{ item.product.name }}
+                </h3>
+                <p class="text-sm text-gray-600">
+                  {{ item.product.vendor.name }}
+                </p>
+                <p class="text-sm text-gray-500">
+                  {{ item.product.category.name }}
+                </p>
+
+                <!-- Price per unit -->
+                <p class="text-green-600 font-medium mt-1">
+                  Rs.{{ item.price }} per {{ item.product.unit }}
+                </p>
+              </div>
+
+              <!-- Quantity Controls -->
+              <div class="flex items-center space-x-2">
+                <button
+                  type="button"
+                  class="update-quantity bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+                  data-action="decrease"
+                  data-product-id="{{ item.product.id }}"
+                >
+                  -
+                </button>
+                <span class="quantity-display w-8 text-center font-medium"
+                  >{{ item.quantity }}</span
+                >
+                <button
+                  type="button"
+                  class="update-quantity bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300"
+                  data-action="increase"
+                  data-product-id="{{ item.product.id }}"
+                >
+                  +
+                </button>
+              </div>
+
+              <!-- Item Total -->
+              <div class="text-right">
+                <p class="text-lg font-bold text-gray-900 item-total">
+                  Rs.{{ item.total|floatformat:2 }}
+                </p>
+                <button
+                  type="button"
+                  class="remove-item text-red-600 hover:text-red-800 text-sm"
+                  data-product-id="{{ item.product.id }}"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-lg shadow-sm p-6 sticky top-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-4">
+            📋 Order Summary
+          </h2>
+
+          <div class="space-y-3">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Subtotal</span>
+              <span class="font-medium" id="subtotal"
+                >Rs.{{ total_amount|floatformat:2 }}</span
+              >
+            </div>
+
+            <div class="flex justify-between">
+              <span class="text-gray-600">Platform Fee (5%)</span>
+              <span class="font-medium" id="platform-fee"
+                >Rs.{{ commission_amount|floatformat:2 }}</span
+              >
+            </div>
+
+            <div class="border-t border-gray-200 pt-3">
+              <div class="flex justify-between text-lg font-bold">
+                <span>Total</span>
+                <span class="text-green-600" id="final-total"
+                  >Rs.{{ final_amount|floatformat:2 }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 space-y-3">
+            <a
+              href="{% url 'marketplace:checkout' %}"
+              class="block w-full bg-green-600 text-white text-center py-3 px-4 rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+            >
+              🚀 Proceed to Checkout
+            </a>
+
+            <a
+              href="{% url 'marketplace:product_list' %}"
+              class="block w-full bg-gray-200 text-gray-700 text-center py-3 px-4 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+            >
+              Continue Shopping
+            </a>
+          </div>
+
+          <!-- Security Notice -->
+          <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-start">
+              <span class="text-blue-500 text-lg mr-2">🔒</span>
+              <div>
+                <p class="text-sm font-medium text-blue-800">Secure Checkout</p>
+                <p class="text-xs text-blue-600 mt-1">
+                  Your payment information is encrypted and secure.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <!-- Empty Cart -->
+    <div class="text-center py-16">
+      <div class="text-6xl mb-4">🛒</div>
+      <h3 class="text-2xl font-semibold text-gray-900 mb-2">
+        Your cart is empty
+      </h3>
+      <p class="text-gray-600 mb-8">
+        Add some products to your cart to get started.
+      </p>
+
+      <div class="space-y-4">
+        <a
+          href="{% url 'marketplace:product_list' %}"
+          class="inline-block bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
+        >
+          🛍️ Start Shopping
+        </a>
+
+        <p class="text-gray-500">
+          or
+          <a
+            href="{% url 'marketplace:home' %}"
+            class="text-green-600 hover:text-green-800"
+            >browse featured products</a
+          >
+        </p>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Function to update cart totals
+    function updateCartTotals() {
+      let subtotal = 0;
+      document.querySelectorAll(".item-total").forEach(function (element) {
+        const price = parseFloat(
+          element.textContent.replace("Rs.", "").replace(",", "")
+        );
+        subtotal += price;
+      });
+
+      const platformFee = subtotal * 0.05;
+      const total = subtotal + platformFee;
+
+      document.getElementById("subtotal").textContent = `Rs.${subtotal.toFixed(
+        2
+      )}`;
+      document.getElementById(
+        "platform-fee"
+      ).textContent = `Rs.${platformFee.toFixed(2)}`;
+      document.getElementById("final-total").textContent = `Rs.${total.toFixed(
+        2
+      )}`;
+    }
+
+    // Handle quantity updates
+    document.querySelectorAll(".update-quantity").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const action = this.dataset.action;
+        const productId = this.dataset.productId;
+        const quantityElement =
+          this.parentElement.querySelector(".quantity-display");
+        const itemTotalElement =
+          this.closest("[data-product-id]").querySelector(".item-total");
+
+        let currentQuantity = parseInt(quantityElement.textContent);
+        let newQuantity = currentQuantity;
+
+        if (action === "increase") {
+          newQuantity = currentQuantity + 1;
+        } else if (action === "decrease" && currentQuantity > 1) {
+          newQuantity = currentQuantity - 1;
+        }
+
+        if (newQuantity !== currentQuantity) {
+          // Update quantity display
+          quantityElement.textContent = newQuantity;
+
+          // Calculate new item total (assuming we can get the unit price)
+          const unitPriceText =
+            this.closest("[data-product-id]").querySelector(
+              ".text-green-600"
+            ).textContent;
+          const unitPrice = parseFloat(
+            unitPriceText.match(/Rs\.(\d+(?:\.\d+)?)/)[1]
+          );
+          const newTotal = newQuantity * unitPrice;
+
+          itemTotalElement.textContent = `Rs.${newTotal.toFixed(2)}`;
+
+          // Update cart totals
+          updateCartTotals();
+
+          // TODO: Send AJAX request to update server-side cart
+          // This would require implementing an update endpoint in views.py
+        }
+      });
+    });
+
+    // Handle item removal
+    document.querySelectorAll(".remove-item").forEach(function (button) {
+      button.addEventListener("click", function () {
+        if (
+          confirm("Are you sure you want to remove this item from your cart?")
+        ) {
+          const productId = this.dataset.productId;
+          const itemElement = this.closest("[data-product-id]");
+
+          // Remove the item from DOM
+          itemElement.remove();
+
+          // Update cart totals
+          updateCartTotals();
+
+          // Check if cart is empty
+          const remainingItems = document.querySelectorAll("[data-product-id]");
+          if (remainingItems.length === 0) {
+            // Redirect to empty cart view or reload page
+            window.location.reload();
+          }
+
+          // TODO: Send AJAX request to update server-side cart
+          // This would require implementing a remove endpoint in views.py
+        }
+      });
+    });
+
+    // Add loading states for better UX
+    function addLoadingState(element) {
+      element.disabled = true;
+      element.style.opacity = "0.6";
+      element.style.cursor = "not-allowed";
+    }
+
+    function removeLoadingState(element) {
+      element.disabled = false;
+      element.style.opacity = "1";
+      element.style.cursor = "pointer";
+    }
+  });
+</script>
+{% endblock %}

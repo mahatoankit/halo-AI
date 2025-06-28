@@ -126,15 +126,17 @@
             href="{% url 'experts:experts_list' %}"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             data-page="experts"
-            >🌾 Expert Consultation</a
           >
+            Expert Consultation
+          </a>
           {% if user.is_authenticated and user.is_farmer %}
           <a
             href="{% url 'marketplace:home' %}"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
             data-page="marketplace"
-            >🛒 Marketplace</a
           >
+            Marketplace
+          </a>
           {% endif %} {% else %}
           <!-- Public Navigation -->
           <a
@@ -259,10 +261,10 @@
             >
             {% endif %}
             <a
-              href="#"
+              href="{% url 'experts:experts_list' %}"
               class="mobile-nav-link block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors"
-              data-page="expert"
-              >Connect with Expert</a
+              data-page="experts"
+              >Expert Consultation</a
             >
             {% if user.is_authenticated and user.is_farmer %}
             <a
@@ -523,6 +525,7 @@
             crops: ["/crop-prediction/", "/crop-prediction/prediction/"],
             grants: ["/grants-and-offers/"],
             sensors: ["/sensors/"],
+            experts: ["/experts/"],
             marketplace: ["/marketplace/"],
             login: ["/auth/login/"],
             signup: ["/auth/signup/"],
@@ -530,7 +533,6 @@
             features: ["#features"],
             pricing: ["#pricing"],
             contact: ["#contact"],
-            expert: ["#expert"],
           };
 
           // Find current page with enhanced debugging
@@ -618,6 +620,10 @@
                 text: ["Grants", "Offers"],
               },
               { urls: ["/sensors/"], text: ["Sensors"] },
+              {
+                urls: ["/experts/"],
+                text: ["Expert Consultation", "Expert", "Consultation"],
+              },
               {
                 urls: ["/marketplace/"],
                 text: ["Marketplace"],

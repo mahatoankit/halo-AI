@@ -1,0 +1,259 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Order History -
+Agricultural Marketplace{% endblock %} {% block content %}
+<div class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <h1 class="text-3xl font-bold text-gray-900">📋 Order History</h1>
+        <a
+          href="{% url 'marketplace:home' %}"
+          class="text-green-600 hover:text-green-800 font-medium"
+        >
+          ← Back to Marketplace
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    {% if orders %}
+    <div class="space-y-6">
+      {% for order in orders %}
+      <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+        <!-- Order Header -->
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900">
+                Order #{{ order.order_number }}
+              </h3>
+              <p class="text-sm text-gray-600">
+                Placed on {{ order.created_at|date:"F j, Y \a\t g:i A" }}
+              </p>
+            </div>
+
+            <div class="mt-2 sm:mt-0 flex items-center space-x-4">
+              <span
+                class="px-3 py-1 rounded-full text-sm font-medium {% if order.status == 'delivered' %}bg-green-100 text-green-800 {% elif order.status == 'shipped' %}bg-blue-100 text-blue-800 {% elif order.status == 'processing' %}bg-yellow-100 text-yellow-800 {% elif order.status == 'confirmed' %}bg-indigo-100 text-indigo-800 {% elif order.status == 'cancelled' %}bg-red-100 text-red-800 {% else %}bg-gray-100 text-gray-800{% endif %}"
+              >
+                {% if order.status == 'pending' %}⏳ Pending {% elif
+                order.status == 'confirmed' %}✅ Confirmed {% elif order.status
+                == 'processing' %}🔄 Processing {% elif order.status ==
+                'shipped' %}🚚 Shipped {% elif order.status == 'delivered' %}📦
+                Delivered {% elif order.status == 'cancelled' %}❌ Cancelled {%
+                else %}{{ order.get_status_display }}{% endif %}
+              </span>
+
+              <span class="text-lg font-bold text-gray-900">
+                Rs.{{ order.total_amount|floatformat:2 }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="px-6 py-4">
+          <h4 class="text-sm font-medium text-gray-900 mb-3">Order Items</h4>
+          <div class="space-y-3">
+            {% for item in order.items.all %}
+            <div
+              class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0"
+            >
+              <div class="flex items-center space-x-3">
+                <div
+                  class="w-12 h-12 bg-gradient-to-br from-green-100 to-blue-100 rounded-lg flex items-center justify-center"
+                >
+                  {% if item.product.image_url %}
+                  <img
+                    src="{{ item.product.image_url }}"
+                    alt="{{ item.product.name }}"
+                    class="w-full h-full object-cover rounded-lg"
+                  />
+                  {% else %}
+                  <span class="text-lg">📦</span>
+                  {% endif %}
+                </div>
+
+                <div>
+                  <p class="font-medium text-gray-900">
+                    {{ item.product.name }}
+                  </p>
+                  <p class="text-sm text-gray-600">
+                    {{ item.quantity }} × Rs.{{ item.unit_price }} per {{
+                    item.product.unit }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="text-right">
+                <p class="font-medium text-gray-900">
+                  Rs.{{ item.total_price|floatformat:2 }}
+                </p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Order Details -->
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h5 class="text-sm font-medium text-gray-900 mb-2">
+                📍 Delivery Address
+              </h5>
+              <p class="text-sm text-gray-600">{{ order.delivery_address }}</p>
+
+              <h5 class="text-sm font-medium text-gray-900 mt-4 mb-2">
+                📞 Contact
+              </h5>
+              <p class="text-sm text-gray-600">{{ order.delivery_phone }}</p>
+
+              {% if order.notes %}
+              <h5 class="text-sm font-medium text-gray-900 mt-4 mb-2">
+                📝 Notes
+              </h5>
+              <p class="text-sm text-gray-600">{{ order.notes }}</p>
+              {% endif %}
+            </div>
+
+            <div>
+              <h5 class="text-sm font-medium text-gray-900 mb-2">
+                💰 Payment Summary
+              </h5>
+              <div class="space-y-1 text-sm">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Subtotal:</span>
+                  <span
+                    >Rs.{{
+                    order.total_amount|add:order.commission_amount|floatformat:2
+                    }}</span
+                  >
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Platform Fee:</span>
+                  <span>Rs.{{ order.commission_amount|floatformat:2 }}</span>
+                </div>
+                <div
+                  class="flex justify-between font-medium border-t border-gray-200 pt-1"
+                >
+                  <span>Total:</span>
+                  <span>Rs.{{ order.total_amount|floatformat:2 }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex justify-end space-x-3">
+            <a
+              href="{% url 'marketplace:order_detail' order.id %}"
+              class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+            >
+              View Details
+            </a>
+
+            {% if order.status == 'pending' %}
+            <button
+              type="button"
+              class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
+              onclick="cancelOrder('{{ order.id }}')"
+            >
+              Cancel Order
+            </button>
+            {% endif %} {% if order.status == 'delivered' %}
+            <button
+              type="button"
+              class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+            >
+              Reorder
+            </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if orders.has_other_pages %}
+    <div class="mt-12 flex justify-center">
+      <nav class="inline-flex rounded-md shadow">
+        {% if orders.has_previous %}
+        <a
+          href="?page={{ orders.previous_page_number }}"
+          class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+        >
+          Previous
+        </a>
+        {% endif %} {% for num in orders.paginator.page_range %} {% if
+        orders.number == num %}
+        <span
+          class="px-3 py-2 border border-gray-300 bg-green-600 text-sm font-medium text-white"
+        >
+          {{ num }}
+        </span>
+        {% elif num > orders.number|add:'-3' and num < orders.number|add:'3' %}
+        <a
+          href="?page={{ num }}"
+          class="px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+        >
+          {{ num }}
+        </a>
+        {% endif %} {% endfor %} {% if orders.has_next %}
+        <a
+          href="?page={{ orders.next_page_number }}"
+          class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+        >
+          Next
+        </a>
+        {% endif %}
+      </nav>
+    </div>
+    {% endif %} {% else %}
+    <!-- No Orders -->
+    <div class="text-center py-16">
+      <div class="text-6xl mb-4">📋</div>
+      <h3 class="text-2xl font-semibold text-gray-900 mb-2">No orders yet</h3>
+      <p class="text-gray-600 mb-8">
+        You haven't placed any orders yet. Start shopping to see your order
+        history here.
+      </p>
+
+      <a
+        href="{% url 'marketplace:product_list' %}"
+        class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
+      >
+        🛍️ Start Shopping
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  function cancelOrder(orderId) {
+    if (
+      confirm(
+        "Are you sure you want to cancel this order? This action cannot be undone."
+      )
+    ) {
+      // TODO: Implement order cancellation
+      // This would require implementing a cancel endpoint in views.py
+      alert("Order cancellation feature coming soon!");
+    }
+  }
+
+  function reorderItems(orderId) {
+    if (
+      confirm("This will add all items from this order to your cart. Continue?")
+    ) {
+      // TODO: Implement reorder functionality
+      // This would require implementing a reorder endpoint in views.py
+      alert("Reorder feature coming soon!");
+    }
+  }
+</script>
+{% endblock %}

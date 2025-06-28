@@ -1,0 +1,387 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Order #{{
+order.order_number }} - Agricultural Marketplace{% endblock %} {% block content
+%}
+<div class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">
+            Order #{{ order.order_number }}
+          </h1>
+          <p class="text-gray-600">
+            Placed on {{ order.created_at|date:"F j, Y \a\t g:i A" }}
+          </p>
+        </div>
+        <a
+          href="{% url 'marketplace:order_history' %}"
+          class="text-green-600 hover:text-green-800 font-medium"
+        >
+          ← Back to Orders
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Order Details -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Order Status -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">
+            📊 Order Status
+          </h2>
+
+          <div class="flex items-center mb-6">
+            <span
+              class="px-4 py-2 rounded-full text-lg font-medium {% if order.status == 'delivered' %}bg-green-100 text-green-800 {% elif order.status == 'shipped' %}bg-blue-100 text-blue-800 {% elif order.status == 'processing' %}bg-yellow-100 text-yellow-800 {% elif order.status == 'confirmed' %}bg-indigo-100 text-indigo-800 {% elif order.status == 'cancelled' %}bg-red-100 text-red-800 {% else %}bg-gray-100 text-gray-800{% endif %}"
+            >
+              {% if order.status == 'pending' %}⏳ Pending Confirmation {% elif
+              order.status == 'confirmed' %}✅ Confirmed {% elif order.status ==
+              'processing' %}🔄 Processing {% elif order.status == 'shipped'
+              %}🚚 Shipped {% elif order.status == 'delivered' %}📦 Delivered {%
+              elif order.status == 'cancelled' %}❌ Cancelled {% else %}{{
+              order.get_status_display }}{% endif %}
+            </span>
+          </div>
+
+          <!-- Order Timeline -->
+          <div class="space-y-4">
+            <div class="flex items-center">
+              <div
+                class="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center"
+              >
+                <span class="text-white text-sm">✓</span>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-900">Order Placed</p>
+                <p class="text-xs text-gray-500">
+                  {{ order.created_at|date:"M j, Y g:i A" }}
+                </p>
+              </div>
+            </div>
+
+            {% if order.status != 'pending' and order.status != 'cancelled' %}
+            <div class="flex items-center">
+              <div
+                class="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center"
+              >
+                <span class="text-white text-sm">✓</span>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-900">Order Confirmed</p>
+                <p class="text-xs text-gray-500">
+                  {{ order.updated_at|date:"M j, Y g:i A" }}
+                </p>
+              </div>
+            </div>
+            {% endif %} {% if order.status == 'processing' or order.status ==
+            'shipped' or order.status == 'delivered' %}
+            <div class="flex items-center">
+              <div
+                class="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center"
+              >
+                <span class="text-white text-sm">✓</span>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-900">Processing</p>
+                <p class="text-xs text-gray-500">
+                  Items being prepared for shipment
+                </p>
+              </div>
+            </div>
+            {% endif %} {% if order.status == 'shipped' or order.status ==
+            'delivered' %}
+            <div class="flex items-center">
+              <div
+                class="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center"
+              >
+                <span class="text-white text-sm">✓</span>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-900">Shipped</p>
+                <p class="text-xs text-gray-500">Out for delivery</p>
+              </div>
+            </div>
+            {% endif %} {% if order.status == 'delivered' %}
+            <div class="flex items-center">
+              <div
+                class="flex-shrink-0 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center"
+              >
+                <span class="text-white text-sm">✓</span>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-900">Delivered</p>
+                <p class="text-xs text-gray-500">
+                  Order completed successfully
+                </p>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">
+            📦 Order Items
+          </h2>
+
+          <div class="space-y-4">
+            {% for item in order.items.all %}
+            <div
+              class="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg"
+            >
+              <div
+                class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-green-100 to-blue-100 rounded-lg overflow-hidden"
+              >
+                {% if item.product.image_url %}
+                <img
+                  src="{{ item.product.image_url }}"
+                  alt="{{ item.product.name }}"
+                  class="w-full h-full object-cover"
+                />
+                {% else %}
+                <div class="w-full h-full flex items-center justify-center">
+                  <span class="text-2xl">📦</span>
+                </div>
+                {% endif %}
+              </div>
+
+              <div class="flex-1">
+                <h3 class="font-semibold text-gray-900">
+                  {{ item.product.name }}
+                </h3>
+                <p class="text-sm text-gray-600">
+                  {{ item.product.vendor.name }}
+                </p>
+                <p class="text-sm text-gray-500">
+                  {{ item.product.category.name }}
+                </p>
+
+                <div class="mt-2 flex items-center space-x-4">
+                  <span class="text-sm text-gray-600">
+                    Quantity:
+                    <strong
+                      >{{ item.quantity }} {{ item.product.unit }}s</strong
+                    >
+                  </span>
+                  <span class="text-sm text-gray-600">
+                    Unit Price: <strong>Rs.{{ item.unit_price }}</strong>
+                  </span>
+                </div>
+              </div>
+
+              <div class="text-right">
+                <p class="text-lg font-bold text-gray-900">
+                  Rs.{{ item.total_price|floatformat:2 }}
+                </p>
+                <a
+                  href="{% url 'marketplace:product_detail' item.product.id %}"
+                  class="text-sm text-green-600 hover:text-green-800"
+                >
+                  View Product
+                </a>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <!-- Payment Summary -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            💰 Payment Summary
+          </h3>
+
+          <div class="space-y-3">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Subtotal</span>
+              <span class="font-medium"
+                >Rs.{{
+                order.total_amount|add:order.commission_amount|floatformat:2
+                }}</span
+              >
+            </div>
+
+            <div class="flex justify-between">
+              <span class="text-gray-600">Platform Fee</span>
+              <span class="font-medium"
+                >Rs.{{ order.commission_amount|floatformat:2 }}</span
+              >
+            </div>
+
+            <div class="flex justify-between">
+              <span class="text-gray-600">Delivery Charge</span>
+              <span class="font-medium text-green-600">FREE</span>
+            </div>
+
+            <div class="border-t border-gray-200 pt-3">
+              <div class="flex justify-between text-lg font-bold">
+                <span>Total Paid</span>
+                <span class="text-green-600"
+                  >Rs.{{ order.total_amount|floatformat:2 }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+            <p class="text-sm text-blue-800">
+              <strong>💵 Payment Method:</strong> Cash on Delivery
+            </p>
+          </div>
+        </div>
+
+        <!-- Delivery Information -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">
+            📍 Delivery Information
+          </h3>
+
+          <div class="space-y-4">
+            <div>
+              <p class="text-sm font-medium text-gray-900 mb-1">
+                Delivery Address
+              </p>
+              <p class="text-sm text-gray-600">{{ order.delivery_address }}</p>
+            </div>
+
+            <div>
+              <p class="text-sm font-medium text-gray-900 mb-1">
+                Contact Number
+              </p>
+              <p class="text-sm text-gray-600">{{ order.delivery_phone }}</p>
+            </div>
+
+            {% if order.notes %}
+            <div>
+              <p class="text-sm font-medium text-gray-900 mb-1">
+                Special Instructions
+              </p>
+              <p class="text-sm text-gray-600">{{ order.notes }}</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">🔧 Actions</h3>
+
+          <div class="space-y-3">
+            {% if order.status == 'pending' %}
+            <button
+              type="button"
+              class="w-full bg-red-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-red-700 transition-colors"
+              onclick="cancelOrder('{{ order.id }}')"
+            >
+              ❌ Cancel Order
+            </button>
+            {% endif %} {% if order.status == 'delivered' %}
+            <button
+              type="button"
+              class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              onclick="reorderItems('{{ order.id }}')"
+            >
+              🔄 Reorder Items
+            </button>
+            {% endif %}
+
+            <button
+              type="button"
+              class="w-full bg-gray-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-700 transition-colors"
+              onclick="window.print()"
+            >
+              🖨️ Print Order
+            </button>
+
+            <a
+              href="{% url 'marketplace:home' %}"
+              class="block w-full bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 text-center transition-colors"
+            >
+              🛍️ Continue Shopping
+            </a>
+          </div>
+        </div>
+
+        <!-- Support -->
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div class="flex items-start">
+            <span class="text-yellow-500 text-lg mr-2">💬</span>
+            <div>
+              <p class="text-sm font-medium text-yellow-800">Need Help?</p>
+              <p class="text-xs text-yellow-600 mt-1">
+                Contact our support team for any questions about your order.
+              </p>
+              <a
+                href="#"
+                class="text-xs text-yellow-800 underline hover:no-underline mt-2 block"
+              >
+                Contact Support
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function cancelOrder(orderId) {
+    if (
+      confirm(
+        "Are you sure you want to cancel this order? This action cannot be undone."
+      )
+    ) {
+      // TODO: Implement order cancellation
+      // This would require implementing a cancel endpoint in views.py
+      alert("Order cancellation feature coming soon!");
+    }
+  }
+
+  function reorderItems(orderId) {
+    if (
+      confirm("This will add all items from this order to your cart. Continue?")
+    ) {
+      // TODO: Implement reorder functionality
+      // This would require implementing a reorder endpoint in views.py
+      alert("Reorder feature coming soon!");
+    }
+  }
+
+  // Print styling
+  window.addEventListener("beforeprint", function () {
+    document.body.classList.add("print-mode");
+  });
+
+  window.addEventListener("afterprint", function () {
+    document.body.classList.remove("print-mode");
+  });
+</script>
+
+<style>
+  @media print {
+    body.print-mode {
+      -webkit-print-color-adjust: exact;
+      color-adjust: exact;
+    }
+
+    body.print-mode .bg-gray-50,
+    body.print-mode .shadow-sm {
+      background: white !important;
+      box-shadow: none !important;
+    }
+
+    body.print-mode button {
+      display: none !important;
+    }
+  }
+</style>
+{% endblock %}

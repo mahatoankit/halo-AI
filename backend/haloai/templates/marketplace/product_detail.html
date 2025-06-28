@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ product.name }} - Agricultural Marketplace{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen">
+  <!-- Breadcrumb -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <nav class="flex" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+          <li class="inline-flex items-center">
+            <a href="{% url 'marketplace:home' %}" class="text-gray-700 hover:text-green-600">
+              🏠 Marketplace
+            </a>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <span class="mx-2 text-gray-400">/</span>
+              <a href="{% url 'marketplace:product_list' %}?category={{ product.category.id }}" class="text-gray-700 hover:text-green-600">
+                {{ product.category.name }}
+              </a>
+            </div>
+          </li>
+          <li aria-current="page">
+            <div class="flex items-center">
+              <span class="mx-2 text-gray-400">/</span>
+              <span class="text-gray-500">{{ product.name|truncatechars:30 }}</span>
+            </div>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <!-- Product Image -->
+      <div class="space-y-4">
+        <div class="aspect-square bg-gradient-to-br from-green-100 to-blue-100 rounded-lg overflow-hidden shadow-lg">
+          {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+          {% else %}
+            <div class="w-full h-full flex items-center justify-center">
+              <span class="text-9xl">📦</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Product badges -->
+        <div class="flex flex-wrap gap-2">
+          {% if product.is_featured %}
+            <span class="bg-yellow-400 text-yellow-900 text-sm font-bold px-3 py-1 rounded-full">
+              ⭐ Featured Product
+            </span>
+          {% endif %}
+          
+          {% if product.stock_quantity < 10 %}
+            <span class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+              ⚠️ Low Stock
+            </span>
+          {% elif product.stock_quantity > 100 %}
+            <span class="bg-green-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+              ✅ In Stock
+            </span>
+          {% endif %}
+
+          <span class="bg-gray-200 text-gray-800 text-sm font-medium px-3 py-1 rounded-full">
+            {{ product.get_product_type_display }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Product Details -->
+      <div class="space-y-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ product.name }}</h1>
+          <p class="text-xl text-gray-600">{{ product.category.name }}</p>
+        </div>
+
+        <!-- Price -->
+        <div class="bg-green-50 p-4 rounded-lg">
+          <div class="flex items-baseline">
+            <span class="text-4xl font-bold text-green-600">Rs.{{ product.price }}</span>
+            <span class="text-lg text-gray-600 ml-2">per {{ product.unit }}</span>
+          </div>
+          {% if product.min_order_quantity > 1 %}
+            <p class="text-sm text-gray-500 mt-1">
+              Minimum order: {{ product.min_order_quantity }} {{ product.unit }}s
+            </p>
+          {% endif %}
+        </div>
+
+        <!-- Description -->
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">📝 Product Description</h3>
+          <p class="text-gray-700 leading-relaxed">{{ product.description }}</p>
+        </div>
+
+        <!-- Vendor Information -->
+        <div class="bg-white p-4 rounded-lg border">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">🏪 Vendor Information</h3>
+          <div class="space-y-2">
+            <p><strong>Company:</strong> {{ product.vendor.name }}</p>
+            <p><strong>Region:</strong> {{ product.vendor.region }}</p>
+            <p><strong>Contact:</strong> {{ product.vendor.contact_email }}</p>
+            {% if product.vendor.is_verified %}
+              <div class="flex items-center">
+                <span class="bg-green-100 text-green-800 text-sm font-medium px-2 py-1 rounded-full">
+                  ✅ Verified Vendor
+                </span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Stock Information -->
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">📊 Availability</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-sm text-gray-600">Stock Quantity</p>
+              <p class="text-lg font-semibold">{{ product.stock_quantity }} {{ product.unit }}s</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-600">Status</p>
+              <p class="text-lg font-semibold {% if product.is_available %}text-green-600{% else %}text-red-600{% endif %}">
+                {% if product.is_available %}Available{% else %}Out of Stock{% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add to Cart Form -->
+        {% if product.is_available and product.stock_quantity > 0 %}
+          <form id="add-to-cart-form" class="bg-white p-6 rounded-lg border shadow-sm">
+            {% csrf_token %}
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">🛒 Add to Cart</h3>
+
+            <div class="flex items-center space-x-4 mb-4">
+              <label for="quantity" class="text-sm font-medium text-gray-700">Quantity:</label>
+              <div class="flex items-center">
+                <button type="button" id="decrease-qty" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-l-md hover:bg-gray-300">
+                  -
+                </button>
+                <input type="number" id="quantity" name="quantity" value="{{ product.min_order_quantity }}" 
+                       min="{{ product.min_order_quantity }}" max="{{ product.stock_quantity }}"
+                       class="w-20 text-center border-t border-b border-gray-300 py-1 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <button type="button" id="increase-qty" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-r-md hover:bg-gray-300">
+                  +
+                </button>
+              </div>
+              <span class="text-sm text-gray-600">{{ product.unit }}s</span>
+            </div>
+
+            <div class="mb-4">
+              <p class="text-sm text-gray-600">
+                Total Price:
+                <span id="total-price" class="font-semibold text-green-600">
+                  Rs.{{ product.price|floatformat:2 }}
+                </span>
+              </p>
+            </div>
+
+            <div class="flex space-x-4">
+              <button type="submit" class="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                Add to Cart
+              </button>
+              <a href="{% url 'marketplace:cart' %}" class="bg-gray-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
+                View Cart
+              </a>
+            </div>
+
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+          </form>
+        {% else %}
+          <div class="bg-red-50 border border-red-200 p-4 rounded-lg">
+            <p class="text-red-800 font-medium">
+              ❌ This product is currently out of stock.
+            </p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    {% if related_products %}
+      <div class="mt-16">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">🔗 Related Products</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {% for related_product in related_products %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+              <div class="h-40 bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center">
+                {% if related_product.image_url %}
+                  <img src="{{ related_product.image_url }}" alt="{{ related_product.name }}" class="h-full w-full object-cover">
+                {% else %}
+                  <span class="text-4xl">📦</span>
+                {% endif %}
+              </div>
+              <div class="p-4">
+                <h3 class="font-semibold text-sm mb-2 line-clamp-2">{{ related_product.name }}</h3>
+                <div class="flex items-center justify-between">
+                  <span class="text-lg font-bold text-green-600">Rs.{{ related_product.price }}</span>
+                  <a href="{% url 'marketplace:product_detail' related_product.id %}" class="bg-green-600 text-white px-3 py-1 text-sm rounded hover:bg-green-700">
+                    View
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const quantityInput = document.getElementById('quantity');
+    const decreaseBtn = document.getElementById('decrease-qty');
+    const increaseBtn = document.getElementById('increase-qty');
+    const totalPriceSpan = document.getElementById('total-price');
+    const addToCartForm = document.getElementById('add-to-cart-form');
+
+    const productPrice = {{ product.price }};
+    const minQuantity = {{ product.min_order_quantity }};
+    const maxQuantity = {{ product.stock_quantity }};
+
+    // Update total price
+    function updateTotalPrice() {
+      const quantity = parseInt(quantityInput.value);
+      const total = (quantity * productPrice).toFixed(2);
+      totalPriceSpan.textContent = `Rs.${total}`;
+    }
+
+    // Quantity controls
+    decreaseBtn.addEventListener('click', function() {
+      const currentQty = parseInt(quantityInput.value);
+      if (currentQty > minQuantity) {
+        quantityInput.value = currentQty - 1;
+        updateTotalPrice();
+      }
+    });
+
+    increaseBtn.addEventListener('click', function() {
+      const currentQty = parseInt(quantityInput.value);
+      if (currentQty < maxQuantity) {
+        quantityInput.value = currentQty + 1;
+        updateTotalPrice();
+      }
+    });
+
+    quantityInput.addEventListener('input', updateTotalPrice);
+
+    // Add to cart form submission
+    addToCartForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(addToCartForm);
+
+      fetch("{% url 'marketplace:add_to_cart' %}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Show success message
+          const message = document.createElement('div');
+          message.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+          message.textContent = data.message;
+          document.body.appendChild(message);
+
+          // Remove message after 3 seconds
+          setTimeout(() => {
+            message.remove();
+          }, 3000);
+
+          // Update cart count if element exists
+          const cartCount = document.getElementById('cart-count');
+          if (cartCount) {
+            cartCount.textContent = data.cart_count;
+          }
+        } else {
+          alert('Error adding product to cart. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error adding product to cart. Please try again.');
+      });
+    });
+  });
+</script>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+{% endblock %}

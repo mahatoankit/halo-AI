@@ -1,111 +1,375 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Agricultural Marketplace - Halo AI{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block title %}Agricultural
+Marketplace - HALO AI{% endblock %} {% block extra_css %}
+<style>
+  .hero-gradient {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  }
+  .product-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+  }
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: #10b981;
+  }
+  .category-card {
+    transition: all 0.3s ease;
+  }
+  .category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  .floating-card {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+  }
+</style>
+{% endblock %} {% block content %}
 <div class="bg-gray-50 min-h-screen">
   <!-- Hero Section -->
-  <div class="bg-gradient-to-r from-green-600 to-blue-600 text-white py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center">
-        <h1 class="text-4xl font-bold mb-4">🛒 Agricultural Marketplace</h1>
-        <p class="text-xl mb-8">Find quality seeds, fertilizers, tools, and equipment for your farm</p>
-        <div class="flex justify-center space-x-4">
-          <a href="{% url 'marketplace:product_list' %}" class="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
-            Browse Products
+  <section class="hero-gradient text-white py-20 relative overflow-hidden">
+    <div class="absolute inset-0 bg-black opacity-10"></div>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center max-w-5xl mx-auto">
+        <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+          🛒 Agricultural Marketplace
+        </h1>
+        <p class="text-xl md:text-2xl mb-8 text-green-100 max-w-3xl mx-auto">
+          Your one-stop destination for premium quality seeds, fertilizers,
+          tools, and modern farming equipment
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="{% url 'marketplace:product_list' %}"
+            class="bg-white text-green-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-green-50 transition-colors shadow-lg"
+          >
+            🛍️ Browse Products
           </a>
-          <a href="{% url 'marketplace:cart' %}" class="bg-green-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-800">
-            View Cart (<span id="cart-count">0</span>)
+          <a
+            href="{% url 'marketplace:cart' %}"
+            class="bg-green-700 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-green-800 transition-colors shadow-lg"
+          >
+            🛒 View Cart (<span id="cart-count">0</span>)
           </a>
         </div>
       </div>
     </div>
-  </div>
+    <!-- Decorative elements -->
+    <div
+      class="absolute top-0 left-0 w-64 h-64 bg-white opacity-10 rounded-full -translate-x-32 -translate-y-32"
+    ></div>
+    <div
+      class="absolute bottom-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full translate-x-48 translate-y-48"
+    ></div>
+  </section>
 
-  <!-- Categories Section -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h2 class="text-3xl font-bold text-gray-900 mb-8">Shop by Category</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
-      {% for category in categories %}
-      <a href="{% url 'marketplace:product_list' %}?category={{ category.id }}" 
-         class="bg-white rounded-lg p-6 text-center shadow-md hover:shadow-lg transition-shadow">
-        <div class="text-4xl mb-3">{{ category.icon }}</div>
-        <h3 class="font-semibold text-gray-900">{{ category.name }}</h3>
-      </a>
-      {% endfor %}
-    </div>
-  </div>
-
-  <!-- Featured Products -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h2 class="text-3xl font-bold text-gray-900 mb-8">Featured Products</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {% for product in featured_products %}
-      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-        <div class="h-48 bg-gray-200 flex items-center justify-center">
-          {% if product.image_url %}
-            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="h-full w-full object-cover">
-          {% else %}
-            <span class="text-6xl">📦</span>
-          {% endif %}
-        </div>
-        <div class="p-6">
-          <h3 class="font-semibold text-lg mb-2">{{ product.name }}</h3>
-          <p class="text-gray-600 mb-4">{{ product.description|truncatechars:80 }}</p>
-          <div class="flex justify-between items-center">
-            <span class="text-2xl font-bold text-green-600">Rs.{{ product.price }}/{{ product.unit }}</span>
-            <a href="{% url 'marketplace:product_detail' product.id %}" 
-               class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-              View Details
-            </a>
+  <!-- Quick Stats -->
+  <section class="py-12 -mt-10 relative z-10">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="floating-card rounded-2xl p-8 shadow-xl">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+          <div>
+            <div class="text-3xl font-bold text-green-600 mb-2">
+              {{ featured_products|length }}+
+            </div>
+            <div class="text-gray-600">Featured Products</div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-green-600 mb-2">
+              {{ categories|length }}
+            </div>
+            <div class="text-gray-600">Product Categories</div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-green-600 mb-2">50+</div>
+            <div class="text-gray-600">Verified Vendors</div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-green-600 mb-2">FREE</div>
+            <div class="text-gray-600">Home Delivery</div>
           </div>
         </div>
       </div>
-      {% endfor %}
     </div>
-  </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">
+          🏪 Shop by Category
+        </h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Discover everything you need for modern, sustainable farming
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+        {% for category in categories %}
+        <a
+          href="{% url 'marketplace:product_list' %}?category={{ category.id }}"
+          class="category-card bg-white rounded-xl p-6 text-center shadow-md hover:shadow-lg group"
+        >
+          <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">
+            {{ category.icon }}
+          </div>
+          <h3 class="font-semibold text-gray-900 text-sm">
+            {{ category.name }}
+          </h3>
+          {% if category.description %}
+          <p class="text-xs text-gray-500 mt-1">
+            {{ category.description|truncatewords:3 }}
+          </p>
+          {% endif %}
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="py-12 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">
+          ⭐ Featured Products
+        </h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Hand-picked premium products from trusted vendors in your region
+        </p>
+      </div>
+
+      {% if featured_products %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for product in featured_products %}
+        <div
+          class="product-card bg-white rounded-2xl shadow-lg overflow-hidden"
+        >
+          <!-- Featured Badge -->
+          <div class="relative">
+            <div
+              class="h-56 bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center"
+            >
+              {% if product.image_url %}
+              <img
+                src="{{ product.image_url }}"
+                alt="{{ product.name }}"
+                class="h-full w-full object-cover"
+              />
+              {% else %}
+              <span class="text-6xl">📦</span>
+              {% endif %}
+            </div>
+            <div class="absolute top-3 left-3">
+              <span
+                class="bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full"
+              >
+                ⭐ FEATURED
+              </span>
+            </div>
+            {% if product.stock_quantity < 10 %}
+            <div class="absolute top-3 right-3">
+              <span
+                class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full"
+              >
+                LOW STOCK
+              </span>
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="p-6">
+            <div class="mb-3">
+              <span
+                class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full"
+              >
+                {{ product.get_product_type_display }}
+              </span>
+            </div>
+
+            <h3 class="font-bold text-xl mb-2 text-gray-900 line-clamp-2">
+              {{ product.name }}
+            </h3>
+
+            <p class="text-gray-600 mb-4 text-sm line-clamp-3">
+              {{ product.description }}
+            </p>
+
+            <div class="mb-4">
+              <p class="text-sm text-gray-500 mb-1">
+                <span class="font-medium">Vendor:</span> {{ product.vendor.name
+                }}
+              </p>
+              <p class="text-sm text-gray-500">
+                <span class="font-medium">Stock:</span> {{
+                product.stock_quantity }} {{ product.unit }}s
+              </p>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="text-3xl font-bold text-green-600"
+                  >Rs.{{ product.price }}</span
+                >
+                <span class="text-gray-500 text-sm">/{{ product.unit }}</span>
+              </div>
+
+              <div class="flex space-x-2">
+                <a
+                  href="{% url 'marketplace:product_detail' product.id %}"
+                  class="bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+                >
+                  View Details
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="text-center mt-12">
+        <a
+          href="{% url 'marketplace:product_list' %}"
+          class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
+        >
+          View All Products →
+        </a>
+      </div>
+      {% else %}
+      <div class="text-center py-12">
+        <div class="text-6xl mb-4">🌱</div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Coming Soon!</h3>
+        <p class="text-gray-600">Featured products will be available soon.</p>
+      </div>
+      {% endif %}
+    </div>
+  </section>
 
   <!-- Recent Orders -->
   {% if recent_orders %}
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h2 class="text-3xl font-bold text-gray-900 mb-8">Recent Orders</h2>
-    <div class="bg-white rounded-lg shadow">
-      {% for order in recent_orders %}
-      <div class="border-b border-gray-200 p-6 {% if forloop.last %}border-b-0{% endif %}">
-        <div class="flex justify-between items-center">
-          <div>
-            <h3 class="font-semibold">Order #{{ order.order_number }}</h3>
-            <p class="text-gray-600">{{ order.created_at|date:"M d, Y" }} - Rs.{{ order.total_amount }}</p>
+  <section class="py-12 bg-gray-50">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">
+          📋 Your Recent Orders
+        </h2>
+        <p class="text-xl text-gray-600">
+          Track your recent purchases and order history
+        </p>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        {% for order in recent_orders %}
+        <div
+          class="border-b border-gray-200 p-6 {% if forloop.last %}border-b-0{% endif %}"
+        >
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div class="mb-4 sm:mb-0">
+              <h3 class="font-semibold text-lg text-gray-900">
+                Order #{{ order.order_number }}
+              </h3>
+              <p class="text-gray-600">
+                {{ order.created_at|date:"F j, Y" }} • Rs.{{ order.total_amount
+                }}
+              </p>
+              <p class="text-sm text-gray-500">
+                {{ order.items.count }} item{{ order.items.count|pluralize }}
+              </p>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span
+                class="px-4 py-2 rounded-full text-sm font-medium {% if order.status == 'delivered' %}bg-green-100 text-green-800 {% elif order.status == 'shipped' %}bg-blue-100 text-blue-800 {% elif order.status == 'processing' %}bg-yellow-100 text-yellow-800 {% else %}bg-gray-100 text-gray-800{% endif %}"
+              >
+                {% if order.status == 'pending' %}⏳ Pending {% elif
+                order.status == 'confirmed' %}✅ Confirmed {% elif order.status
+                == 'processing' %}🔄 Processing {% elif order.status ==
+                'shipped' %}🚚 Shipped {% elif order.status == 'delivered' %}📦
+                Delivered {% else %}{{ order.get_status_display }}{% endif %}
+              </span>
+
+              <a
+                href="{% url 'marketplace:order_detail' order.id %}"
+                class="text-green-600 hover:text-green-800 font-medium"
+              >
+                View Details →
+              </a>
+            </div>
           </div>
-          <span class="px-3 py-1 rounded-full text-sm font-medium
-                       {% if order.status == 'delivered' %}bg-green-100 text-green-800
-                       {% elif order.status == 'shipped' %}bg-blue-100 text-blue-800
-                       {% elif order.status == 'processing' %}bg-yellow-100 text-yellow-800
-                       {% else %}bg-gray-100 text-gray-800{% endif %}">
-            {{ order.get_status_display }}
-          </span>
+        </div>
+        {% endfor %}
+
+        <div class="p-6 bg-gray-50 text-center">
+          <a
+            href="{% url 'marketplace:order_history' %}"
+            class="text-green-600 hover:text-green-800 font-medium"
+          >
+            View All Orders →
+          </a>
         </div>
       </div>
-      {% endfor %}
-      <div class="p-6 bg-gray-50">
-        <a href="{% url 'marketplace:order_history' %}" class="text-green-600 hover:text-green-800 font-medium">
-          View All Orders →
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Call to Action -->
+  <section class="py-16 bg-green-600 text-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-4xl font-bold mb-4">Ready to Transform Your Farm?</h2>
+      <p class="text-xl mb-8 max-w-2xl mx-auto text-green-100">
+        Join thousands of farmers who trust our marketplace for quality products
+        and reliable service.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="{% url 'marketplace:product_list' %}"
+          class="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors"
+        >
+          Start Shopping Now
+        </a>
+        <a
+          href="#"
+          class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-colors"
+        >
+          Learn More
         </a>
       </div>
     </div>
-  </div>
-  {% endif %}
+  </section>
 </div>
 
 <script>
-// Update cart count on page load
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('/marketplace/cart-count/')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('cart-count').textContent = data.count || 0;
-        });
-});
+  // Update cart count on page load
+  document.addEventListener("DOMContentLoaded", function () {
+    fetch('{% url "marketplace:cart_count" %}')
+      .then((response) => response.json())
+      .then((data) => {
+        document.getElementById("cart-count").textContent = data.count || 0;
+      })
+      .catch((error) => {
+        console.log("Cart count fetch error:", error);
+        document.getElementById("cart-count").textContent = "0";
+      });
+  });
 </script>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
 {% endblock %}
