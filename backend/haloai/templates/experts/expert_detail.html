@@ -1,0 +1,692 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ expert.user.get_full_name }} - Expert Profile - HALO-AI{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-primary-50 to-secondary-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Expert Profile Header -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+            <!-- Cover Section -->
+            <div class="bg-gradient-to-r from-primary-600 to-primary-700 px-8 py-12">
+                <div class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+                    <!-- Avatar -->
+                    <div class="flex-shrink-0">
+                        {% if expert.profile_image %}
+                        <img src="{{ expert.profile_image.url }}" 
+                             alt="{{ expert.user.get_full_name }}" 
+                             class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
+                        {% else %}
+                        <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+                            <i class="fas fa-user text-primary-600 text-5xl"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Basic Info -->
+                    <div class="flex-1 text-center md:text-left text-white">
+                        <h1 class="text-3xl md:text-4xl font-bold mb-2">{{ expert.user.get_full_name }}</h1>
+                        <p class="text-xl text-primary-100 mb-2">{{ expert.professional_title }}</p>
+                        {% if expert.organization %}
+                        <p class="text-primary-200 mb-4">{{ expert.organization }}</p>
+                        {% endif %}
+                        
+                        <!-- Verification Badge -->
+                        {% if expert.is_verified %}
+                        <div class="inline-flex items-center bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium mb-4">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Verified Expert
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Contact Info -->
+                        <div class="flex flex-col md:flex-row items-center md:items-start space-y-2 md:space-y-0 md:space-x-6 text-sm text-primary-100">
+                            <div class="flex items-center">
+                                <i class="fas fa-clock mr-2"></i>
+                                {{ expert.years_of_experience }} years experience
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-map-marker-alt mr-2"></i>
+                                {{ expert.service_areas|truncatewords:3 }}
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-comments mr-2"></i>
+                                {{ expert.languages_spoken }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex-shrink-0 text-center">
+                        <div class="bg-white text-primary-600 rounded-2xl p-4 mb-4">
+                            <div class="text-2xl font-bold">{{ expert.currency }} {{ expert.hourly_rate }}</div>
+                            <div class="text-sm">per hour</div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <a href="{% url 'experts:book_consultation' expert.id %}" 
+                               class="block bg-secondary-500 hover:bg-secondary-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200">
+                                Book Consultation
+                            </a>
+                            <button class="block w-full bg-white hover:bg-gray-50 text-primary-600 px-6 py-3 rounded-lg font-semibold transition-colors duration-200 border border-white">
+                                <i class="fas fa-heart mr-2"></i>
+                                Save Expert
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- About Section -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">About {{ expert.user.first_name }}</h2>
+                    <p class="text-gray-700 leading-relaxed mb-6">{{ expert.bio }}</p>
+                    
+                    <!-- Education & Credentials -->
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Education & Background</h3>
+                        <p class="text-gray-700">{{ expert.education_background }}</p>
+                        {% if expert.professional_license %}
+                        <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-certificate text-green-600 mr-2"></i>
+                                <span class="text-green-800 font-medium">Licensed Professional: {{ expert.professional_license }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Specializations -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Areas of Expertise</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {% for specialization in expert.specializations.all %}
+                        <div class="flex items-center p-4 border border-primary-200 rounded-lg bg-primary-50">
+                            {% if specialization.icon %}
+                            <i class="{{ specialization.icon }} text-primary-600 text-xl mr-3"></i>
+                            {% else %}
+                            <i class="fas fa-leaf text-primary-600 text-xl mr-3"></i>
+                            {% endif %}
+                            <div>
+                                <h4 class="font-semibold text-gray-900">{{ specialization.name }}</h4>
+                                {% if specialization.description %}
+                                <p class="text-sm text-gray-600">{{ specialization.description|truncatewords:10 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Reviews Section -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">Reviews & Ratings</h2>
+                        {% if user.is_authenticated and user != expert.user %}
+                        <button class="text-primary-600 hover:text-primary-700 font-medium">
+                            Write a Review
+                        </button>
+                        {% endif %}
+                    </div>
+                    
+                    {% if reviews %}
+                    <div class="space-y-6">
+                        {% for review in reviews %}
+                        <div class="border-b border-gray-200 pb-6 last:border-b-0">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-user text-gray-600"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="font-semibold text-gray-900">{{ review.reviewer.get_full_name }}</h4>
+                                        <div class="flex items-center">
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= review.rating %}
+                                                <i class="fas fa-star text-yellow-400"></i>
+                                                {% else %}
+                                                <i class="far fa-star text-gray-300"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                            <span class="ml-2 text-sm text-gray-500">{{ review.created_at|date:"M d, Y" }}</span>
+                                        </div>
+                                    </div>
+                                    <h5 class="font-medium text-gray-900 mb-2">{{ review.title }}</h5>
+                                    <p class="text-gray-700">{{ review.review_text }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-8">
+                        <i class="fas fa-star text-gray-300 text-4xl mb-4"></i>
+                        <p class="text-gray-500">No reviews yet. Be the first to review this expert!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Stats Card -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Expert Statistics</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">Total Consultations</span>
+                            <span class="font-semibold text-2xl text-primary-600">{{ expert.total_consultations }}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">Average Rating</span>
+                            <div class="flex items-center">
+                                <span class="font-semibold text-2xl text-primary-600 mr-2">{{ expert.average_rating }}</span>
+                                <div class="flex">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= expert.average_rating %}
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        {% else %}
+                                        <i class="far fa-star text-gray-300"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">Response Rate</span>
+                            <span class="font-semibold text-2xl text-green-600">{{ expert.response_rate }}%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Availability Card -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Availability</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-gray-600 block mb-2">Available Days</span>
+                            <div class="flex flex-wrap gap-2">
+                                {% for day in expert.available_days|split:"," %}
+                                <span class="px-3 py-1 bg-primary-100 text-primary-800 rounded-full text-sm">{{ day }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-gray-600 block mb-2">Available Hours</span>
+                            <span class="text-lg font-medium text-gray-900">{{ expert.available_hours }}</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600 block mb-2">Consultation Modes</span>
+                            <div class="flex items-center text-primary-600">
+                                {% if expert.consultation_modes == 'online' %}
+                                <i class="fas fa-video mr-2"></i>
+                                Online Only
+                                {% elif expert.consultation_modes == 'in_person' %}
+                                <i class="fas fa-handshake mr-2"></i>
+                                In-Person Only
+                                {% else %}
+                                <i class="fas fa-laptop mr-2"></i>
+                                Both Online & In-Person
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Card -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Contact Information</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-phone text-gray-400 w-5 mr-3"></i>
+                            <span class="text-gray-700">{{ expert.phone_number }}</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-gray-400 w-5 mr-3 mt-1"></i>
+                            <span class="text-gray-700">{{ expert.service_areas }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+  .rating-fill {
+    height: 100%;
+    background-color: #ffc107;
+  }
+
+  .review-card {
+    border-left: 4px solid #28a745;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .specialization-badge {
+    background-color: #17a2b8;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    margin: 0.2rem;
+    display: inline-block;
+    font-size: 0.9rem;
+  }
+
+  .book-consultation-sticky {
+    position: sticky;
+    top: 20px;
+    background: white;
+    border: 2px solid #28a745;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .language-tag {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    margin: 0.1rem;
+  }
+
+  .availability-info {
+    background-color: #e7f5e7;
+    border: 1px solid #c3e6cb;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="container mt-4">
+  <!-- Expert Profile Header -->
+  <div class="expert-profile-header">
+    <div class="row align-items-center">
+      <div class="col-md-3 text-center">
+        {% if expert.profile_image %}
+        <img
+          src="{{ expert.profile_image.url }}"
+          alt="{{ expert.user.get_full_name }}"
+          class="expert-avatar"
+        />
+        {% else %}
+        <div
+          class="expert-avatar mx-auto bg-white text-dark d-flex align-items-center justify-content-center"
+        >
+          <i class="fas fa-user fa-3x"></i>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="col-md-9">
+        <h1 class="mb-2">{{ expert.user.get_full_name }}</h1>
+        <h4 class="mb-3 opacity-75">{{ expert.professional_title }}</h4>
+
+        {% if expert.organization %}
+        <p class="mb-2">
+          <i class="fas fa-building"></i> {{ expert.organization }}
+        </p>
+        {% endif %}
+
+        <p class="mb-2">
+          <i class="fas fa-calendar-alt"></i> {{ expert.years_of_experience }}
+          years of experience
+        </p>
+
+        <div class="d-flex align-items-center mb-3">
+          <div class="me-3">
+            {% for i in "12345" %} {% if forloop.counter <=
+            expert.average_rating %}
+            <i class="fas fa-star text-warning"></i>
+            {% else %}
+            <i class="far fa-star text-warning"></i>
+            {% endif %} {% endfor %}
+            <span class="ms-2">{{ expert.average_rating }}/5.0</span>
+          </div>
+
+          {% if expert.is_verified %}
+          <span class="badge bg-success">✓ Verified Expert</span>
+          {% endif %} {% if expert.is_available %}
+          <span class="badge bg-success ms-2">Available</span>
+          {% else %}
+          <span class="badge bg-secondary ms-2">Currently Unavailable</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+      <!-- Statistics -->
+      <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+          <div class="stat-card">
+            <div class="stat-value">{{ expert.total_consultations }}</div>
+            <div class="stat-label">Total Consultations</div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="stat-card">
+            <div class="stat-value">{{ expert.response_rate }}%</div>
+            <div class="stat-label">Response Rate</div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="stat-card">
+            <div class="stat-value">{{ expert.average_rating }}</div>
+            <div class="stat-label">Average Rating</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- About Section -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5><i class="fas fa-user-circle"></i> About</h5>
+        </div>
+        <div class="card-body">
+          <p>{{ expert.bio|linebreaks }}</p>
+
+          <h6 class="mt-3">Education & Background</h6>
+          <p>{{ expert.education_background|linebreaks }}</p>
+
+          {% if expert.professional_license %}
+          <h6 class="mt-3">Professional License</h6>
+          <p>{{ expert.professional_license }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Specializations -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5><i class="fas fa-seedling"></i> Specializations</h5>
+        </div>
+        <div class="card-body">
+          {% for spec in expert.specializations.all %}
+          <span class="specialization-badge">{{ spec.name }}</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Languages -->
+      {% if expert.languages_spoken %}
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5><i class="fas fa-language"></i> Languages</h5>
+        </div>
+        <div class="card-body">
+          {% for language in expert.languages_spoken|split:"," %}
+          <span class="language-tag">{{ language|trim }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Service Areas -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5><i class="fas fa-map-marker-alt"></i> Service Areas</h5>
+        </div>
+        <div class="card-body">
+          <p>{{ expert.service_areas|linebreaks }}</p>
+        </div>
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="card mb-4">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h5><i class="fas fa-star"></i> Reviews ({{ total_reviews }})</h5>
+        </div>
+        <div class="card-body">
+          {% if reviews %}
+          <!-- Rating Breakdown -->
+          <div class="rating-breakdown mb-4">
+            {% for rating, count in rating_breakdown.items %}
+            <div class="d-flex align-items-center mb-2">
+              <span class="me-2">{{ rating }}★</span>
+              <div class="rating-bar flex-grow-1 me-2">
+                <div
+                  class="rating-fill"
+                  style="width: {% if total_reviews %}{{ count|div:total_reviews|mul:100 }}%{% else %}0%{% endif %}"
+                ></div>
+              </div>
+              <span class="text-muted">{{ count }}</span>
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Recent Reviews -->
+          {% for review in reviews %}
+          <div class="review-card">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <h6 class="mb-1">{{ review.title }}</h6>
+                <div class="text-warning mb-1">
+                  {% for i in "12345" %} {% if forloop.counter <= review.rating
+                  %}
+                  <i class="fas fa-star"></i>
+                  {% else %}
+                  <i class="far fa-star"></i>
+                  {% endif %} {% endfor %}
+                </div>
+              </div>
+              <small class="text-muted"
+                >{{ review.created_at|date:"M d, Y" }}</small
+              >
+            </div>
+            <p class="mb-2">{{ review.review_text }}</p>
+            <small class="text-muted"
+              >by {{
+              review.reviewer.get_full_name|default:review.reviewer.username
+              }}</small
+            >
+          </div>
+          {% endfor %} {% else %}
+          <p class="text-muted">
+            No reviews yet. Be the first to review this expert!
+          </p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Expert Blog Posts -->
+      {% if blog_posts %}
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5><i class="fas fa-blog"></i> Recent Articles</h5>
+        </div>
+        <div class="card-body">
+          {% for post in blog_posts %}
+          <div class="d-flex mb-3">
+            {% if post.featured_image %}
+            <img
+              src="{{ post.featured_image.url }}"
+              alt="{{ post.title }}"
+              class="me-3"
+              style="
+                width: 80px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 5px;
+              "
+            />
+            {% endif %}
+            <div>
+              <h6>
+                <a
+                  href="{% url 'experts:blog_detail' post.slug %}"
+                  class="text-decoration-none"
+                  >{{ post.title }}</a
+                >
+              </h6>
+              <p class="text-muted mb-1">{{ post.excerpt|truncatewords:20 }}</p>
+              <small class="text-muted"
+                >{{ post.published_at|date:"M d, Y" }} • {{ post.views_count }}
+                views</small
+              >
+            </div>
+          </div>
+          {% endfor %}
+          <a
+            href="{% url 'experts:blog_list' %}?expert={{ expert.id }}"
+            class="btn btn-sm btn-outline-primary"
+          >
+            View All Articles
+          </a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <!-- Book Consultation Card -->
+      {% if user.is_authenticated and expert.is_available %}
+      <div class="book-consultation-sticky mb-4">
+        <h5 class="text-center mb-3">Book Consultation</h5>
+
+        <div class="text-center mb-3">
+          <div class="h4 text-success">
+            {{ expert.currency }} {{ expert.hourly_rate }}
+          </div>
+          <small class="text-muted">per hour</small>
+        </div>
+
+        <div class="mb-3">
+          <strong>Consultation Modes:</strong><br />
+          {% if expert.consultation_modes == 'online' %}
+          <i class="fas fa-video text-primary"></i> Online only {% elif
+          expert.consultation_modes == 'in_person' %}
+          <i class="fas fa-map-marker-alt text-success"></i> In-person only {%
+          else %} <i class="fas fa-video text-primary"></i> Online &
+          <i class="fas fa-map-marker-alt text-success"></i> In-person {% endif
+          %}
+        </div>
+
+        <a
+          href="{% url 'experts:book_consultation' expert.id %}"
+          class="btn btn-success w-100 mb-3"
+        >
+          <i class="fas fa-calendar-plus"></i> Book Now
+        </a>
+
+        <div class="availability-info">
+          <h6><i class="fas fa-clock"></i> Availability</h6>
+          <p class="mb-1">
+            <strong>Days:</strong> {{ expert.available_days|default:"Contact for
+            schedule" }}
+          </p>
+          <p class="mb-0">
+            <strong>Hours:</strong> {{ expert.available_hours|default:"Contact
+            for schedule" }}
+          </p>
+        </div>
+      </div>
+      {% elif not user.is_authenticated %}
+      <div class="book-consultation-sticky mb-4">
+        <h5 class="text-center mb-3">Book Consultation</h5>
+        <p class="text-center text-muted mb-3">
+          Please log in to book a consultation
+        </p>
+        <a
+          href="{% url 'users:login' %}?next={% url 'experts:expert_detail' expert.id %}"
+          class="btn btn-primary w-100"
+        >
+          <i class="fas fa-sign-in-alt"></i> Login to Book
+        </a>
+      </div>
+      {% else %}
+      <div class="book-consultation-sticky mb-4">
+        <h5 class="text-center mb-3">Currently Unavailable</h5>
+        <p class="text-center text-muted">
+          This expert is not currently accepting new consultations.
+        </p>
+      </div>
+      {% endif %}
+
+      <!-- Contact Information -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6><i class="fas fa-address-card"></i> Contact Information</h6>
+        </div>
+        <div class="card-body">
+          {% if expert.phone_number %}
+          <p class="mb-2">
+            <i class="fas fa-phone"></i> {{ expert.phone_number }}
+          </p>
+          {% endif %}
+
+          <p class="mb-2">
+            <i class="fas fa-envelope"></i> {{ expert.user.email }}
+          </p>
+
+          {% if expert.service_areas %}
+          <p class="mb-0">
+            <i class="fas fa-map-marker-alt"></i> {{
+            expert.service_areas|truncatewords:10 }}
+          </p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="card">
+        <div class="card-header">
+          <h6><i class="fas fa-chart-bar"></i> Quick Stats</h6>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between mb-2">
+            <span>Member since:</span>
+            <span>{{ expert.created_at|date:"M Y" }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Last active:</span>
+            <span>{{ expert.user.last_login|date:"M d" }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>Response time:</span>
+            <span class="text-success">Usually responds in 24h</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back to Experts -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <a
+        href="{% url 'experts:experts_list' %}"
+        class="btn btn-outline-secondary"
+      >
+        <i class="fas fa-arrow-left"></i> Back to All Experts
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  // Add any interactive features here
+  console.log("Expert profile loaded for: {{ expert.user.get_full_name }}");
+</script>
+{% endblock %}

@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Agricultural Experts - HALO AI {% endblock %}
+
+{% block extra_css %}
+<style>
+    .expert-card {
+        transition: all 0.3s ease;
+        border: 1px solid #e5e7eb;
+    }
+    .expert-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border-color: #10b981;
+    }
+    .rating-stars {
+        color: #fbbf24;
+    }
+    .hero-gradient {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+    .specialization-badge {
+        background: linear-gradient(135deg, #10b981, #059669);
+    }
+    .floating-card {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-gradient text-white py-16 relative overflow-hidden">
+    <div class="absolute inset-0 bg-black opacity-10"></div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center max-w-4xl mx-auto">
+            <h1 class="text-5xl font-bold mb-6 leading-tight">
+                Connect with Agricultural Experts
+            </h1>
+            <p class="text-xl mb-8 text-green-100">
+                Get personalized advice from certified agricultural professionals to optimize your farming practices
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'experts:become_expert' %}" 
+                   class="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors">
+                    Become an Expert
+                </a>
+                <a href="#experts-list" 
+                   class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-colors">
+                    Browse Experts
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Decorative elements -->
+    <div class="absolute top-0 left-0 w-64 h-64 bg-white opacity-10 rounded-full -translate-x-32 -translate-y-32"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full translate-x-48 translate-y-48"></div>
+</section>
+
+<!-- Search and Filter Section -->
+<section class="py-12 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="floating-card rounded-2xl p-8 shadow-lg">
+            <form method="GET" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Search -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Search Experts</label>
+                        <div class="relative">
+                            <input type="text" 
+                                   name="search" 
+                                   value="{{ request.GET.search }}"
+                                   placeholder="Search by name, expertise, or location..."
+                                   class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Specialization Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Specialization</label>
+                        <select name="specialization" 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">All Specializations</option>
+                            {% for spec in specializations %}
+                                <option value="{{ spec.id }}" 
+                                        {% if request.GET.specialization == spec.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ spec.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <!-- Rating Filter -->
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Minimum Rating</label>
+                        <select name="min_rating" 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="">Any Rating</option>
+                            <option value="4" {% if request.GET.min_rating == "4" %}selected{% endif %}>4+ Stars</option>
+                            <option value="3" {% if request.GET.min_rating == "3" %}selected{% endif %}>3+ Stars</option>
+                            <option value="2" {% if request.GET.min_rating == "2" %}selected{% endif %}>2+ Stars</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Sort -->
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                        <select name="sort" 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <option value="rating" {% if request.GET.sort == "rating" %}selected{% endif %}>Highest Rated</option>
+                            <option value="experience" {% if request.GET.sort == "experience" %}selected{% endif %}>Most Experienced</option>
+                            <option value="consultations" {% if request.GET.sort == "consultations" %}selected{% endif %}>Most Consultations</option>
+                            <option value="newest" {% if request.GET.sort == "newest" %}selected{% endif %}>Newest</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Search Button -->
+                    <div class="flex items-end">
+                        <button type="submit" 
+                                class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Experts List Section -->
+<section id="experts-list" class="py-12">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">
+                {% if experts %}
+                    {{ experts|length }} Expert{{ experts|length|pluralize }} Found
+                {% else %}
+                    No Experts Found
+                {% endif %}
+            </h2>
+            <p class="text-gray-600">Professional agricultural consultants ready to help you succeed</p>
+        </div>
+
+        {% if experts %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for expert in experts %}
+                    <div class="expert-card bg-white rounded-2xl p-6 shadow-lg">
+                        <!-- Expert Header -->
+                        <div class="text-center mb-6">
+                            {% if expert.user.profile_picture %}
+                                <img src="{{ expert.user.profile_picture.url }}" 
+                                     alt="{{ expert.user.get_full_name }}"
+                                     class="w-20 h-20 rounded-full mx-auto mb-4 object-cover border-4 border-green-100">
+                            {% else %}
+                                <div class="w-20 h-20 rounded-full mx-auto mb-4 bg-green-100 flex items-center justify-center border-4 border-green-200">
+                                    <span class="text-green-600 text-2xl font-bold">
+                                        {{ expert.user.first_name|first }}{{ expert.user.last_name|first }}
+                                    </span>
+                                </div>
+                            {% endif %}
+                            
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">
+                                {{ expert.user.get_full_name }}
+                            </h3>
+                            
+                            <!-- Rating -->
+                            <div class="flex items-center justify-center mb-2">
+                                <div class="rating-stars flex">
+                                    {% for i in expert.rating_range %}
+                                        <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                                        </svg>
+                                    {% endfor %}
+                                </div>
+                                <span class="ml-2 text-sm text-gray-600">
+                                    ({{ expert.total_reviews }} review{{ expert.total_reviews|pluralize }})
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Expert Info -->
+                        <div class="space-y-4">
+                            <!-- Specializations -->
+                            <div>
+                                <h4 class="text-sm font-semibold text-gray-700 mb-2">Specializations</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    {% for spec in expert.specializations.all|slice:":3" %}
+                                        <span class="specialization-badge text-white text-xs px-3 py-1 rounded-full">
+                                            {{ spec.name }}
+                                        </span>
+                                    {% endfor %}
+                                    {% if expert.specializations.count > 3 %}
+                                        <span class="text-gray-500 text-xs px-3 py-1 bg-gray-100 rounded-full">
+                                            +{{ expert.specializations.count|add:"-3" }} more
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Experience -->
+                            <div class="flex items-center text-sm text-gray-600">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ expert.years_of_experience }} years experience
+                            </div>
+
+                            <!-- Location -->
+                            {% if expert.location %}
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    {{ expert.location }}
+                                </div>
+                            {% endif %}
+
+                            <!-- Consultation Rate -->
+                            <div class="flex items-center text-sm text-gray-600">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                </svg>
+                                ${{ expert.hourly_rate }}/hour
+                            </div>
+
+                            <!-- Total Consultations -->
+                            <div class="flex items-center text-sm text-gray-600">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                {{ expert.total_consultations }} consultation{{ expert.total_consultations|pluralize }}
+                            </div>
+                        </div>
+
+                        <!-- Bio Preview -->
+                        {% if expert.bio %}
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <p class="text-sm text-gray-600 line-clamp-3">
+                                    {{ expert.bio|truncatewords:20 }}
+                                </p>
+                            </div>
+                        {% endif %}
+
+                        <!-- Action Buttons -->
+                        <div class="mt-6 flex gap-3">
+                            <a href="{% url 'experts:expert_detail' expert.id %}" 
+                               class="flex-1 bg-green-600 text-white text-center py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                                View Profile
+                            </a>
+                            <a href="{% url 'experts:book_consultation' expert.id %}" 
+                               class="flex-1 bg-gray-100 text-gray-700 text-center py-2 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors">
+                                Book Now
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+                <div class="mt-12 flex justify-center">
+                    <nav class="flex items-center space-x-2">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.specialization %}&specialization={{ request.GET.specialization }}{% endif %}{% if request.GET.min_rating %}&min_rating={{ request.GET.min_rating }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" 
+                               class="px-3 py-2 text-sm text-gray-500 hover:text-green-600">
+                                First
+                            </a>
+                            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.specialization %}&specialization={{ request.GET.specialization }}{% endif %}{% if request.GET.min_rating %}&min_rating={{ request.GET.min_rating }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" 
+                               class="px-3 py-2 text-sm text-gray-500 hover:text-green-600">
+                                Previous
+                            </a>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <span class="px-3 py-2 text-sm bg-green-600 text-white rounded">{{ num }}</span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.specialization %}&specialization={{ request.GET.specialization }}{% endif %}{% if request.GET.min_rating %}&min_rating={{ request.GET.min_rating }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" 
+                                   class="px-3 py-2 text-sm text-gray-500 hover:text-green-600">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.specialization %}&specialization={{ request.GET.specialization }}{% endif %}{% if request.GET.min_rating %}&min_rating={{ request.GET.min_rating }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" 
+                               class="px-3 py-2 text-sm text-gray-500 hover:text-green-600">
+                                Next
+                            </a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.specialization %}&specialization={{ request.GET.specialization }}{% endif %}{% if request.GET.min_rating %}&min_rating={{ request.GET.min_rating }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}" 
+                               class="px-3 py-2 text-sm text-gray-500 hover:text-green-600">
+                                Last
+                            </a>
+                        {% endif %}
+                    </nav>
+                </div>
+            {% endif %}
+
+        {% else %}
+            <!-- No Experts Found -->
+            <div class="text-center py-16">
+                <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">No experts found</h3>
+                <p class="text-gray-600 mb-6">Try adjusting your search criteria or check back later.</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="{% url 'experts:experts_list' %}" 
+                       class="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                        Clear Filters
+                    </a>
+                    <a href="{% url 'experts:become_expert' %}" 
+                       class="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-colors">
+                        Become an Expert
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="bg-green-50 py-16">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+            Ready to Transform Your Farming?
+        </h2>
+        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Connect with our expert agricultural consultants and take your farming to the next level with personalized advice and proven strategies.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'experts:become_expert' %}" 
+               class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                Join as Expert
+            </a>
+            <a href="#experts-list" 
+               class="bg-white text-green-600 border-2 border-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors">
+                Find Expert
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

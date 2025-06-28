@@ -31,4 +31,5 @@ urlpatterns = [
     path("dashboard/", include("apps.dashboard.urls", namespace="dashboard")),
     path("sensors/", include("apps.sensors.urls", namespace="sensors")),
     path("marketplace/", include("apps.marketplace.urls", namespace="marketplace")),
+    path("experts/", include("apps.experts.urls", namespace="experts")),
 ]

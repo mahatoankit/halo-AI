@@ -1,0 +1,877 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Expert Dashboard - HALO-AI{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-primary-50 to-secondary-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Dashboard Header -->
+        <div class="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl shadow-xl text-white p-8 mb-8">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="flex items-center space-x-6 mb-4 md:mb-0">
+                    {% if expert_profile.profile_image %}
+                    <img src="{{ expert_profile.profile_image.url }}" 
+                         alt="{{ user.get_full_name }}" 
+                         class="w-20 h-20 rounded-full object-cover border-3 border-white">
+                    {% else %}
+                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-primary-600 text-2xl"></i>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <h1 class="text-3xl font-bold mb-1">Welcome back, {{ user.first_name }}!</h1>
+                        <p class="text-primary-100 text-lg">{{ expert_profile.professional_title }}</p>
+                        <div class="flex items-center mt-2">
+                            {% if expert_profile.is_verified %}
+                            <span class="inline-flex items-center bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium mr-3">
+                                <i class="fas fa-check-circle mr-1"></i>
+                                Verified Expert
+                            </span>
+                            {% endif %}
+                            {% if expert_profile.is_available %}
+                            <span class="inline-flex items-center bg-secondary-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fas fa-circle mr-1"></i>
+                                Available
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                <i class="fas fa-pause-circle mr-1"></i>
+                                Away
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="bg-white text-primary-600 rounded-xl p-4">
+                        <div class="text-2xl font-bold">{{ expert_profile.currency }} {{ expert_profile.hourly_rate }}</div>
+                        <div class="text-sm">hourly rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Consultations -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-3xl font-bold text-gray-900">{{ stats.total_consultations }}</div>
+                        <div class="text-sm text-gray-600 uppercase tracking-wide font-medium">Total Consultations</div>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-calendar-check text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Requests -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-yellow-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-3xl font-bold text-gray-900">{{ stats.pending_requests }}</div>
+                        <div class="text-sm text-gray-600 uppercase tracking-wide font-medium">Pending Requests</div>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Earnings -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-3xl font-bold text-gray-900">{{ expert_profile.currency }} {{ stats.monthly_earnings }}</div>
+                        <div class="text-sm text-gray-600 uppercase tracking-wide font-medium">This Month</div>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Average Rating -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-purple-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-3xl font-bold text-gray-900">{{ expert_profile.average_rating }}</div>
+                        <div class="text-sm text-gray-600 uppercase tracking-wide font-medium">Average Rating</div>
+                    </div>
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <i class="fas fa-star text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Recent Consultation Requests -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">Recent Consultation Requests</h2>
+                        <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">View All</a>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        {% for request in recent_requests %}
+                        <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-lg text-gray-900 mb-1">{{ request.title }}</h4>
+                                    <p class="text-gray-600 mb-2">by {{ request.farmer.get_full_name }}</p>
+                                    <p class="text-sm text-gray-700 line-clamp-2">{{ request.description|truncatewords:20 }}</p>
+                                </div>
+                                <div class="flex-shrink-0 ml-4">
+                                    {% if request.status == 'pending' %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        Pending
+                                    </span>
+                                    {% elif request.status == 'accepted' %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        Accepted
+                                    </span>
+                                    {% elif request.status == 'completed' %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        Completed
+                                    </span>
+                                    {% else %}
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        {{ request.get_status_display }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                                <div class="flex items-center space-x-4">
+                                    <span><i class="fas fa-calendar mr-1"></i>{{ request.preferred_date }}</span>
+                                    <span><i class="fas fa-clock mr-1"></i>{{ request.preferred_time }}</span>
+                                    <span><i class="fas fa-hourglass-half mr-1"></i>{{ request.duration_hours }}h</span>
+                                </div>
+                                <span class="font-semibold text-primary-600">{{ expert_profile.currency }} {{ request.calculate_cost }}</span>
+                            </div>
+                            
+                            {% if request.status == 'pending' %}
+                            <div class="flex space-x-3">
+                                <button class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-200">
+                                    Accept
+                                </button>
+                                <button class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-200">
+                                    Decline
+                                </button>
+                                <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium transition-colors duration-200">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            {% else %}
+                            <div class="text-center">
+                                <button class="bg-primary-600 hover:bg-primary-700 text-white py-2 px-6 rounded-lg font-medium transition-colors duration-200">
+                                    View Details
+                                </button>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-12">
+                            <i class="fas fa-calendar-times text-gray-300 text-5xl mb-4"></i>
+                            <h3 class="text-lg font-semibold text-gray-600 mb-2">No consultation requests yet</h3>
+                            <p class="text-gray-500">Requests from farmers will appear here</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Upcoming Consultations -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">Upcoming Consultations</h2>
+                        <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">View Calendar</a>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        {% for consultation in upcoming_consultations %}
+                        <div class="border border-gray-200 rounded-xl p-6 bg-green-50 border-green-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-semibold text-lg text-gray-900">{{ consultation.title }}</h4>
+                                <span class="text-lg font-bold text-green-600">{{ expert_profile.currency }} {{ consultation.calculate_cost }}</span>
+                            </div>
+                            
+                            <div class="flex items-center space-x-6 text-sm text-gray-600 mb-4">
+                                <span><i class="fas fa-user mr-1"></i>{{ consultation.farmer.get_full_name }}</span>
+                                <span><i class="fas fa-calendar mr-1"></i>{{ consultation.scheduled_datetime|date:"M d, Y" }}</span>
+                                <span><i class="fas fa-clock mr-1"></i>{{ consultation.scheduled_datetime|time:"g:i A" }}</span>
+                                <span><i class="fas fa-hourglass-half mr-1"></i>{{ consultation.duration_hours }}h</span>
+                            </div>
+                            
+                            <div class="flex items-center space-x-3">
+                                {% if consultation.preferred_mode == 'online' %}
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors duration-200">
+                                    <i class="fas fa-video mr-2"></i>Join Meeting
+                                </button>
+                                {% else %}
+                                <span class="text-sm text-gray-600">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>{{ consultation.consultation_address|truncatewords:8 }}
+                                </span>
+                                {% endif %}
+                                <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium transition-colors duration-200">
+                                    Reschedule
+                                </button>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-12">
+                            <i class="fas fa-calendar-check text-gray-300 text-5xl mb-4"></i>
+                            <h3 class="text-lg font-semibold text-gray-600 mb-2">No upcoming consultations</h3>
+                            <p class="text-gray-500">Accepted consultations will appear here</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center">
+                            <i class="fas fa-edit mr-2"></i>
+                            Edit Profile
+                        </button>
+                        <button class="w-full bg-secondary-500 hover:bg-secondary-600 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            Manage Availability
+                        </button>
+                        <button class="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center">
+                            <i class="fas fa-pen mr-2"></i>
+                            Write Blog Post
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Completeness -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Profile Completeness</h3>
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-gray-600">Progress</span>
+                            <span class="font-semibold">{{ profile_completeness }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-primary-600 h-2 rounded-full" style="width: {{ profile_completeness }}%"></div>
+                        </div>
+                    </div>
+                    
+                    {% if profile_suggestions %}
+                    <div class="space-y-2">
+                        <p class="text-sm text-gray-600 mb-3">Complete your profile:</p>
+                        {% for suggestion in profile_suggestions %}
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-circle text-red-400 text-xs mr-2"></i>
+                            {{ suggestion }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Recent Reviews -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Reviews</h3>
+                    {% if recent_reviews %}
+                    <div class="space-y-4">
+                        {% for review in recent_reviews %}
+                        <div class="border-b border-gray-100 pb-4 last:border-b-0">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= review.rating %}
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        {% else %}
+                                        <i class="far fa-star text-gray-300"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <span class="text-xs text-gray-500">{{ review.created_at|date:"M d" }}</span>
+                            </div>
+                            <p class="text-sm text-gray-700 line-clamp-2">{{ review.review_text|truncatewords:15 }}</p>
+                            <p class="text-xs text-gray-500 mt-1">by {{ review.reviewer.get_full_name }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-6">
+                        <i class="fas fa-star text-gray-300 text-3xl mb-2"></i>
+                        <p class="text-sm text-gray-500">No reviews yet</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+{% endblock %}
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: transform 0.2s ease;
+  }
+
+  .consultation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .status-badge {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 15px;
+  }
+
+  .status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+  .status-accepted {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+  .status-completed {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  .status-cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .response-form {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .urgent-badge {
+    background-color: #dc3545;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 10px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .quick-actions {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.5rem;
+  }
+
+  .action-btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="container-fluid mt-4">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h1 class="mb-2">
+          Welcome back, {{ expert_profile.user.get_full_name }}!
+        </h1>
+        <p class="mb-1 opacity-75">{{ expert_profile.professional_title }}</p>
+        <p class="mb-0 opacity-75">{{ expert_profile.organization }}</p>
+      </div>
+      <div class="col-md-4 text-end">
+        <div class="text-light">
+          <h5>{{ expert_profile.average_rating }}/5.0 ⭐</h5>
+          <small>Average Rating</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+      <div class="stat-card total">
+        <div class="stat-value text-primary">{{ total_consultations }}</div>
+        <div class="stat-label">Total Consultations</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+      <div class="stat-card pending">
+        <div class="stat-value text-warning">{{ pending_count }}</div>
+        <div class="stat-label">Pending Requests</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+      <div class="stat-card monthly">
+        <div class="stat-value text-success">
+          {{ this_month_consultations }}
+        </div>
+        <div class="stat-label">This Month</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+      <div class="stat-card rating">
+        <div class="stat-value text-danger">
+          {{ expert_profile.response_rate }}%
+        </div>
+        <div class="stat-label">Response Rate</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+      <!-- Pending Requests -->
+      {% if pending_requests %}
+      <div class="card mb-4">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0">
+            <i class="fas fa-clock text-warning"></i> Pending Consultation
+            Requests {% if pending_count > 5 %}
+            <span class="urgent-badge">URGENT</span>
+            {% endif %}
+          </h5>
+          <span class="badge bg-warning">{{ pending_count }}</span>
+        </div>
+        <div class="card-body">
+          {% for consultation in pending_requests %}
+          <div class="consultation-card">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <h6 class="mb-1">{{ consultation.title }}</h6>
+                <p class="text-muted mb-1">
+                  by {{ consultation.farmer.get_full_name }}
+                </p>
+                <span class="status-badge status-pending"
+                  >{{ consultation.get_consultation_type_display }}</span
+                >
+              </div>
+              <div class="text-end">
+                <small class="text-muted"
+                  >{{ consultation.created_at|timesince }} ago</small
+                >
+                <div class="text-success fw-bold">
+                  {{ expert_profile.currency }} {{
+                  consultation.total_cost|floatformat:2 }}
+                </div>
+              </div>
+            </div>
+
+            <p class="mb-2">{{ consultation.description|truncatewords:20 }}</p>
+
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <small class="text-muted">
+                  <i class="fas fa-calendar"></i> {{ consultation.preferred_date
+                  }} at {{ consultation.preferred_time }}
+                </small>
+              </div>
+              <div class="col-sm-6">
+                <small class="text-muted">
+                  {% if consultation.preferred_mode == 'online' %}
+                  <i class="fas fa-video"></i> Online {% elif
+                  consultation.preferred_mode == 'in_person' %}
+                  <i class="fas fa-map-marker-alt"></i> In-person {% else %}
+                  <i class="fas fa-video"></i>
+                  <i class="fas fa-map-marker-alt"></i> {{
+                  consultation.preferred_mode }} {% endif %}
+                </small>
+              </div>
+            </div>
+
+            <!-- Response Form -->
+            <div class="response-form">
+              <form
+                method="POST"
+                action="{% url 'experts:respond_to_consultation' consultation.id %}"
+              >
+                {% csrf_token %}
+                <div class="mb-2">
+                  <textarea
+                    name="response_text"
+                    class="form-control form-control-sm"
+                    placeholder="Response to farmer..."
+                    rows="2"
+                  ></textarea>
+                </div>
+                <div class="row g-2 mb-2">
+                  <div class="col-md-4">
+                    <input
+                      type="date"
+                      name="scheduled_date"
+                      class="form-control form-control-sm"
+                      value="{{ consultation.preferred_date }}"
+                      min="{{ today|date:'Y-m-d' }}"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <input
+                      type="time"
+                      name="scheduled_time"
+                      class="form-control form-control-sm"
+                      value="{{ consultation.preferred_time }}"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <input
+                      type="url"
+                      name="meeting_link"
+                      class="form-control form-control-sm"
+                      placeholder="Meeting link (if online)"
+                    />
+                  </div>
+                </div>
+                <div class="d-flex gap-2">
+                  <button
+                    type="submit"
+                    name="action"
+                    value="accept"
+                    class="btn btn-success btn-sm flex-fill"
+                  >
+                    <i class="fas fa-check"></i> Accept
+                  </button>
+                  <button
+                    type="submit"
+                    name="action"
+                    value="reject"
+                    class="btn btn-outline-danger btn-sm flex-fill"
+                  >
+                    <i class="fas fa-times"></i> Decline
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Upcoming Consultations -->
+      {% if upcoming_consultations %}
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-calendar-check text-primary"></i> Upcoming
+            Consultations
+          </h5>
+        </div>
+        <div class="card-body">
+          {% for consultation in upcoming_consultations %}
+          <div class="consultation-card">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <h6 class="mb-1">{{ consultation.title }}</h6>
+                <p class="text-muted mb-1">
+                  with {{ consultation.farmer.get_full_name }}
+                </p>
+                <span class="status-badge status-accepted">Scheduled</span>
+              </div>
+              <div class="text-end">
+                <div class="text-primary fw-bold">
+                  {{ consultation.scheduled_datetime|date:"M d, Y" }}
+                </div>
+                <div class="text-primary">
+                  {{ consultation.scheduled_datetime|time:"g:i A" }}
+                </div>
+              </div>
+            </div>
+
+            <p class="mb-2">{{ consultation.description|truncatewords:15 }}</p>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                Duration: {{ consultation.duration_hours }} hour{{
+                consultation.duration_hours|pluralize }} • {{
+                expert_profile.currency }} {{
+                consultation.total_cost|floatformat:2 }}
+              </small>
+              {% if consultation.meeting_link %}
+              <a
+                href="{{ consultation.meeting_link }}"
+                target="_blank"
+                class="btn btn-primary btn-sm"
+              >
+                <i class="fas fa-video"></i> Join Meeting
+              </a>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Recent Consultations -->
+      {% if recent_consultations %}
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-history text-secondary"></i> Recent Consultations
+          </h5>
+        </div>
+        <div class="card-body">
+          {% for consultation in recent_consultations %}
+          <div class="consultation-card">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <h6 class="mb-1">{{ consultation.title }}</h6>
+                <p class="text-muted mb-1">
+                  with {{ consultation.farmer.get_full_name }}
+                </p>
+                <span class="status-badge status-{{ consultation.status }}">
+                  {{ consultation.get_status_display }}
+                </span>
+              </div>
+              <div class="text-end">
+                <small class="text-muted"
+                  >{{ consultation.updated_at|date:"M d, Y" }}</small
+                >
+                <div class="text-muted">
+                  {{ expert_profile.currency }} {{
+                  consultation.total_cost|floatformat:2 }}
+                </div>
+              </div>
+            </div>
+
+            {% if consultation.status == 'completed' and consultation.review %}
+            <div class="mt-2">
+              <div class="text-warning">
+                {% for i in "12345" %} {% if forloop.counter <=
+                consultation.review.rating %}
+                <i class="fas fa-star"></i>
+                {% else %}
+                <i class="far fa-star"></i>
+                {% endif %} {% endfor %}
+              </div>
+              <small class="text-muted"
+                >{{ consultation.review.review_text|truncatewords:10 }}</small
+              >
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- No Data State -->
+      {% if not pending_requests and not upcoming_consultations and not
+      recent_consultations %}
+      <div class="card">
+        <div class="card-body text-center py-5">
+          <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
+          <h4>No consultations yet</h4>
+          <p class="text-muted">
+            Your consultation requests will appear here once farmers start
+            booking.
+          </p>
+          <a href="{% url 'experts:experts_list' %}" class="btn btn-primary">
+            View Your Public Profile
+          </a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <!-- Quick Actions -->
+      <div class="quick-actions mb-4">
+        <h6 class="mb-3"><i class="fas fa-bolt"></i> Quick Actions</h6>
+
+        <a
+          href="{% url 'experts:expert_detail' expert_profile.id %}"
+          class="btn btn-outline-primary action-btn"
+        >
+          <i class="fas fa-eye"></i> View Public Profile
+        </a>
+
+        <button
+          class="btn btn-outline-secondary action-btn"
+          data-bs-toggle="modal"
+          data-bs-target="#editProfileModal"
+        >
+          <i class="fas fa-edit"></i> Edit Profile
+        </button>
+
+        <button class="btn btn-outline-info action-btn">
+          <i class="fas fa-calendar-plus"></i> Set Availability
+        </button>
+
+        <a
+          href="{% url 'experts:blog_list' %}"
+          class="btn btn-outline-success action-btn"
+        >
+          <i class="fas fa-blog"></i> Write Article
+        </a>
+
+        <button class="btn btn-outline-warning action-btn">
+          <i class="fas fa-chart-line"></i> View Analytics
+        </button>
+      </div>
+
+      <!-- Profile Status -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0"><i class="fas fa-user-check"></i> Profile Status</h6>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>Verification Status:</span>
+            {% if expert_profile.verification_status == 'verified' %}
+            <span class="badge bg-success">✓ Verified</span>
+            {% elif expert_profile.verification_status == 'pending' %}
+            <span class="badge bg-warning">⏳ Pending</span>
+            {% else %}
+            <span class="badge bg-danger">✗ Rejected</span>
+            {% endif %}
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>Availability:</span>
+            {% if expert_profile.is_available %}
+            <span class="badge bg-success">Available</span>
+            {% else %}
+            <span class="badge bg-secondary">Unavailable</span>
+            {% endif %}
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <span>Profile Complete:</span>
+            <span class="badge bg-info">85%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Metrics -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0"><i class="fas fa-chart-bar"></i> This Month</h6>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between mb-2">
+            <span>Consultations:</span>
+            <span class="fw-bold">{{ this_month_consultations }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Earnings:</span>
+            <span class="fw-bold text-success"
+              >{{ expert_profile.currency }} 1,250</span
+            >
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>New Reviews:</span>
+            <span class="fw-bold">3</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>Response Time:</span>
+            <span class="fw-bold text-info">2.5 hrs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0"><i class="fas fa-bell"></i> Recent Activity</h6>
+        </div>
+        <div class="card-body">
+          <div class="small">
+            <div class="d-flex mb-2">
+              <i class="fas fa-star text-warning me-2 mt-1"></i>
+              <div>
+                <strong>New 5-star review</strong> from John Doe
+                <div class="text-muted">2 hours ago</div>
+              </div>
+            </div>
+            <div class="d-flex mb-2">
+              <i class="fas fa-calendar text-primary me-2 mt-1"></i>
+              <div>
+                <strong>Consultation completed</strong> with Jane Smith
+                <div class="text-muted">1 day ago</div>
+              </div>
+            </div>
+            <div class="d-flex">
+              <i class="fas fa-user-plus text-success me-2 mt-1"></i>
+              <div>
+                <strong>New consultation request</strong> from Mike Johnson
+                <div class="text-muted">2 days ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Profile</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>Profile editing form would go here...</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  // Auto-refresh for real-time updates
+  setTimeout(function () {
+    location.reload();
+  }, 300000); // Refresh every 5 minutes
+
+  // Add any other interactive features
+  console.log(
+    "Expert dashboard loaded for {{ expert_profile.user.get_full_name }}"
+  );
+</script>
+{% endblock %}

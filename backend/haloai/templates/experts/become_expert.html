@@ -1,0 +1,983 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Become an Expert - HALO-AI{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-primary-50 to-secondary-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Hero Section -->
+        <div class="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl shadow-xl text-white p-12 mb-12 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">Join Our Expert Network</h1>
+            <p class="text-xl text-primary-100 max-w-3xl mx-auto mb-8">
+                Share your agricultural knowledge with farmers worldwide and earn while making a difference in sustainable farming
+            </p>
+            <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8">
+                <div class="flex items-center">
+                    <i class="fas fa-users text-secondary-400 text-2xl mr-2"></i>
+                    <span class="text-lg">Connect with 10,000+ farmers</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-dollar-sign text-secondary-400 text-2xl mr-2"></i>
+                    <span class="text-lg">Flexible earning opportunities</span>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-leaf text-secondary-400 text-2xl mr-2"></i>
+                    <span class="text-lg">Support sustainable agriculture</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="mb-12">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Why Join HALO-AI as an Expert?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Flexible Schedule -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow duration-300">
+                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-clock text-primary-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Flexible Schedule</h3>
+                    <p class="text-gray-600">Set your own availability and work hours that fit your lifestyle</p>
+                </div>
+
+                <!-- Global Reach -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow duration-300">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-globe text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Global Impact</h3>
+                    <p class="text-gray-600">Help farmers worldwide with your expertise and knowledge</p>
+                </div>
+
+                <!-- Competitive Rates -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow duration-300">
+                    <div class="w-16 h-16 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-money-bill-wave text-secondary-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Competitive Rates</h3>
+                    <p class="text-gray-600">Set your own rates and earn based on your experience and expertise</p>
+                </div>
+
+                <!-- Professional Growth -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow duration-300">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Professional Growth</h3>
+                    <p class="text-gray-600">Build your reputation and expand your professional network</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Expert Application Form</h2>
+                    <p class="text-gray-600">Tell us about your expertise and start your journey as an agricultural expert</p>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data" class="space-y-8">
+                    {% csrf_token %}
+                    
+                    <!-- Personal Information -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                            <i class="fas fa-user text-primary-600 mr-2"></i>
+                            Personal Information
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                <input type="text" 
+                                       name="first_name" 
+                                       id="first_name" 
+                                       required 
+                                       value="{{ user.first_name }}"
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                            </div>
+                            
+                            <div>
+                                <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                <input type="text" 
+                                       name="last_name" 
+                                       id="last_name" 
+                                       required 
+                                       value="{{ user.last_name }}"
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                            </div>
+                            
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                                <input type="email" 
+                                       name="email" 
+                                       id="email" 
+                                       required 
+                                       value="{{ user.email }}"
+                                       readonly
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-600">
+                            </div>
+                            
+                            <div>
+                                <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                <input type="tel" 
+                                       name="phone_number" 
+                                       id="phone_number" 
+                                       required 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                       placeholder="+1 (555) 123-4567">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Information -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                            <i class="fas fa-briefcase text-primary-600 mr-2"></i>
+                            Professional Information
+                        </h3>
+                        
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="professional_title" class="block text-sm font-medium text-gray-700 mb-2">Professional Title</label>
+                                    <input type="text" 
+                                           name="professional_title" 
+                                           id="professional_title" 
+                                           required 
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                           placeholder="e.g., Agricultural Engineer, Crop Scientist">
+                                </div>
+                                
+                                <div>
+                                    <label for="organization" class="block text-sm font-medium text-gray-700 mb-2">Organization/Institution</label>
+                                    <input type="text" 
+                                           name="organization" 
+                                           id="organization" 
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                           placeholder="Current or previous organization">
+                                </div>
+                                
+                                <div>
+                                    <label for="years_of_experience" class="block text-sm font-medium text-gray-700 mb-2">Years of Experience</label>
+                                    <select name="years_of_experience" 
+                                            id="years_of_experience" 
+                                            required 
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                                        <option value="">Select experience</option>
+                                        <option value="1">1-2 years</option>
+                                        <option value="3">3-5 years</option>
+                                        <option value="6">6-10 years</option>
+                                        <option value="11">11-15 years</option>
+                                        <option value="16">16-20 years</option>
+                                        <option value="21">20+ years</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label for="professional_license" class="block text-sm font-medium text-gray-700 mb-2">Professional License/Certification</label>
+                                    <input type="text" 
+                                           name="professional_license" 
+                                           id="professional_license" 
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                           placeholder="License number or certification">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="education_background" class="block text-sm font-medium text-gray-700 mb-2">Education Background</label>
+                                <textarea name="education_background" 
+                                          id="education_background" 
+                                          rows="4" 
+                                          required 
+                                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                          placeholder="Describe your educational qualifications, degrees, certifications, and relevant training"></textarea>
+                            </div>
+                            
+                            <div>
+                                <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">Professional Bio</label>
+                                <textarea name="bio" 
+                                          id="bio" 
+                                          rows="6" 
+                                          required 
+                                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                          placeholder="Tell farmers about yourself, your expertise, and how you can help them. This will be visible on your profile."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Specializations -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                            <i class="fas fa-seedling text-primary-600 mr-2"></i>
+                            Areas of Expertise
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {% for specialization in specializations %}
+                            <label class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-primary-50 hover:border-primary-300 cursor-pointer transition-colors">
+                                <input type="checkbox" 
+                                       name="specializations" 
+                                       value="{{ specialization.id }}" 
+                                       class="rounded border-gray-300 text-primary-600 focus:ring-primary-500 mr-3">
+                                <div>
+                                    <div class="font-medium text-gray-900">{{ specialization.name }}</div>
+                                    {% if specialization.description %}
+                                    <div class="text-sm text-gray-600">{{ specialization.description|truncatewords:8 }}</div>
+                                    {% endif %}
+                                </div>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Service Details -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                            <i class="fas fa-cogs text-primary-600 mr-2"></i>
+                            Service Details
+                        </h3>
+                        
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="consultation_modes" class="block text-sm font-medium text-gray-700 mb-3">Consultation Modes</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" name="consultation_modes" value="online" class="mr-2" required>
+                                            <span>Online Only (Video/Phone calls)</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="radio" name="consultation_modes" value="in_person" class="mr-2" required>
+                                            <span>In-Person Only (Farm visits)</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="radio" name="consultation_modes" value="both" class="mr-2" required>
+                                            <span>Both Online & In-Person</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label for="hourly_rate" class="block text-sm font-medium text-gray-700 mb-2">Hourly Rate (NPR)</label>
+                                    <input type="number" 
+                                           name="hourly_rate" 
+                                           id="hourly_rate" 
+                                           required 
+                                           min="100" 
+                                           step="50"
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                           placeholder="e.g., 1500">
+                                </div>
+                                
+                                <div>
+                                    <label for="languages_spoken" class="block text-sm font-medium text-gray-700 mb-2">Languages Spoken</label>
+                                    <input type="text" 
+                                           name="languages_spoken" 
+                                           id="languages_spoken" 
+                                           required 
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                           placeholder="e.g., English, Nepali, Hindi">
+                                </div>
+                                
+                                <div>
+                                    <label for="profile_image" class="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+                                    <input type="file" 
+                                           name="profile_image" 
+                                           id="profile_image" 
+                                           accept="image/*"
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                                    <p class="text-sm text-gray-500 mt-1">Upload a professional photo (optional)</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="service_areas" class="block text-sm font-medium text-gray-700 mb-2">Service Areas</label>
+                                <textarea name="service_areas" 
+                                          id="service_areas" 
+                                          rows="3" 
+                                          required 
+                                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                          placeholder="List the geographic areas where you can provide services (for in-person consultations)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documents -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                            <i class="fas fa-file-alt text-primary-600 mr-2"></i>
+                            Verification Documents
+                        </h3>
+                        
+                        <div>
+                            <label for="verification_documents" class="block text-sm font-medium text-gray-700 mb-2">Upload Documents</label>
+                            <input type="file" 
+                                   name="verification_documents" 
+                                   id="verification_documents" 
+                                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                            <p class="text-sm text-gray-500 mt-2">
+                                Upload relevant documents such as degrees, certifications, licenses, or professional credentials. 
+                                Accepted formats: PDF, DOC, DOCX, JPG, PNG (Max 10MB)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <label class="flex items-start">
+                            <input type="checkbox" 
+                                   name="agree_terms" 
+                                   required 
+                                   class="rounded border-gray-300 text-primary-600 focus:ring-primary-500 mr-3 mt-1">
+                            <div class="text-sm text-gray-700">
+                                I agree to the <a href="#" class="text-primary-600 hover:text-primary-700 underline">Terms of Service</a> 
+                                and <a href="#" class="text-primary-600 hover:text-primary-700 underline">Expert Guidelines</a>. 
+                                I understand that my application will be reviewed and I will be notified of the decision within 3-5 business days.
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" 
+                                class="bg-primary-600 hover:bg-primary-700 text-white px-12 py-4 rounded-lg font-semibold text-lg transition-colors duration-200 inline-flex items-center">
+                            <i class="fas fa-paper-plane mr-2"></i>
+                            Submit Application
+                        </button>
+                        <p class="text-sm text-gray-500 mt-3">
+                            Your application will be reviewed by our team within 3-5 business days
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem auto;
+    font-size: 1.5rem;
+    color: white;
+  }
+
+  .specialization-checkbox {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .specialization-checkbox:hover {
+    border-color: #007bff;
+    background-color: #f8f9ff;
+  }
+
+  .specialization-checkbox input:checked + label {
+    font-weight: bold;
+    color: #007bff;
+  }
+
+  .specialization-checkbox input:checked ~ .specialization-checkbox {
+    border-color: #007bff;
+    background-color: #e7f1ff;
+  }
+
+  .requirements-list {
+    background-color: #e7f5e7;
+    border: 1px solid #c3e6cb;
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  .step-indicator {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .step {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 1rem;
+    font-weight: bold;
+  }
+
+  .step.active {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .step.completed {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .form-section {
+    display: none;
+  }
+
+  .form-section.active {
+    display: block;
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="container mt-4">
+  <!-- Hero Section -->
+  <div class="hero-section text-center">
+    <h1 class="display-4 mb-3">🌟 Become an Agricultural Expert</h1>
+    <p class="lead mb-4">
+      Join HALO-AI and help farmers while earning income through your expertise
+    </p>
+    <div class="row">
+      <div class="col-md-4">
+        <h5>💰 Earn Income</h5>
+        <p>Set your own rates and earn from consultations</p>
+      </div>
+      <div class="col-md-4">
+        <h5>🌍 Make Impact</h5>
+        <p>Help farmers improve their agricultural practices</p>
+      </div>
+      <div class="col-md-4">
+        <h5>📈 Grow Network</h5>
+        <p>Build your professional network and reputation</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Benefits Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h3 class="text-center mb-4">Why Join HALO-AI as an Expert?</h3>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="benefit-card">
+        <div class="benefit-icon" style="background-color: #28a745">
+          <i class="fas fa-dollar-sign"></i>
+        </div>
+        <h5>Flexible Earnings</h5>
+        <p>
+          Set your own hourly rates and work on your schedule. Average experts
+          earn $25-100/hour.
+        </p>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="benefit-card">
+        <div class="benefit-icon" style="background-color: #007bff">
+          <i class="fas fa-users"></i>
+        </div>
+        <h5>Direct Access to Farmers</h5>
+        <p>
+          Connect directly with farmers who need your expertise without
+          intermediaries.
+        </p>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="benefit-card">
+        <div class="benefit-icon" style="background-color: #17a2b8">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h5>Professional Growth</h5>
+        <p>
+          Build your reputation, gain reviews, and grow your agricultural
+          consulting business.
+        </p>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="benefit-card">
+        <div class="benefit-icon" style="background-color: #ffc107">
+          <i class="fas fa-globe"></i>
+        </div>
+        <h5>Global Reach</h5>
+        <p>
+          Provide consultations online to farmers worldwide, expanding your
+          impact.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Requirements Section -->
+  <div class="row mb-5">
+    <div class="col-lg-8 mx-auto">
+      <div class="requirements-list">
+        <h4 class="mb-3">
+          <i class="fas fa-check-circle text-success"></i> Requirements to
+          Become an Expert
+        </h4>
+        <ul class="list-unstyled">
+          <li class="mb-2">
+            <i class="fas fa-check text-success me-2"></i> Minimum 3 years of
+            agricultural experience
+          </li>
+          <li class="mb-2">
+            <i class="fas fa-check text-success me-2"></i> Relevant educational
+            background or certifications
+          </li>
+          <li class="mb-2">
+            <i class="fas fa-check text-success me-2"></i> Ability to provide
+            consultation in English or local languages
+          </li>
+          <li class="mb-2">
+            <i class="fas fa-check text-success me-2"></i> Reliable internet
+            connection for online consultations
+          </li>
+          <li class="mb-2">
+            <i class="fas fa-check text-success me-2"></i> Professional
+            references or portfolio (preferred)
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Form -->
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <div class="application-form">
+        <h3 class="text-center mb-4">Expert Application Form</h3>
+
+        <form
+          method="POST"
+          enctype="multipart/form-data"
+          id="expertApplicationForm"
+        >
+          {% csrf_token %}
+
+          <!-- Professional Information -->
+          <div class="section-header">
+            <h5 class="mb-0">
+              <i class="fas fa-user-tie"></i> Professional Information
+            </h5>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="professional_title" class="form-label"
+                >Professional Title *</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="professional_title"
+                name="professional_title"
+                placeholder="e.g., Agricultural Consultant, Crop Specialist"
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="organization" class="form-label"
+                >Organization/Company</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="organization"
+                name="organization"
+                placeholder="Current or previous organization"
+              />
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="years_of_experience" class="form-label"
+                >Years of Experience *</label
+              >
+              <select
+                class="form-select"
+                id="years_of_experience"
+                name="years_of_experience"
+                required
+              >
+                <option value="">Select experience level</option>
+                <option value="3">3-5 years</option>
+                <option value="6">6-10 years</option>
+                <option value="11">11-15 years</option>
+                <option value="16">16-20 years</option>
+                <option value="21">20+ years</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="professional_license" class="form-label"
+                >Professional License/Certification</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="professional_license"
+                name="professional_license"
+                placeholder="License number or certification"
+              />
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="education_background" class="form-label"
+              >Education Background *</label
+            >
+            <textarea
+              class="form-control"
+              id="education_background"
+              name="education_background"
+              rows="4"
+              placeholder="Describe your educational background, degrees, certifications, and relevant training..."
+              required
+            ></textarea>
+          </div>
+
+          <!-- Specializations -->
+          <div class="section-header">
+            <h5 class="mb-0">
+              <i class="fas fa-seedling"></i> Specializations
+            </h5>
+          </div>
+
+          <p class="text-muted mb-3">
+            Select all areas where you have expertise (minimum 2 required):
+          </p>
+
+          <div class="row mb-4">
+            {% for specialization in specializations %}
+            <div class="col-md-6 col-lg-4 mb-2">
+              <div class="specialization-checkbox">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="spec_{{ specialization.id }}"
+                  name="specializations"
+                  value="{{ specialization.id }}"
+                />
+                <label
+                  class="form-check-label w-100"
+                  for="spec_{{ specialization.id }}"
+                >
+                  <strong>{{ specialization.name }}</strong>
+                  {% if specialization.description %}
+                  <br /><small class="text-muted"
+                    >{{ specialization.description|truncatewords:8 }}</small
+                  >
+                  {% endif %}
+                </label>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Contact & Consultation Details -->
+          <div class="section-header">
+            <h5 class="mb-0">
+              <i class="fas fa-phone"></i> Contact & Consultation Details
+            </h5>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="phone_number" class="form-label"
+                >Phone Number *</label
+              >
+              <input
+                type="tel"
+                class="form-control"
+                id="phone_number"
+                name="phone_number"
+                placeholder="+1 (555) 123-4567"
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="languages_spoken" class="form-label"
+                >Languages Spoken *</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="languages_spoken"
+                name="languages_spoken"
+                placeholder="English, Spanish, Hindi (comma separated)"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="consultation_modes" class="form-label"
+                >Consultation Modes *</label
+              >
+              <select
+                class="form-select"
+                id="consultation_modes"
+                name="consultation_modes"
+                required
+              >
+                <option value="">Select consultation mode</option>
+                {% for mode_code, mode_name in consultation_modes %}
+                <option value="{{ mode_code }}">{{ mode_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="hourly_rate" class="form-label"
+                >Hourly Rate (NPR) *</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="hourly_rate"
+                name="hourly_rate"
+                min="500"
+                max="10000"
+                step="100"
+                placeholder="2000"
+                required
+              />
+              <div class="form-text">
+                Recommended range: NPR 1,000 - 5,000 per hour
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="service_areas" class="form-label"
+              >Service Areas *</label
+            >
+            <textarea
+              class="form-control"
+              id="service_areas"
+              name="service_areas"
+              rows="3"
+              placeholder="Describe the geographical areas you serve for in-person consultations..."
+              required
+            ></textarea>
+          </div>
+
+          <!-- Availability -->
+          <div class="section-header">
+            <h5 class="mb-0">
+              <i class="fas fa-calendar-alt"></i> Availability
+            </h5>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="available_days" class="form-label"
+                >Available Days</label
+              >
+              <select
+                class="form-select"
+                id="available_days"
+                name="available_days"
+              >
+                <option value="Monday,Tuesday,Wednesday,Thursday,Friday">
+                  Monday - Friday
+                </option>
+                <option
+                  value="Monday,Tuesday,Wednesday,Thursday,Friday,Saturday"
+                >
+                  Monday - Saturday
+                </option>
+                <option
+                  value="Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday"
+                >
+                  All Days
+                </option>
+                <option value="Saturday,Sunday">Weekends Only</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="available_hours" class="form-label"
+                >Available Hours</label
+              >
+              <select
+                class="form-select"
+                id="available_hours"
+                name="available_hours"
+              >
+                <option value="09:00-17:00">9:00 AM - 5:00 PM</option>
+                <option value="08:00-16:00">8:00 AM - 4:00 PM</option>
+                <option value="10:00-18:00">10:00 AM - 6:00 PM</option>
+                <option value="09:00-12:00,14:00-17:00">
+                  9:00 AM - 12:00 PM, 2:00 PM - 5:00 PM
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- About Yourself -->
+          <div class="section-header">
+            <h5 class="mb-0"><i class="fas fa-user"></i> About Yourself</h5>
+          </div>
+
+          <div class="mb-4">
+            <label for="bio" class="form-label">Professional Bio *</label>
+            <textarea
+              class="form-control"
+              id="bio"
+              name="bio"
+              rows="5"
+              placeholder="Write a compelling bio that highlights your expertise, experience, and what makes you a great agricultural consultant. This will be visible to farmers on your profile..."
+              required
+            ></textarea>
+            <div class="form-text">
+              This will be displayed on your public profile. Make it engaging
+              and professional.
+            </div>
+          </div>
+
+          <!-- Terms and Submit -->
+          <div class="mb-4">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="terms_agreement"
+                required
+              />
+              <label class="form-check-label" for="terms_agreement">
+                I agree to the
+                <a href="#" target="_blank">Terms of Service</a> and
+                <a href="#" target="_blank">Expert Code of Conduct</a>. I
+                understand that my application will be reviewed and verified
+                before activation.
+              </label>
+            </div>
+
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="data_consent"
+                required
+              />
+              <label class="form-check-label" for="data_consent">
+                I consent to HALO-AI storing and processing my information for
+                the purpose of providing expert consultation services.
+              </label>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="text-center">
+            <button type="submit" class="btn btn-success btn-lg px-5">
+              <i class="fas fa-paper-plane"></i> Submit Application
+            </button>
+            <p class="text-muted mt-2">
+              We'll review your application within 2-3 business days
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- What Happens Next -->
+  <div class="row mt-5">
+    <div class="col-lg-8 mx-auto">
+      <div class="card bg-light">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fas fa-info-circle text-primary"></i> What Happens Next?
+          </h5>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="text-center">
+                <div class="step completed">1</div>
+                <h6>Application Review</h6>
+                <p class="small text-muted">
+                  Our team reviews your application and verifies your
+                  credentials
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="text-center">
+                <div class="step">2</div>
+                <h6>Profile Setup</h6>
+                <p class="small text-muted">
+                  Once approved, complete your profile and set availability
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="text-center">
+                <div class="step">3</div>
+                <h6>Start Consulting</h6>
+                <p class="small text-muted">
+                  Go live and start receiving consultation requests from farmers
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  // Form validation
+  document
+    .getElementById("expertApplicationForm")
+    .addEventListener("submit", function (e) {
+      const selectedSpecs = document.querySelectorAll(
+        'input[name="specializations"]:checked'
+      );
+      if (selectedSpecs.length < 2) {
+        e.preventDefault();
+        alert("Please select at least 2 specializations.");
+        return;
+      }
+
+      // Show loading state
+      const submitBtn = this.querySelector('button[type="submit"]');
+      submitBtn.innerHTML =
+        '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+      submitBtn.disabled = true;
+    });
+
+  // Specialization checkbox styling
+  document
+    .querySelectorAll('input[name="specializations"]')
+    .forEach(function (checkbox) {
+      checkbox.addEventListener("change", function () {
+        const card = this.closest(".specialization-checkbox");
+        if (this.checked) {
+          card.style.borderColor = "#28a745";
+          card.style.backgroundColor = "#e7f5e7";
+        } else {
+          card.style.borderColor = "#e9ecef";
+          card.style.backgroundColor = "white";
+        }
+      });
+    });
+
+  // Phone number formatting
+  document
+    .getElementById("phone_number")
+    .addEventListener("input", function (e) {
+      let value = e.target.value.replace(/\D/g, "");
+      if (value.length >= 10) {
+        value = value.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+      }
+      e.target.value = value;
+    });
+</script>
+{% endblock %}

@@ -123,10 +123,10 @@
           >
           {% endif %}
           <a
-            href="#"
+            href="{% url 'experts:experts_list' %}"
             class="nav-link text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
-            data-page="expert"
-            >Connect with Expert</a
+            data-page="experts"
+            >🌾 Expert Consultation</a
           >
           {% if user.is_authenticated and user.is_farmer %}
           <a

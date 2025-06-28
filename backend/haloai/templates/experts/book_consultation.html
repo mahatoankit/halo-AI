@@ -1,0 +1,767 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Book Consultation with {{ expert.user.get_full_name }} - HALO-AI{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-primary-50 to-secondary-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl shadow-xl text-white p-8 mb-8">
+            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                <div class="flex-shrink-0">
+                    {% if expert.profile_image %}
+                    <img src="{{ expert.profile_image.url }}" 
+                         alt="{{ expert.user.get_full_name }}" 
+                         class="w-20 h-20 rounded-full object-cover border-3 border-white">
+                    {% else %}
+                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center border-3 border-white">
+                        <i class="fas fa-user text-primary-600 text-2xl"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="text-center md:text-left">
+                    <h1 class="text-3xl font-bold mb-2">Book Consultation</h1>
+                    <h2 class="text-xl text-primary-100 mb-1">with {{ expert.user.get_full_name }}</h2>
+                    <p class="text-primary-200">{{ expert.professional_title }}</p>
+                </div>
+                <div class="flex-1"></div>
+                <div class="text-center">
+                    <div class="bg-white text-primary-600 rounded-xl p-4">
+                        <div class="text-2xl font-bold">{{ expert.currency }} {{ expert.hourly_rate }}</div>
+                        <div class="text-sm">per hour</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Booking Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl shadow-xl p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-8">Consultation Details</h2>
+                    
+                    <form method="POST" class="space-y-8">
+                        {% csrf_token %}
+                        
+                        <!-- Consultation Type -->
+                        <div>
+                            <label class="block text-lg font-semibold text-gray-900 mb-4">What do you need help with?</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {% for type_code, type_name in consultation_types %}
+                                <div class="consultation-type-option border-2 border-gray-200 hover:border-primary-500 rounded-xl p-4 cursor-pointer transition-all duration-200" 
+                                     data-type="{{ type_code }}">
+                                    <input type="radio" 
+                                           name="consultation_type" 
+                                           value="{{ type_code }}" 
+                                           id="type_{{ type_code }}" 
+                                           class="sr-only" 
+                                           required>
+                                    <label for="type_{{ type_code }}" class="cursor-pointer">
+                                        <div class="font-semibold text-gray-900 mb-1">{{ type_name }}</div>
+                                        <div class="text-sm text-gray-600">
+                                            {% if type_code == 'crop_disease' %}
+                                            Diagnose plant diseases and treatment options
+                                            {% elif type_code == 'soil_analysis' %}
+                                            Soil testing recommendations and improvements
+                                            {% elif type_code == 'pest_management' %}
+                                            Pest identification and control strategies
+                                            {% elif type_code == 'fertilizer' %}
+                                            Fertilizer selection and application guidance
+                                            {% elif type_code == 'irrigation' %}
+                                            Water management and irrigation planning
+                                            {% elif type_code == 'crop_planning' %}
+                                            Crop selection and seasonal planning
+                                            {% else %}
+                                            General agricultural consultation and advice
+                                            {% endif %}
+                                        </div>
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Consultation Mode -->
+                        <div>
+                            <label class="block text-lg font-semibold text-gray-900 mb-4">How would you like to consult?</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {% if expert.consultation_modes == 'online' or expert.consultation_modes == 'both' %}
+                                <div class="mode-option border-2 border-gray-200 hover:border-primary-500 rounded-xl p-4 cursor-pointer transition-all duration-200" 
+                                     data-mode="online">
+                                    <input type="radio" 
+                                           name="preferred_mode" 
+                                           value="online" 
+                                           id="mode_online" 
+                                           class="sr-only" 
+                                           required>
+                                    <label for="mode_online" class="cursor-pointer text-center block">
+                                        <i class="fas fa-video text-primary-600 text-2xl mb-2 block"></i>
+                                        <div class="font-semibold">Online</div>
+                                        <div class="text-sm text-gray-600">Video/Phone Call</div>
+                                    </label>
+                                </div>
+                                {% endif %}
+                                
+                                {% if expert.consultation_modes == 'in_person' or expert.consultation_modes == 'both' %}
+                                <div class="mode-option border-2 border-gray-200 hover:border-primary-500 rounded-xl p-4 cursor-pointer transition-all duration-200" 
+                                     data-mode="in_person">
+                                    <input type="radio" 
+                                           name="preferred_mode" 
+                                           value="in_person" 
+                                           id="mode_in_person" 
+                                           class="sr-only" 
+                                           required>
+                                    <label for="mode_in_person" class="cursor-pointer text-center block">
+                                        <i class="fas fa-handshake text-primary-600 text-2xl mb-2 block"></i>
+                                        <div class="font-semibold">In-Person</div>
+                                        <div class="text-sm text-gray-600">Farm Visit</div>
+                                    </label>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Title and Description -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="title" class="block text-sm font-semibold text-gray-900 mb-2">Consultation Title</label>
+                                <input type="text" 
+                                       name="title" 
+                                       id="title" 
+                                       required 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                       placeholder="Brief title for your consultation">
+                            </div>
+                            
+                            <div>
+                                <label for="duration_hours" class="block text-sm font-semibold text-gray-900 mb-2">Duration (Hours)</label>
+                                <select name="duration_hours" 
+                                        id="duration_hours" 
+                                        required 
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                                    <option value="0.5">30 minutes</option>
+                                    <option value="1" selected>1 hour</option>
+                                    <option value="1.5">1.5 hours</option>
+                                    <option value="2">2 hours</option>
+                                    <option value="3">3 hours</option>
+                                    <option value="4">4 hours</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="description" class="block text-sm font-semibold text-gray-900 mb-2">Detailed Description</label>
+                            <textarea name="description" 
+                                      id="description" 
+                                      rows="6" 
+                                      required 
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                      placeholder="Please describe your farming situation, specific problems, or questions you have. The more details you provide, the better the expert can help you."></textarea>
+                        </div>
+
+                        <!-- Scheduling -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Preferred Schedule</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="preferred_date" class="block text-sm font-semibold text-gray-900 mb-2">Preferred Date</label>
+                                    <input type="date" 
+                                           name="preferred_date" 
+                                           id="preferred_date" 
+                                           required 
+                                           min="{{ today }}"
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                                </div>
+                                
+                                <div>
+                                    <label for="preferred_time" class="block text-sm font-semibold text-gray-900 mb-2">Preferred Time</label>
+                                    <input type="time" 
+                                           name="preferred_time" 
+                                           id="preferred_time" 
+                                           required 
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Location (for in-person) -->
+                        <div id="location-section" class="hidden">
+                            <label for="consultation_address" class="block text-sm font-semibold text-gray-900 mb-2">Farm/Meeting Address</label>
+                            <textarea name="consultation_address" 
+                                      id="consultation_address" 
+                                      rows="3" 
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                      placeholder="Please provide the complete address where the consultation should take place"></textarea>
+                        </div>
+
+                        <!-- Cost Calculator -->
+                        <div id="cost-calculator" class="bg-green-50 border border-green-200 rounded-xl p-6">
+                            <h3 class="text-lg font-semibold text-green-800 mb-4">Consultation Cost</h3>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="text-green-700">Duration: </span>
+                                    <span id="calc-duration" class="font-semibold">1 hour</span>
+                                </div>
+                                <div>
+                                    <span class="text-green-700">Total Cost: </span>
+                                    <span id="calc-total" class="text-2xl font-bold text-green-800">{{ expert.currency }} {{ expert.hourly_rate }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" 
+                                    class="bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200 inline-flex items-center">
+                                <i class="fas fa-calendar-check mr-2"></i>
+                                Request Consultation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Expert Info -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Expert Information</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">Experience</span>
+                            <span class="font-semibold">{{ expert.years_of_experience }} years</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">Rating</span>
+                            <div class="flex items-center">
+                                <span class="font-semibold mr-1">{{ expert.average_rating }}</span>
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= expert.average_rating %}
+                                    <i class="fas fa-star text-yellow-400"></i>
+                                    {% else %}
+                                    <i class="far fa-star text-gray-300"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-600">Response Rate</span>
+                            <span class="font-semibold text-green-600">{{ expert.response_rate }}%</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t">
+                        <h4 class="font-semibold text-gray-900 mb-3">Specializations</h4>
+                        <div class="space-y-2">
+                            {% for spec in expert.specializations.all %}
+                            <div class="flex items-center text-sm">
+                                <i class="fas fa-check text-green-500 mr-2"></i>
+                                {{ spec.name }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t">
+                        <h4 class="font-semibold text-gray-900 mb-3">Available Times</h4>
+                        <p class="text-sm text-gray-600 mb-2">{{ expert.available_days }}</p>
+                        <p class="text-sm text-gray-600">{{ expert.available_hours }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const consultationTypes = document.querySelectorAll('.consultation-type-option');
+    const modeOptions = document.querySelectorAll('.mode-option');
+    const durationSelect = document.getElementById('duration_hours');
+    const locationSection = document.getElementById('location-section');
+    const costCalculator = document.getElementById('cost-calculator');
+    const calcDuration = document.getElementById('calc-duration');
+    const calcTotal = document.getElementById('calc-total');
+    const hourlyRate = {{ expert.hourly_rate }};
+    const currency = "{{ expert.currency }}";
+
+    // Handle consultation type selection
+    consultationTypes.forEach(option => {
+        option.addEventListener('click', function() {
+            consultationTypes.forEach(opt => opt.classList.remove('border-primary-500', 'bg-primary-50'));
+            this.classList.add('border-primary-500', 'bg-primary-50');
+            this.querySelector('input[type="radio"]').checked = true;
+        });
+    });
+
+    // Handle mode selection
+    modeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            modeOptions.forEach(opt => opt.classList.remove('border-primary-500', 'bg-primary-50'));
+            this.classList.add('border-primary-500', 'bg-primary-50');
+            this.querySelector('input[type="radio"]').checked = true;
+            
+            // Show/hide location section
+            const mode = this.dataset.mode;
+            if (mode === 'in_person') {
+                locationSection.classList.remove('hidden');
+                document.getElementById('consultation_address').required = true;
+            } else {
+                locationSection.classList.add('hidden');
+                document.getElementById('consultation_address').required = false;
+            }
+        });
+    });
+
+    // Update cost calculation
+    function updateCost() {
+        const duration = parseFloat(durationSelect.value);
+        const total = (hourlyRate * duration).toFixed(2);
+        
+        calcDuration.textContent = duration === 0.5 ? '30 minutes' : duration + (duration === 1 ? ' hour' : ' hours');
+        calcTotal.textContent = currency + ' ' + total;
+    }
+
+    durationSelect.addEventListener('change', updateCost);
+    updateCost(); // Initial calculation
+});
+</script>
+{% endblock %}
+            background-color: white;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+          "
+        >
+          <i class="fas fa-user fa-2x"></i>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Booking Form -->
+    <div class="col-lg-8">
+      <div class="card form-card">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="fas fa-calendar-plus"></i> Consultation Details
+          </h5>
+        </div>
+        <div class="card-body">
+          <form method="POST" id="bookingForm">
+            {% csrf_token %}
+
+            <!-- Consultation Type -->
+            <div class="mb-4">
+              <label class="form-label">
+                <strong>What type of consultation do you need?</strong>
+              </label>
+              <div class="row">
+                {% for type_code, type_name in consultation_types %}
+                <div class="col-md-6 col-lg-4">
+                  <div
+                    class="consultation-type-card"
+                    onclick="selectConsultationType('{{ type_code }}', this)"
+                  >
+                    <div class="text-center">
+                      {% if type_code == 'general' %}
+                      <i class="fas fa-comments fa-2x text-primary mb-2"></i>
+                      {% elif type_code == 'crop_disease' %}
+                      <i class="fas fa-bug fa-2x text-danger mb-2"></i>
+                      {% elif type_code == 'soil_analysis' %}
+                      <i class="fas fa-flask fa-2x text-warning mb-2"></i>
+                      {% elif type_code == 'pest_management' %}
+                      <i class="fas fa-shield-alt fa-2x text-success mb-2"></i>
+                      {% elif type_code == 'fertilizer' %}
+                      <i class="fas fa-seedling fa-2x text-info mb-2"></i>
+                      {% elif type_code == 'irrigation' %}
+                      <i class="fas fa-tint fa-2x text-primary mb-2"></i>
+                      {% elif type_code == 'crop_planning' %}
+                      <i
+                        class="fas fa-calendar-alt fa-2x text-secondary mb-2"
+                      ></i>
+                      {% elif type_code == 'marketing' %}
+                      <i class="fas fa-chart-line fa-2x text-success mb-2"></i>
+                      {% elif type_code == 'technology' %}
+                      <i class="fas fa-laptop fa-2x text-info mb-2"></i>
+                      {% elif type_code == 'organic_farming' %}
+                      <i class="fas fa-leaf fa-2x text-success mb-2"></i>
+                      {% else %}
+                      <i class="fas fa-question fa-2x text-muted mb-2"></i>
+                      {% endif %}
+                      <h6>{{ type_name }}</h6>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              <input
+                type="hidden"
+                name="consultation_type"
+                id="consultation_type"
+                required
+              />
+            </div>
+
+            <!-- Title and Description -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="title" class="form-label">Consultation Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  name="title"
+                  placeholder="Brief title for your consultation"
+                  required
+                />
+              </div>
+              <div class="col-md-6">
+                <label for="duration_hours" class="form-label"
+                  >Duration (hours)</label
+                >
+                <select
+                  class="form-select"
+                  id="duration_hours"
+                  name="duration_hours"
+                  onchange="calculateCost()"
+                >
+                  <option value="0.5">30 minutes</option>
+                  <option value="1" selected>1 hour</option>
+                  <option value="1.5">1.5 hours</option>
+                  <option value="2">2 hours</option>
+                  <option value="3">3 hours</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label"
+                >Detailed Description</label
+              >
+              <textarea
+                class="form-control"
+                id="description"
+                name="description"
+                rows="4"
+                placeholder="Please describe your issue, questions, or what you'd like to discuss in detail..."
+                required
+              ></textarea>
+            </div>
+
+            <!-- Consultation Mode -->
+            <div class="mb-4">
+              <label class="form-label">
+                <strong>Preferred Consultation Mode</strong>
+              </label>
+
+              {% if expert.consultation_modes == 'online' or
+              expert.consultation_modes == 'both' %}
+              <div class="mode-option" onclick="selectMode('online', this)">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-video fa-2x text-primary me-3"></i>
+                  <div>
+                    <h6>Online Consultation</h6>
+                    <small class="text-muted"
+                      >Video call or phone consultation</small
+                    >
+                  </div>
+                </div>
+              </div>
+              {% endif %} {% if expert.consultation_modes == 'in_person' or
+              expert.consultation_modes == 'both' %}
+              <div class="mode-option" onclick="selectMode('in_person', this)">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-map-marker-alt fa-2x text-success me-3"></i>
+                  <div>
+                    <h6>In-Person Consultation</h6>
+                    <small class="text-muted"
+                      >Face-to-face meeting at your location or expert's
+                      office</small
+                    >
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+
+              <input
+                type="hidden"
+                name="preferred_mode"
+                id="preferred_mode"
+                required
+              />
+            </div>
+
+            <!-- In-Person Address (shown conditionally) -->
+            <div class="mb-3" id="address_section" style="display: none">
+              <label for="consultation_address" class="form-label"
+                >Consultation Address</label
+              >
+              <textarea
+                class="form-control"
+                id="consultation_address"
+                name="consultation_address"
+                rows="2"
+                placeholder="Please provide the address where the consultation should take place"
+              ></textarea>
+            </div>
+
+            <!-- Scheduling -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label for="preferred_date" class="form-label"
+                  >Preferred Date</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="preferred_date"
+                  name="preferred_date"
+                  min="{{ today|date:'Y-m-d' }}"
+                  required
+                />
+              </div>
+              <div class="col-md-6">
+                <label for="preferred_time" class="form-label"
+                  >Preferred Time</label
+                >
+                <select
+                  class="form-select"
+                  id="preferred_time"
+                  name="preferred_time"
+                  required
+                >
+                  <option value="">Select time</option>
+                  <option value="09:00">9:00 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="11:00">11:00 AM</option>
+                  <option value="14:00">2:00 PM</option>
+                  <option value="15:00">3:00 PM</option>
+                  <option value="16:00">4:00 PM</option>
+                  <option value="17:00">5:00 PM</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Cost Calculator -->
+            <div class="cost-calculator">
+              <h6><i class="fas fa-calculator"></i> Cost Estimate</h6>
+              <div class="d-flex justify-content-between">
+                <span>Hourly Rate:</span>
+                <span>{{ expert.currency }} {{ expert.hourly_rate }}</span>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Duration:</span>
+                <span id="selected_duration">1 hour</span>
+              </div>
+              <hr />
+              <div class="d-flex justify-content-between">
+                <strong>Total Cost:</strong>
+                <strong id="total_cost"
+                  >{{ expert.currency }} {{ expert.hourly_rate }}</strong
+                >
+              </div>
+            </div>
+
+            <!-- Terms and Submit -->
+            <div class="mb-3 mt-4">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="terms"
+                  required
+                />
+                <label class="form-check-label" for="terms">
+                  I agree to the
+                  <a href="#" target="_blank">terms and conditions</a> and
+                  understand that payment will be required upon expert
+                  acceptance.
+                </label>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a
+                href="{% url 'experts:expert_detail' expert.id %}"
+                class="btn btn-outline-secondary"
+              >
+                Cancel
+              </a>
+              <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-paper-plane"></i> Send Consultation Request
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expert Info Sidebar -->
+    <div class="col-lg-4">
+      <div class="expert-info-sidebar">
+        <h6 class="mb-3">Expert Information</h6>
+
+        <div class="d-flex align-items-center mb-3">
+          {% if expert.profile_image %}
+          <img
+            src="{{ expert.profile_image.url }}"
+            alt="{{ expert.user.get_full_name }}"
+            style="
+              width: 50px;
+              height: 50px;
+              border-radius: 50%;
+              object-fit: cover;
+            "
+            class="me-3"
+          />
+          {% endif %}
+          <div>
+            <h6 class="mb-0">{{ expert.user.get_full_name }}</h6>
+            <small class="text-muted">{{ expert.professional_title }}</small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <div class="d-flex justify-content-between mb-1">
+            <span>Rating:</span>
+            <span>
+              {% for i in "12345" %} {% if forloop.counter <=
+              expert.average_rating %}
+              <i class="fas fa-star text-warning"></i>
+              {% else %}
+              <i class="far fa-star text-warning"></i>
+              {% endif %} {% endfor %} {{ expert.average_rating }}
+            </span>
+          </div>
+          <div class="d-flex justify-content-between mb-1">
+            <span>Experience:</span>
+            <span>{{ expert.years_of_experience }} years</span>
+          </div>
+          <div class="d-flex justify-content-between mb-1">
+            <span>Consultations:</span>
+            <span>{{ expert.total_consultations }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>Response Rate:</span>
+            <span>{{ expert.response_rate }}%</span>
+          </div>
+        </div>
+
+        <h6>Specializations</h6>
+        <div class="mb-3">
+          {% for spec in expert.specializations.all %}
+          <span class="badge bg-secondary me-1 mb-1">{{ spec.name }}</span>
+          {% endfor %}
+        </div>
+
+        <h6>Available Modes</h6>
+        <p class="mb-3">
+          {% if expert.consultation_modes == 'online' %}
+          <i class="fas fa-video text-primary"></i> Online only {% elif
+          expert.consultation_modes == 'in_person' %}
+          <i class="fas fa-map-marker-alt text-success"></i> In-person only {%
+          else %} <i class="fas fa-video text-primary"></i> Online &
+          <i class="fas fa-map-marker-alt text-success"></i> In-person {% endif
+          %}
+        </p>
+
+        <h6>Service Areas</h6>
+        <p class="small text-muted">
+          {{ expert.service_areas|truncatewords:20 }}
+        </p>
+
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle"></i>
+          <strong>Note:</strong> Your consultation request will be sent to the
+          expert for review. They will respond within 24 hours with confirmation
+          and next steps.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  const expertHourlyRate = {{ expert.hourly_rate }};
+  const currency = '{{ expert.currency }}';
+
+  function selectConsultationType(type, element) {
+      // Remove previous selection
+      document.querySelectorAll('.consultation-type-card').forEach(card => {
+          card.classList.remove('selected');
+      });
+
+      // Add selection to clicked card
+      element.classList.add('selected');
+      document.getElementById('consultation_type').value = type;
+  }
+
+  function selectMode(mode, element) {
+      // Remove previous selection
+      document.querySelectorAll('.mode-option').forEach(option => {
+          option.classList.remove('selected');
+      });
+
+      // Add selection to clicked option
+      element.classList.add('selected');
+      document.getElementById('preferred_mode').value = mode;
+
+      // Show/hide address section
+      const addressSection = document.getElementById('address_section');
+      if (mode === 'in_person') {
+          addressSection.style.display = 'block';
+          document.getElementById('consultation_address').required = true;
+      } else {
+          addressSection.style.display = 'none';
+          document.getElementById('consultation_address').required = false;
+      }
+  }
+
+  function calculateCost() {
+      const duration = parseFloat(document.getElementById('duration_hours').value);
+      const totalCost = expertHourlyRate * duration;
+
+      // Update display
+      document.getElementById('selected_duration').textContent =
+          duration === 0.5 ? '30 minutes' :
+          duration === 1 ? '1 hour' :
+          duration + ' hours';
+
+      document.getElementById('total_cost').textContent = currency + ' ' + totalCost.toFixed(2);
+  }
+
+  // Set minimum date to today
+  document.getElementById('preferred_date').min = new Date().toISOString().split('T')[0];
+
+  // Form validation
+  document.getElementById('bookingForm').addEventListener('submit', function(e) {
+      const consultationType = document.getElementById('consultation_type').value;
+      const preferredMode = document.getElementById('preferred_mode').value;
+
+      if (!consultationType) {
+          e.preventDefault();
+          alert('Please select a consultation type.');
+          return;
+      }
+
+      if (!preferredMode) {
+          e.preventDefault();
+          alert('Please select a consultation mode.');
+          return;
+      }
+  });
+
+  // Initialize cost calculation
+  calculateCost();
+</script>
+{% endblock %}
