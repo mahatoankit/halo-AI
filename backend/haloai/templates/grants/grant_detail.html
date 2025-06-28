@@ -1,0 +1,553 @@
+{% extends 'base.html' %} {% load static %} {% block title %}{{ grant.title }} -
+Grants & Offers - Halo AI{% endblock %} {% block content %}
+<div
+  class="bg-gradient-to-br from-{{ grant.category.color_class }}-50 to-{{ grant.category.color_class }}-100 py-16"
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Breadcrumb -->
+    <nav class="mb-8" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-2 text-sm">
+        <li>
+          <a
+            href="{% url 'home:index' %}"
+            class="text-gray-500 hover:text-gray-700"
+            >Home</a
+          >
+        </li>
+        <li class="text-gray-400">/</li>
+        <li>
+          <a
+            href="{% url 'grants:grants_and_offers' %}"
+            class="text-gray-500 hover:text-gray-700"
+            >Grants & Offers</a
+          >
+        </li>
+        <li class="text-gray-400">/</li>
+        <li class="text-gray-900 font-medium">
+          {{ grant.title|truncatewords:5 }}
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Grant Header -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+      <div class="flex flex-col lg:flex-row lg:items-start gap-6">
+        <div class="flex-1">
+          <!-- Category and Status -->
+          <div class="flex flex-wrap items-center gap-3 mb-4">
+            <span
+              class="bg-{{ grant.category.color_class }}-100 text-{{ grant.category.color_class }}-800 text-sm font-medium px-3 py-1 rounded-full flex items-center"
+            >
+              <span class="mr-1 text-lg">{{ grant.category.icon }}</span>
+              {{ grant.category.name }}
+            </span>
+
+            {% if grant.priority == 'urgent' %}
+            <span
+              class="bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded-full animate-pulse"
+            >
+              ⚡ Urgent
+            </span>
+            {% elif grant.is_featured %}
+            <span
+              class="bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-1 rounded-full"
+            >
+              ⭐ Featured
+            </span>
+            {% endif %}
+
+            <span class="text-sm text-gray-500"
+              >{{ grant.views_count }} views</span
+            >
+          </div>
+
+          <!-- Title and Amount -->
+          <h1 class="text-3xl font-bold text-gray-900 mb-4">
+            {{ grant.title }}
+          </h1>
+          <div
+            class="text-2xl font-bold text-{{ grant.category.color_class }}-600 mb-4"
+          >
+            {{ grant.amount }}
+          </div>
+
+          <!-- Status -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-gray-600"
+                >Application Status:</span
+              >
+              <span
+                class="text-sm font-bold {% if grant.is_deadline_approaching %}text-red-600{% else %}text-green-600{% endif %}"
+              >
+                {{ grant.status_text }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Action Panel -->
+        <div class="lg:w-80">
+          <div
+            class="bg-{{ grant.category.color_class }}-50 rounded-xl p-6 border border-{{ grant.category.color_class }}-200"
+          >
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              Quick Actions
+            </h3>
+
+            {% if grant.application_url %}
+            <a
+              href="{{ grant.application_url }}"
+              target="_blank"
+              class="w-full bg-{{ grant.category.color_class }}-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-{{ grant.category.color_class }}-700 transition-colors inline-flex items-center justify-center mb-3"
+            >
+              Apply Online
+              <svg
+                class="ml-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                />
+              </svg>
+            </a>
+            {% endif %}
+
+            <button
+              onclick="shareGrant()"
+              class="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors inline-flex items-center justify-center mb-3"
+            >
+              Share Grant
+              <svg
+                class="ml-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+                />
+              </svg>
+            </button>
+
+            <button
+              onclick="saveGrant({{ grant.id }})"
+              class="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors inline-flex items-center justify-center"
+            >
+              Save for Later
+              <svg
+                class="ml-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grant Details Tabs -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <!-- Tab Navigation -->
+      <div class="border-b border-gray-200">
+        <nav class="flex space-x-8 px-8" aria-label="Tabs">
+          <button
+            onclick="showTab('overview')"
+            class="tab-btn active-tab border-b-2 border-{{ grant.category.color_class }}-600 text-{{ grant.category.color_class }}-600 py-4 px-1 text-sm font-medium"
+          >
+            Overview
+          </button>
+          <button
+            onclick="showTab('eligibility')"
+            class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 py-4 px-1 text-sm font-medium"
+          >
+            Eligibility
+          </button>
+          <button
+            onclick="showTab('documents')"
+            class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 py-4 px-1 text-sm font-medium"
+          >
+            Documents
+          </button>
+          <button
+            onclick="showTab('process')"
+            class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 py-4 px-1 text-sm font-medium"
+          >
+            Process
+          </button>
+        </nav>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="p-8">
+        <!-- Overview Tab -->
+        <div id="overview-tab" class="tab-content">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Grant Overview</h2>
+
+          <!-- Description -->
+          <div class="prose prose-lg max-w-none mb-8">
+            <p class="text-gray-700 leading-relaxed">{{ grant.description }}</p>
+          </div>
+
+          <!-- Key Details Grid -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+          >
+            <div class="bg-gray-50 rounded-lg p-4">
+              <div class="text-sm font-medium text-gray-600 mb-1">
+                Grant Amount
+              </div>
+              <div
+                class="text-lg font-bold text-{{ grant.category.color_class }}-600"
+              >
+                {{ grant.amount }}
+              </div>
+            </div>
+
+            {% if grant.duration %}
+            <div class="bg-gray-50 rounded-lg p-4">
+              <div class="text-sm font-medium text-gray-600 mb-1">Duration</div>
+              <div class="text-lg font-semibold text-gray-900">
+                {{ grant.duration }}
+              </div>
+            </div>
+            {% endif %} {% if grant.coverage %}
+            <div class="bg-gray-50 rounded-lg p-4">
+              <div class="text-sm font-medium text-gray-600 mb-1">Coverage</div>
+              <div class="text-lg font-semibold text-gray-900">
+                {{ grant.coverage }}
+              </div>
+            </div>
+            {% endif %} {% if grant.interest_rate %}
+            <div class="bg-gray-50 rounded-lg p-4">
+              <div class="text-sm font-medium text-gray-600 mb-1">
+                Interest Rate
+              </div>
+              <div class="text-lg font-semibold text-gray-900">
+                {{ grant.interest_rate }}
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="bg-gray-50 rounded-lg p-4">
+              <div class="text-sm font-medium text-gray-600 mb-1">
+                Application Deadline
+              </div>
+              <div
+                class="text-lg font-semibold {% if grant.is_deadline_approaching %}text-red-600{% else %}text-gray-900{% endif %}"
+              >
+                {% if grant.is_always_open %} Always Open {% elif
+                grant.application_deadline %} {{
+                grant.application_deadline|date:"M d, Y" }} {% else %} Check
+                Details {% endif %}
+              </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-lg p-4">
+              <div class="text-sm font-medium text-gray-600 mb-1">
+                Priority Level
+              </div>
+              <div class="text-lg font-semibold text-gray-900 capitalize">
+                {{ grant.priority }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Eligibility Tab -->
+        <div id="eligibility-tab" class="tab-content hidden">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">
+            Eligibility Criteria
+          </h2>
+
+          <div
+            class="bg-{{ grant.category.color_class }}-50 border border-{{ grant.category.color_class }}-200 rounded-lg p-6"
+          >
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <svg
+                  class="h-6 w-6 text-{{ grant.category.color_class }}-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <h3
+                  class="text-lg font-medium text-{{ grant.category.color_class }}-800 mb-2"
+                >
+                  Who Can Apply
+                </h3>
+                <div
+                  class="text-{{ grant.category.color_class }}-700 prose prose-sm"
+                >
+                  {{ grant.eligibility|linebreaks }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Documents Tab -->
+        <div id="documents-tab" class="tab-content hidden">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">
+            Required Documents
+          </h2>
+
+          {% if grant.required_documents %}
+          <div class="space-y-4">
+            {% for doc in grant.required_documents|linebreaks %} {% if doc.strip
+            %}
+            <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+              <svg
+                class="h-5 w-5 text-gray-400 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              <span class="text-gray-700">{{ doc }}</span>
+            </div>
+            {% endif %} {% endfor %}
+          </div>
+          {% else %}
+          <div class="text-center py-8">
+            <svg
+              class="mx-auto h-12 w-12 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">
+              No specific documents listed
+            </h3>
+            <p class="mt-1 text-sm text-gray-500">
+              Please check the application portal for detailed requirements.
+            </p>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Process Tab -->
+        <div id="process-tab" class="tab-content hidden">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">
+            Application Process
+          </h2>
+
+          <div class="space-y-6">
+            <!-- Step 1 -->
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <div
+                  class="flex items-center justify-center h-10 w-10 rounded-full bg-{{ grant.category.color_class }}-600 text-white font-semibold"
+                >
+                  1
+                </div>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-lg font-medium text-gray-900">
+                  Review Eligibility
+                </h3>
+                <p class="text-gray-600">
+                  Ensure you meet all the eligibility criteria mentioned in the
+                  grant details.
+                </p>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <div
+                  class="flex items-center justify-center h-10 w-10 rounded-full bg-{{ grant.category.color_class }}-600 text-white font-semibold"
+                >
+                  2
+                </div>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-lg font-medium text-gray-900">
+                  Prepare Documents
+                </h3>
+                <p class="text-gray-600">
+                  Gather all required documents as listed in the documents
+                  section.
+                </p>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <div
+                  class="flex items-center justify-center h-10 w-10 rounded-full bg-{{ grant.category.color_class }}-600 text-white font-semibold"
+                >
+                  3
+                </div>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-lg font-medium text-gray-900">
+                  Submit Application
+                </h3>
+                <p class="text-gray-600">
+                  {% if grant.application_url %} Apply online through the
+                  official portal or submit physical application. {% else %}
+                  Contact the relevant authorities or visit the nearest office
+                  for application submission. {% endif %}
+                </p>
+              </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <div
+                  class="flex items-center justify-center h-10 w-10 rounded-full bg-{{ grant.category.color_class }}-600 text-white font-semibold"
+                >
+                  4
+                </div>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-lg font-medium text-gray-900">
+                  Track Application
+                </h3>
+                <p class="text-gray-600">
+                  Monitor your application status and respond to any additional
+                  requirements.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Grants -->
+    {% if related_grants %}
+    <div class="mt-12">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Related Grants</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {% for related_grant in related_grants %}
+        <div
+          class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+        >
+          <div class="flex items-center mb-3">
+            <span class="text-lg mr-2">{{ related_grant.category.icon }}</span>
+            <span
+              class="bg-{{ related_grant.category.color_class }}-100 text-{{ related_grant.category.color_class }}-800 text-sm font-medium px-2 py-1 rounded-full"
+            >
+              {{ related_grant.category.name }}
+            </span>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">
+            {{ related_grant.title|truncatewords:6 }}
+          </h3>
+          <p class="text-gray-600 text-sm mb-3">
+            {{ related_grant.description|truncatewords:12 }}
+          </p>
+          <div
+            class="text-{{ related_grant.category.color_class }}-600 font-semibold mb-3"
+          >
+            {{ related_grant.amount }}
+          </div>
+          <a
+            href="{% url 'grants:grant_detail' related_grant.id %}"
+            class="text-{{ related_grant.category.color_class }}-600 hover:text-{{ related_grant.category.color_class }}-700 font-medium text-sm"
+          >
+            Learn More →
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- JavaScript for tabs and interactions -->
+<script>
+  function showTab(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll(".tab-content").forEach((tab) => {
+      tab.classList.add("hidden");
+    });
+
+    // Remove active class from all tab buttons
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.classList.remove(
+        "active-tab",
+        "border-{{ grant.category.color_class }}-600",
+        "text-{{ grant.category.color_class }}-600"
+      );
+      btn.classList.add("border-transparent", "text-gray-500");
+    });
+
+    // Show selected tab content
+    document.getElementById(tabName + "-tab").classList.remove("hidden");
+
+    // Add active class to selected tab button
+    event.target.classList.add(
+      "active-tab",
+      "border-{{ grant.category.color_class }}-600",
+      "text-{{ grant.category.color_class }}-600"
+    );
+    event.target.classList.remove("border-transparent", "text-gray-500");
+  }
+
+  function shareGrant() {
+    if (navigator.share) {
+      navigator.share({
+        title: "{{ grant.title }}",
+        text: "{{ grant.description|truncatewords:20 }}",
+        url: window.location.href,
+      });
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert("Grant link copied to clipboard!");
+      });
+    }
+  }
+
+  function saveGrant(grantId) {
+    // This would typically save to user's favorites
+    // For now, just show a message
+    alert("Grant saved to your favorites! (Feature coming soon)");
+  }
+</script>
+{% endblock %}
