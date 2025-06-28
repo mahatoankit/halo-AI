@@ -94,31 +94,42 @@ def expert_detail(request, expert_id):
         ExpertProfile, id=expert_id, verification_status="verified"
     )
 
-    # Get recent reviews
-    reviews = ConsultationReview.objects.filter(expert=expert).order_by("-created_at")[
-        :5
-    ]
+    # Get all reviews for rating breakdown calculation
+    all_reviews = ConsultationReview.objects.filter(expert=expert)
+
+    # Get recent reviews for display
+    reviews = all_reviews.order_by("-created_at")[:5]
 
     # Get recent blog posts by this expert
     blog_posts = ExpertBlog.objects.filter(expert=expert, status="published").order_by(
         "-published_at"
     )[:3]
 
-    # Calculate rating breakdown
+    # Calculate rating breakdown using all reviews
     rating_breakdown = {
-        5: reviews.filter(rating=5).count(),
-        4: reviews.filter(rating=4).count(),
-        3: reviews.filter(rating=3).count(),
-        2: reviews.filter(rating=2).count(),
-        1: reviews.filter(rating=1).count(),
+        5: all_reviews.filter(rating=5).count(),
+        4: all_reviews.filter(rating=4).count(),
+        3: all_reviews.filter(rating=3).count(),
+        2: all_reviews.filter(rating=2).count(),
+        1: all_reviews.filter(rating=1).count(),
     }
+
+    # Process comma-separated fields for template
+    available_days_list = (
+        expert.available_days.split(",") if expert.available_days else []
+    )
+    languages_list = (
+        expert.languages_spoken.split(",") if expert.languages_spoken else []
+    )
 
     context = {
         "expert": expert,
         "reviews": reviews,
         "blog_posts": blog_posts,
         "rating_breakdown": rating_breakdown,
-        "total_reviews": reviews.count(),
+        "total_reviews": all_reviews.count(),
+        "available_days_list": [day.strip() for day in available_days_list],
+        "languages_list": [lang.strip() for lang in languages_list],
     }
 
     return render(request, "experts/expert_detail.html", context)
