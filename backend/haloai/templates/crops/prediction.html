@@ -432,8 +432,12 @@ Halo AI{% endblock %} {% block content %}
               <span class="text-green-600 font-semibold" id="data-timestamp"
                 >Last updated: Loading...</span
               ><br />
+              <span id="connection-status" class="text-blue-600"
+                >🔄 Connecting...</span
+              ><br />
               💡 Click "Use Real-Time Data" to automatically fetch and fill
-              current values
+              current values<br />
+              ⚡ Click "Force Refresh" to manually update the display
             </div>
           </div>
           <button
@@ -450,6 +454,14 @@ Halo AI{% endblock %} {% block content %}
             class="mt-2 w-full bg-primary-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
           >
             🔄 Use Real-Time IoT & Weather Data
+          </button>
+          <button
+            type="button"
+            onclick="forceRefreshData()"
+            id="force-refresh-btn"
+            class="mt-2 w-full bg-orange-500 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-orange-600 transition-colors"
+          >
+            ⚡ Force Refresh Display
           </button>
         </div>
 
@@ -565,93 +577,151 @@ Halo AI{% endblock %} {% block content %}
     document.getElementById("regional-data").innerHTML =
       '<span class="inline-block animate-pulse text-orange-500">⋯ Fetching regional data...</span>';
 
+    // Add cache-busting parameter to ensure fresh data
+    const cacheBuster = new Date().getTime();
+    const url = `/crop-prediction/api/real-time-data/?region=Bhairahawa-Butwal&_=${cacheBuster}`;
+
+    console.log("🔄 Fetching real-time data from:", url);
+
     // Fetch real-time data from our API which connects to Firebase
-    fetch("/crop-prediction/api/real-time-data/?region=Bhairahawa-Butwal")
-      .then((response) => response.json())
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    })
+      .then((response) => {
+        console.log("🔍 Real-time data response status:", response.status);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+      })
       .then((data) => {
-        if (data.status === "success") {
+        console.log("📊 Real-time data received:", data);
+        if (data.status === "success" && data.data) {
           const realData = data.data;
+          console.log("✅ Processing real-time data:", realData);
+
+          // Validate data exists with safe fallbacks
+          const ph =
+            realData.ph !== undefined && !isNaN(realData.ph)
+              ? parseFloat(realData.ph)
+              : 6.5;
+          const temperature =
+            realData.temperature !== undefined && !isNaN(realData.temperature)
+              ? parseFloat(realData.temperature)
+              : 29.6;
+          const rainfall =
+            realData.rainfall !== undefined && !isNaN(realData.rainfall)
+              ? parseFloat(realData.rainfall)
+              : 22.5;
+          const humidity =
+            realData.humidity !== undefined && !isNaN(realData.humidity)
+              ? parseFloat(realData.humidity)
+              : 60;
+
+          console.log("🔢 Parsed values:", {
+            ph,
+            temperature,
+            rainfall,
+            humidity,
+          });
 
           // Update display sections with real-time data
           document.getElementById("firebase-data").innerHTML = `
-            pH: <span class="font-semibold text-green-700">${realData.ph.toFixed(
+            pH: <span class="font-semibold text-green-700">${ph.toFixed(
               1
             )}</span>, 
-            Temperature: <span class="font-semibold text-green-700">${realData.temperature.toFixed(
+            Temperature: <span class="font-semibold text-green-700">${temperature.toFixed(
               1
             )}°C</span>
+            <small class="block text-xs text-gray-500 mt-1">Sensor: ${
+              realData.sensor_id || "unknown"
+            }</small>
           `;
 
           document.getElementById("weather-data").innerHTML = `
-            Rainfall: <span class="font-semibold text-green-700">${realData.rainfall.toFixed(
+            Rainfall: <span class="font-semibold text-green-700">${rainfall.toFixed(
               1
             )}mm</span>, 
-            Humidity: <span class="font-semibold text-green-700">${realData.humidity.toFixed(
+            Humidity: <span class="font-semibold text-green-700">${humidity.toFixed(
               0
             )}%</span>
+            <small class="block text-xs text-gray-500 mt-1">Source: ${
+              realData.data_sources?.weather || "API"
+            }</small>
           `;
 
           document.getElementById("regional-data").innerHTML = `
-            N: <span class="font-semibold text-green-700">${realData.nitrogen}</span>, 
-            P: <span class="font-semibold text-green-700">${realData.phosphorus}</span>, 
-            K: <span class="font-semibold text-green-700">${realData.potassium}</span> mg/kg
+            N: <span class="font-semibold text-green-700">${
+              realData.nitrogen || 30
+            }</span>, 
+            P: <span class="font-semibold text-green-700">${
+              realData.phosphorus || 22.5
+            }</span>, 
+            K: <span class="font-semibold text-green-700">${
+              realData.potassium || 60
+            }</span> mg/kg
+            <small class="block text-xs text-gray-500 mt-1">Source: ${
+              realData.data_sources?.npk || "Regional avg"
+            }</small>
           `;
 
-          // Update timestamp
+          // Update timestamp with more info
           const timestamp = realData.timestamp
             ? new Date(realData.timestamp).toLocaleString()
             : new Date().toLocaleString();
           document.getElementById(
             "data-timestamp"
-          ).innerHTML = `Last updated: ${timestamp}`;
+          ).innerHTML = `Last updated: <span class="font-semibold">${timestamp}</span><br><small>Region: ${
+            realData.region || "Bhairahawa-Butwal"
+          }</small>`;
 
           // Fill form with real-time data
           document.getElementById("nitrogen").value = realData.nitrogen || 30;
           document.getElementById("phosphorus").value =
             realData.phosphorus || 22.5;
           document.getElementById("potassium").value = realData.potassium || 60;
-          document.getElementById("ph").value = realData.ph || 6.5;
-          document.getElementById("temperature").value =
-            realData.temperature || 29.6;
-          document.getElementById("humidity").value = realData.humidity || 60;
-          document.getElementById("rainfall").value = realData.rainfall || 22.5;
+          document.getElementById("ph").value = ph;
+          document.getElementById("temperature").value = temperature;
+          document.getElementById("humidity").value = humidity;
+          document.getElementById("rainfall").value = rainfall;
           document.getElementById("location").value = "Bhairahawa, Nepal";
           document.getElementById("area").value = "2.5";
           document.getElementById("season").value = "kharif";
 
-          // Show success message
+          // Show success message with more details
           showNotification(
-            "✅ Firebase real-time data loaded successfully!",
+            `✅ Real-time data loaded! pH: ${ph.toFixed(
+              1
+            )}, Temp: ${temperature.toFixed(1)}°C (Sensor: ${
+              realData.sensor_id || "N/A"
+            })`,
             "success"
           );
 
           // Add real-time data indicator
-          addDataSourceIndicator(realData.data_sources);
+          if (realData.data_sources) {
+            addDataSourceIndicator(realData.data_sources);
+          }
         } else {
-          document.getElementById("firebase-data").innerHTML =
-            'pH: 6.5, Temperature: 29.6°C <span class="text-red-600">(Default)</span>';
-          document.getElementById("weather-data").innerHTML =
-            'Rainfall: 22.5mm, Humidity: 60% <span class="text-red-600">(Default)</span>';
-          document.getElementById("regional-data").innerHTML =
-            'N: 30, P: 22.5, K: 60 mg/kg <span class="text-red-600">(Default)</span>';
-
+          console.error("❌ API returned error or missing data:", data);
+          setDefaultDataDisplay();
           showNotification(
-            "⚠️ Failed to load real-time data: " + data.message,
+            "⚠️ Failed to load real-time data: " +
+              (data.message || "Unknown error"),
             "error"
           );
         }
       })
       .catch((error) => {
-        console.error("Error fetching real-time data:", error);
-        document.getElementById("firebase-data").innerHTML =
-          'pH: 6.5, Temperature: 29.6°C <span class="text-red-600">(Default)</span>';
-        document.getElementById("weather-data").innerHTML =
-          'Rainfall: 22.5mm, Humidity: 60% <span class="text-red-600">(Default)</span>';
-        document.getElementById("regional-data").innerHTML =
-          'N: 30, P: 22.5, K: 60 mg/kg <span class="text-red-600">(Default)</span>';
-
+        console.error("❌ Error fetching real-time data:", error);
+        setDefaultDataDisplay();
         showNotification(
-          "❌ Error loading real-time data from Firebase. Using defaults.",
+          `❌ Error loading real-time data: ${error.message}. Using defaults.`,
           "error"
         );
         fillSampleData(); // Fallback to sample data
@@ -660,6 +730,18 @@ Halo AI{% endblock %} {% block content %}
         btn.innerHTML = originalText;
         btn.disabled = false;
       });
+  }
+
+  // Helper function to set default data display
+  function setDefaultDataDisplay() {
+    document.getElementById("firebase-data").innerHTML =
+      'pH: 6.5, Temperature: 29.6°C <span class="text-red-600">(Default)</span>';
+    document.getElementById("weather-data").innerHTML =
+      'Rainfall: 22.5mm, Humidity: 60% <span class="text-red-600">(Default)</span>';
+    document.getElementById("regional-data").innerHTML =
+      'N: 30, P: 22.5, K: 60 mg/kg <span class="text-red-600">(Default)</span>';
+    document.getElementById("data-timestamp").innerHTML =
+      'Last updated: <span class="text-red-600">Failed to connect</span>';
   }
 
   function addDataSourceIndicator(dataSources) {
@@ -875,19 +957,44 @@ Halo AI{% endblock %} {% block content %}
         "success"
       );
     }, 2000);
-  }
-
-  // Auto-load real-time data on page load
+  } // Auto-load real-time data on page load
   document.addEventListener("DOMContentLoaded", function () {
     // Fetch real-time data without filling the form fields
     fetchRealtimeDataForDisplay();
 
+    // Set up auto-refresh every 30 seconds
+    setInterval(fetchRealtimeDataForDisplay, 30000);
+
     // Uncomment the line below to auto-load real-time data when page loads
-     // fillRealTimeData();
+    // fillRealTimeData();
   });
+
+  // Force refresh function for manual data refresh
+  function forceRefreshData() {
+    const btn = document.getElementById("force-refresh-btn");
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "⚡ Refreshing...";
+    btn.disabled = true;
+
+    // Clear cache and force fresh data
+    fetchRealtimeDataForDisplay();
+
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+      showNotification("🔄 Display data refreshed!", "success");
+    }, 2000);
+  }
 
   // This function only updates the display panels without filling form fields
   function fetchRealtimeDataForDisplay() {
+    // Update connection status
+    const statusElement = document.getElementById("connection-status");
+    if (statusElement) {
+      statusElement.innerHTML = "🔄 Fetching live data...";
+      statusElement.className = "text-blue-600";
+    }
+
     // Show loading state in display panels
     document.getElementById("firebase-data").innerHTML =
       '<span class="inline-block animate-pulse text-orange-500">⋯ Connecting to Firebase...</span>';
@@ -896,66 +1003,146 @@ Halo AI{% endblock %} {% block content %}
     document.getElementById("regional-data").innerHTML =
       '<span class="inline-block animate-pulse text-orange-500">⋯ Fetching regional data...</span>';
 
-    fetch("/crop-prediction/api/real-time-data/?region=Bhairahawa-Butwal")
-      .then((response) => response.json())
+    // Add cache-busting parameter to ensure fresh data
+    const cacheBuster = new Date().getTime();
+    const url = `/crop-prediction/api/real-time-data/?region=Bhairahawa-Butwal&_=${cacheBuster}`;
+
+    console.log("🔄 Auto-fetching display data from:", url);
+
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    })
+      .then((response) => {
+        console.log("🔍 Display data response status:", response.status);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+      })
       .then((data) => {
-        if (data.status === "success") {
+        console.log("📊 Display data received:", data);
+        if (data.status === "success" && data.data) {
           const realData = data.data;
+          console.log("✅ Processing display data:", realData);
+
+          // Validate data exists with fallbacks (for display function)
+          const ph =
+            realData.ph !== undefined && !isNaN(realData.ph)
+              ? parseFloat(realData.ph)
+              : 6.5;
+          const temperature =
+            realData.temperature !== undefined && !isNaN(realData.temperature)
+              ? parseFloat(realData.temperature)
+              : 29.6;
+          const rainfall =
+            realData.rainfall !== undefined && !isNaN(realData.rainfall)
+              ? parseFloat(realData.rainfall)
+              : 22.5;
+          const humidity =
+            realData.humidity !== undefined && !isNaN(realData.humidity)
+              ? parseFloat(realData.humidity)
+              : 60;
+
+          console.log("🔢 Display values:", {
+            ph,
+            temperature,
+            rainfall,
+            humidity,
+          });
 
           // Update display sections with real-time data
           document.getElementById("firebase-data").innerHTML = `
-            pH: <span class="font-semibold text-green-700">${realData.ph.toFixed(
+            pH: <span class="font-semibold text-green-700">${ph.toFixed(
               1
             )}</span>,
-            Temperature: <span class="font-semibold text-green-700">${realData.temperature.toFixed(
+            Temperature: <span class="font-semibold text-green-700">${temperature.toFixed(
               1
             )}°C</span>
+            <small class="block text-xs text-gray-500 mt-1">Live from: ${
+              realData.sensor_id || "unknown"
+            }</small>
           `;
 
           document.getElementById("weather-data").innerHTML = `
-            Rainfall: <span class="font-semibold text-green-700">${realData.rainfall.toFixed(
+            Rainfall: <span class="font-semibold text-green-700">${rainfall.toFixed(
               1
             )}mm</span>,
-            Humidity: <span class="font-semibold text-green-700">${realData.humidity.toFixed(
+            Humidity: <span class="font-semibold text-green-700">${humidity.toFixed(
               0
             )}%</span>
+            <small class="block text-xs text-gray-500 mt-1">Source: ${
+              realData.data_sources?.weather || "API"
+            }</small>
           `;
 
           document.getElementById("regional-data").innerHTML = `
-            N: <span class="font-semibold text-green-700">${realData.nitrogen}</span>,
-            P: <span class="font-semibold text-green-700">${realData.phosphorus}</span>,
-            K: <span class="font-semibold text-green-700">${realData.potassium}</span> mg/kg
+            N: <span class="font-semibold text-green-700">${
+              realData.nitrogen || 30
+            }</span>,
+            P: <span class="font-semibold text-green-700">${
+              realData.phosphorus || 22.5
+            }</span>,
+            K: <span class="font-semibold text-green-700">${
+              realData.potassium || 60
+            }</span> mg/kg
+            <small class="block text-xs text-gray-500 mt-1">Source: ${
+              realData.data_sources?.npk || "Regional avg"
+            }</small>
           `;
 
-          // Update timestamp
+          // Update timestamp with sensor info
           const timestamp = realData.timestamp
             ? new Date(realData.timestamp).toLocaleString()
             : new Date().toLocaleString();
           document.getElementById(
             "data-timestamp"
-          ).innerHTML = `Last updated: ${timestamp}`;
+          ).innerHTML = `Last updated: <span class="font-semibold text-green-600">${timestamp}</span><br><small>Sensor: ${
+            realData.sensor_id || "N/A"
+          }, Region: ${realData.region || "Bhairahawa-Butwal"}</small>`;
+
+          // Update connection status
+          if (statusElement) {
+            statusElement.innerHTML = "✅ Connected to Firebase";
+            statusElement.className = "text-green-600";
+          }
         } else {
-          document.getElementById("firebase-data").innerHTML =
-            "pH: 6.5, Temperature: 29.6°C";
-          document.getElementById("weather-data").innerHTML =
-            "Rainfall: 22.5mm, Humidity: 60%";
-          document.getElementById("regional-data").innerHTML =
-            "N: 30, P: 22.5, K: 60 mg/kg";
-          document.getElementById("data-timestamp").innerHTML =
-            "Last updated: Not available";
+          console.error("❌ Display API returned error or missing data:", data);
+          setDefaultDataDisplayQuiet();
+
+          // Update connection status
+          if (statusElement) {
+            statusElement.innerHTML = "⚠️ API Error";
+            statusElement.className = "text-orange-600";
+          }
         }
       })
       .catch((error) => {
-        console.error("Error fetching real-time data for display:", error);
-        document.getElementById("firebase-data").innerHTML =
-          "pH: 6.5, Temperature: 29.6°C";
-        document.getElementById("weather-data").innerHTML =
-          "Rainfall: 22.5mm, Humidity: 60%";
-        document.getElementById("regional-data").innerHTML =
-          "N: 30, P: 22.5, K: 60 mg/kg";
-        document.getElementById("data-timestamp").innerHTML =
-          "Last updated: Failed to connect";
+        console.error("❌ Error fetching real-time data for display:", error);
+        setDefaultDataDisplayQuiet();
+
+        // Update connection status
+        if (statusElement) {
+          statusElement.innerHTML = "❌ Connection Failed";
+          statusElement.className = "text-red-600";
+        }
       });
+  }
+
+  // Helper function to set default data display quietly (no error messages)
+  function setDefaultDataDisplayQuiet() {
+    document.getElementById("firebase-data").innerHTML =
+      'pH: 6.5, Temperature: 29.6°C <small class="block text-xs text-gray-500 mt-1">Default values</small>';
+    document.getElementById("weather-data").innerHTML =
+      'Rainfall: 22.5mm, Humidity: 60% <small class="block text-xs text-gray-500 mt-1">Default values</small>';
+    document.getElementById("regional-data").innerHTML =
+      'N: 30, P: 22.5, K: 60 mg/kg <small class="block text-xs text-gray-500 mt-1">Regional averages</small>';
+    document.getElementById("data-timestamp").innerHTML =
+      'Last updated: <span class="text-orange-600">No live connection</span><br><small>Using default values</small>';
   }
 </script>
 {% endblock %}

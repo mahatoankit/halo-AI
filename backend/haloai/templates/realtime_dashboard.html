@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-time IoT Sensor Dashboard</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: white;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .realtime-indicator {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 12px;
+        height: 12px;
+        background: #ff4757;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      .realtime-indicator.active {
+        background: #2ed573;
+        animation: flash 0.5s ease-out;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes flash {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.3);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .sensor-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.3s ease;
+      }
+
+      .sensor-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .sensor-title {
+        font-size: 1.2em;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #fff;
+      }
+
+      .metric {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .metric-label {
+        font-weight: 500;
+        opacity: 0.8;
+      }
+
+      .metric-value {
+        font-size: 1.3em;
+        font-weight: 700;
+        color: #2ed573;
+      }
+
+      .status-active {
+        color: #2ed573;
+      }
+
+      .status-default {
+        color: #ffa726;
+      }
+
+      .status-error {
+        color: #ff4757;
+      }
+
+      .controls {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        cursor: pointer;
+        margin: 0 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .btn.active {
+        background: #2ed573;
+        border-color: #2ed573;
+      }
+
+      .log {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        padding: 20px;
+        height: 200px;
+        overflow-y: auto;
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      .log-entry {
+        margin-bottom: 5px;
+        opacity: 0.8;
+      }
+
+      .log-entry.success {
+        color: #2ed573;
+      }
+
+      .log-entry.error {
+        color: #ff4757;
+      }
+
+      .error-notification {
+        position: fixed;
+        top: 50px;
+        right: 20px;
+        background: #ff4757;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        display: none;
+        box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="realtime-indicator" class="realtime-indicator"></div>
+
+    <div class="container">
+      <div class="header">
+        <h1>🌱 Real-time IoT Sensor Dashboard</h1>
+        <p>Live agricultural sensor monitoring with Firebase integration</p>
+      </div>
+
+      <div class="controls">
+        <button id="start-btn" class="btn" onclick="startMonitoring()">
+          Start Real-time Monitoring
+        </button>
+        <button id="stop-btn" class="btn" onclick="stopMonitoring()">
+          Stop Monitoring
+        </button>
+        <select
+          id="sensor-select"
+          style="padding: 10px; border-radius: 5px; margin: 0 10px"
+        >
+          <option value="SENSOR_001">SENSOR_001</option>
+          <option value="bhairahawa_farm_1">Bhairahawa Farm 1</option>
+          <option value="butwal_farm_1">Butwal Farm 1</option>
+          <option value="demo_sensor_001">Demo Sensor</option>
+        </select>
+        <span id="update-interval">Update every 3 seconds</span>
+      </div>
+
+      <div class="dashboard">
+        <div class="sensor-card">
+          <div class="sensor-title">🌡️ Temperature Readings</div>
+          <div class="metric">
+            <span class="metric-label">Soil Temperature</span>
+            <span id="sensor-temperature" class="metric-value">--°C</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Soil Temperature</span>
+            <span id="sensor-soil-temperature" class="metric-value">--°C</span>
+          </div>
+        </div>
+
+        <div class="sensor-card">
+          <div class="sensor-title">💧 Soil & Air Quality</div>
+          <div class="metric">
+            <span class="metric-label">pH Level</span>
+            <span id="sensor-ph" class="metric-value">--</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Humidity</span>
+            <span id="sensor-humidity" class="metric-value">--%</span>
+          </div>
+        </div>
+
+        <div class="sensor-card">
+          <div class="sensor-title">📊 Sensor Status</div>
+          <div class="metric">
+            <span class="metric-label">Status</span>
+            <span id="sensor-status" class="metric-value status-active"
+              >--</span
+            >
+          </div>
+          <div class="metric">
+            <span class="metric-label">Last Update</span>
+            <span
+              id="sensor-timestamp"
+              class="metric-value"
+              style="font-size: 0.9em"
+              >--</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="sensor-card">
+        <div class="sensor-title">📝 Real-time Activity Log</div>
+        <div id="activity-log" class="log"></div>
+      </div>
+    </div>
+
+    <div id="sensor-error-notification" class="error-notification"></div>
+
+    <script src="/static/js/realtime-iot-client.js"></script>
+    <script>
+      let isMonitoring = false;
+
+      function startMonitoring() {
+        if (isMonitoring) return;
+
+        const sensorId = document.getElementById("sensor-select").value;
+        isMonitoring = true;
+
+        document.getElementById("start-btn").classList.add("active");
+        document.getElementById("stop-btn").classList.remove("active");
+
+        logActivity(`🔴 Started monitoring sensor: ${sensorId}`, "success");
+
+        realtimeIoT.startRealTimeUpdates(
+          sensorId,
+          (sensorData, metadata) => {
+            updateDashboard(sensorData, metadata);
+            logActivity(
+              `📊 Data updated: T=${sensorData.temperature}°C, pH=${sensorData.ph}`,
+              "success"
+            );
+          },
+          (error) => {
+            logActivity(`❌ Error: ${error.message}`, "error");
+          },
+          3000 // 3 second updates
+        );
+      }
+
+      function stopMonitoring() {
+        if (!isMonitoring) return;
+
+        isMonitoring = false;
+        realtimeIoT.stopRealTimeUpdates();
+
+        document.getElementById("start-btn").classList.remove("active");
+        document.getElementById("stop-btn").classList.add("active");
+
+        logActivity("⏹️ Stopped monitoring", "success");
+      }
+
+      function updateDashboard(sensorData, metadata) {
+        // Update temperature
+        document.getElementById(
+          "sensor-temperature"
+        ).textContent = `${sensorData.temperature}°C`;
+        document.getElementById(
+          "sensor-soil-temperature"
+        ).textContent = `${sensorData.soil_temperature}°C`;
+
+        // Update pH with color coding
+        const phElement = document.getElementById("sensor-ph");
+        phElement.textContent = sensorData.ph;
+        if (sensorData.ph < 6.0) {
+          phElement.style.color = "#ff4757"; // Acidic - red
+        } else if (sensorData.ph > 8.0) {
+          phElement.style.color = "#5352ed"; // Alkaline - blue
+        } else {
+          phElement.style.color = "#2ed573"; // Neutral - green
+        }
+
+        // Update humidity
+        document.getElementById(
+          "sensor-humidity"
+        ).textContent = `${sensorData.humidity}%`;
+
+        // Update status
+        const statusElement = document.getElementById("sensor-status");
+        statusElement.textContent = sensorData.status;
+        statusElement.className = `metric-value status-${sensorData.status}`;
+
+        // Update timestamp
+        const date = new Date(sensorData.timestamp);
+        document.getElementById("sensor-timestamp").textContent =
+          date.toLocaleString();
+
+        // Flash the indicator
+        const indicator = document.getElementById("realtime-indicator");
+        indicator.classList.add("active");
+        setTimeout(() => indicator.classList.remove("active"), 500);
+      }
+
+      function logActivity(message, type = "info") {
+        const log = document.getElementById("activity-log");
+        const entry = document.createElement("div");
+        entry.className = `log-entry ${type}`;
+        entry.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+        log.appendChild(entry);
+        log.scrollTop = log.scrollHeight;
+
+        // Keep only last 50 entries
+        while (log.children.length > 50) {
+          log.removeChild(log.firstChild);
+        }
+      }
+
+      // Auto-start monitoring on page load
+      window.addEventListener("load", function () {
+        logActivity("🚀 Dashboard loaded and ready", "success");
+
+        // Auto-start after 2 seconds
+        setTimeout(() => {
+          startMonitoring();
+        }, 2000);
+      });
+
+      // Handle sensor selection changes
+      document
+        .getElementById("sensor-select")
+        .addEventListener("change", function () {
+          if (isMonitoring) {
+            stopMonitoring();
+            setTimeout(() => startMonitoring(), 1000);
+          }
+        });
+    </script>
+  </body>
+</html>

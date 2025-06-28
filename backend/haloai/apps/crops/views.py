@@ -6,7 +6,7 @@ import json
 from typing import Dict, Any
 
 # Import our enhanced services
-from services.iot_data_service import iot_data_service
+from services.enhanced_iot_service import enhanced_iot_service
 from services.enhanced_weather_service import enhanced_weather_service
 from services.real_ml_prediction_service import real_ml_service
 
@@ -26,7 +26,6 @@ def crop_prediction(request):
     """
     return render(request, "crops/prediction.html")
     # return render(request, "crops/dashboard.html")
-
 
 
 @csrf_exempt
@@ -76,8 +75,8 @@ def get_real_time_data(request):
         region = request.GET.get("region", "Bhairahawa-Butwal")
         sensor_id = request.GET.get("sensor_id", "bhairahawa_farm_1")
 
-        # Get IoT sensor data
-        iot_data = iot_data_service.get_latest_sensor_data(sensor_id)
+        # Get IoT sensor data - FORCE REAL-TIME (bypass cache)
+        iot_data = enhanced_iot_service.get_realtime_sensor_data(sensor_id)
 
         # Get weather data
         weather_data = enhanced_weather_service.get_current_weather_data(region)
@@ -131,9 +130,9 @@ def collect_real_time_data(user_input: Dict[str, Any]) -> Dict[str, float]:
     # Regional NPK averages for Bhairahawa as specified
     npk_defaults = {"nitrogen": 30.0, "phosphorus": 22.5, "potassium": 60.0}
 
-    # Get IoT sensor data
+    # Get IoT sensor data - FORCE REAL-TIME (bypass cache)
     try:
-        iot_data = iot_data_service.get_latest_sensor_data("bhairahawa_farm_1")
+        iot_data = enhanced_iot_service.get_realtime_sensor_data("bhairahawa_farm_1")
     except Exception as e:
         print(f"IoT data fetch error: {e}")
         iot_data = {}
