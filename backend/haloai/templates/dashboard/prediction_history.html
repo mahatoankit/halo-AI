@@ -104,9 +104,7 @@
           />
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2"
-            >&nbsp;</label
-          >
+          <label class="block text-sm font-medium text-gray-700 mb-2"> </label>
           <button
             class="w-full bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700"
           >
@@ -181,61 +179,58 @@
                     <span>pH: {{ prediction.ph }}</span>
                   </div>
                   <div class="text-xs text-gray-500 mt-1">
-                    Temp: {{ prediction.temperature }}°C, Humidity: {{
-                    prediction.humidity }}%
+                    Temp: {{ prediction.temperature }}°C, Humidity: {% if prediction.humidity_percentage %}{{ prediction.humidity_percentage }}{% else %}{{ prediction.humidity }}{% endif %}%
                   </div>
                 </div>
               </td>
               <td class="px-6 py-4">
-                {% if prediction.predicted_crops %}
+                {% with crops=prediction.get_top_predicted_crops %} 
+                {% if crops %}
                 <div class="space-y-1">
-                  {% for crop in prediction.predicted_crops|slice:":3" %}
+                  {% for crop in crops %}
                   <div class="text-sm text-gray-900">
-                    {{ crop.crop_name }} {% if crop.confidence %}
-                    <span class="text-xs text-gray-500"
-                      >({{ crop.confidence|floatformat:0 }}%)</span
-                    >
+                    {{ crop.crop_name|default:crop.name }} 
+                    {% if crop.confidence is not None %}
+                    <span class="text-xs text-gray-500">
+                      ({% if crop.confidence < 1 %}{% widthratio crop.confidence 1 100 as percent %}{{ percent|floatformat:0 }}{% else %}{{ crop.confidence|floatformat:0 }}{% endif %}%)
+                    </span>
                     {% endif %}
                   </div>
                   {% endfor %}
                 </div>
                 {% else %}
                 <span class="text-sm text-gray-500">Processing...</span>
-                {% endif %}
+                {% endif %} 
+                {% endwith %}
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                {% if prediction.confidence_score %}
-                <div class="flex items-center">
-                  <div class="flex-shrink-0">
-                    {% if prediction.confidence_score > 0.8 %}
-                    <div class="h-2 w-16 bg-gray-200 rounded-full">
-                      <div
-                        class="h-2 bg-green-500 rounded-full"
-                        style="width: {{ prediction.confidence_score|floatformat:0 }}%"
-                      ></div>
-                    </div>
-                    {% elif prediction.confidence_score > 0.6 %}
-                    <div class="h-2 w-16 bg-gray-200 rounded-full">
-                      <div
-                        class="h-2 bg-yellow-500 rounded-full"
-                        style="width: {{ prediction.confidence_score|floatformat:0 }}%"
-                      ></div>
-                    </div>
-                    {% else %}
-                    <div class="h-2 w-16 bg-gray-200 rounded-full">
-                      <div
-                        class="h-2 bg-red-500 rounded-full"
-                        style="width: {{ prediction.confidence_score|floatformat:0 }}%"
-                      ></div>
-                    </div>
-                    {% endif %}
-                  </div>
-                  <div class="ml-2 text-sm text-gray-900">
-                    {{ prediction.confidence_score|floatformat:0 }}%
-                  </div>
-                </div>
+                {% if prediction.confidence_score is not None %}
+                    {% with score=prediction.confidence_score %}
+                        {% if score < 1 %}
+                            {% widthratio score 1 100 as percent %}
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="h-2 w-16 bg-gray-200 rounded-full">
+                                        <div class="h-2 rounded-full {% if percent > 80 %}bg-green-500{% elif percent > 60 %}bg-yellow-500{% else %}bg-red-500{% endif %}" style="width: {{ percent|floatformat:0 }}%"></div>
+                                    </div>
+                                </div>
+                                <div class="ml-2 text-sm text-gray-900">{{ percent|floatformat:0 }}%</div>
+                            </div>
+                        {% else %}
+                            {% with percent=score %}
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="h-2 w-16 bg-gray-200 rounded-full">
+                                        <div class="h-2 rounded-full {% if percent > 80 %}bg-green-500{% elif percent > 60 %}bg-yellow-500{% else %}bg-red-500{% endif %}" style="width: {{ percent|floatformat:0 }}%"></div>
+                                    </div>
+                                </div>
+                                <div class="ml-2 text-sm text-gray-900">{{ percent|floatformat:0 }}%</div>
+                            </div>
+                            {% endwith %}
+                        {% endif %}
+                    {% endwith %}
                 {% else %}
-                <span class="text-sm text-gray-500">-</span>
+                    <span class="text-sm text-gray-500">-</span>
                 {% endif %}
               </td>
               <td class="px-6 py-4 whitespace-nowrap">

@@ -131,6 +131,35 @@ class CropPredictionRequest(models.Model):
             "rainfall": self.rainfall,
         }
 
+    @property
+    def parsed_predicted_crops(self):
+        """Return predicted_crops as a list of dictionaries with proper structure"""
+        if not self.predicted_crops:
+            return []
+
+        # If it's already a list of dictionaries, return as is
+        if isinstance(self.predicted_crops, list):
+            return self.predicted_crops
+
+        # If it's a string, try to parse it as JSON
+        if isinstance(self.predicted_crops, str):
+            try:
+                return json.loads(self.predicted_crops)
+            except (json.JSONDecodeError, ValueError):
+                return []
+
+        return []
+
+    def get_top_predicted_crops(self, limit=3):
+        """Get top predicted crops with confidence scores"""
+        crops = self.parsed_predicted_crops
+        if not crops:
+            return []
+
+        # Sort by confidence score if available
+        sorted_crops = sorted(crops, key=lambda x: x.get("confidence", 0), reverse=True)
+        return sorted_crops[:limit]
+
 
 class CropRecommendation(models.Model):
     """Final crop recommendations based on predictions"""

@@ -90,24 +90,29 @@ TEMPLATES = [
 WSGI_APPLICATION = "haloai.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
 # Database Configuration
-DATABASES = {
-    "default": dj_database_url.parse(
-        os.getenv("DATABASE_URL"),
-        conn_max_age=600,
-        conn_health_checks=True,
+# Use PostgreSQL from environment variable
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+    print(
+        f"🗄️ Using PostgreSQL database: {DATABASE_URL.split('@')[1].split('/')[0] if '@' in DATABASE_URL else 'configured'}"
     )
-}
+else:
+    # Fallback to SQLite for development
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+    print("⚠️ DATABASE_URL not found, using SQLite fallback")
 
 
 # Password validation
