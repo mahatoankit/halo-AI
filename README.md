@@ -20,6 +20,12 @@ HALO-AI is an intelligent IoT-enabled crop recommendation system that combines m
 - **⚙️ Automated Setup**: One-command environment setup and Django server deployment
 - **🔥 Firebase Integration**: NoSQL database with real-time capabilities
 - **👥 Multi-User System**: Farmers, Technicians, and Admin roles with community features
+- **✅ Fixed Prediction History**: Farmers can now view their complete prediction history
+
+### 🔧 Recent Critical Fixes
+
+- **Farmer Prediction History**: Fixed the issue where farmers couldn't see their prediction history after making crop recommendations. The system now properly creates and displays prediction records for manual farmer inputs.
+- **Consolidated Prediction System**: Removed redundant manual input forms and consolidated all crop predictions to use the main prediction page at `/crop-prediction/prediction/`. This ensures a single, consistent prediction interface.
 
 ## 🏗️ Project Structure
 

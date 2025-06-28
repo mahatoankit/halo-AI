@@ -42,14 +42,39 @@ class CropPredictionRequest(models.Model):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    # Support both IoT sensor-based and manual input predictions
     community_admin = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="crop_predictions",
         limit_choices_to={"role": "community_admin"},
+        null=True,
+        blank=True,
     )
     sensor_set = models.ForeignKey(
-        IoTSensorSet, on_delete=models.CASCADE, related_name="crop_predictions"
+        IoTSensorSet,
+        on_delete=models.CASCADE,
+        related_name="crop_predictions",
+        null=True,
+        blank=True,
+    )
+    farmer = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="farmer_predictions",
+        limit_choices_to={"role": "farmer"},
+        null=True,
+        blank=True,
+        help_text="Farmer who requested the prediction (for manual inputs)",
+    )
+    manual_input = models.ForeignKey(
+        "dashboard.ManualCropInput",
+        on_delete=models.CASCADE,
+        related_name="prediction_requests",
+        null=True,
+        blank=True,
+        help_text="Link to manual crop input if this prediction is from manual data",
     )
 
     # Input parameters for prediction
@@ -85,7 +110,13 @@ class CropPredictionRequest(models.Model):
         ]
 
     def __str__(self):
-        return f"Prediction {self.id} - {self.sensor_set.name} ({self.status})"
+        if self.sensor_set:
+            source = self.sensor_set.name
+        elif self.farmer:
+            source = f"Manual by {self.farmer.get_full_name()}"
+        else:
+            source = "Unknown source"
+        return f"Prediction {self.id} - {source} ({self.status})"
 
     @property
     def input_parameters(self):

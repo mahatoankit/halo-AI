@@ -17,7 +17,6 @@ urlpatterns = [
     path(
         "farmer/subscription/", views.subscription_details, name="subscription_details"
     ),
-    path("farmer/manual-input/", views.manual_input_form, name="manual_input"),
     path(
         "farmer/expert-consultation/",
         views.expert_consultation_request,

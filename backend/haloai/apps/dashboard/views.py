@@ -66,7 +66,7 @@ def farmer_dashboard(request):
 
     # Recent crop predictions (last 30 days)
     recent_predictions = CropPredictionRequest.objects.filter(
-        community_admin__managed_farmers__user=request.user
+        farmer=request.user
     ).order_by("-requested_at")[:5]
 
     # Sensor readings if available - get readings from sensor sets managed by the farmer's community admin
@@ -160,9 +160,10 @@ def prediction_history(request):
     if not request.user.is_farmer:
         return JsonResponse({"error": "Access denied"}, status=403)
 
-    predictions = CropPredictionRequest.objects.filter(
-        community_admin__managed_farmers__user=request.user
-    ).order_by("-requested_at")
+    # Get predictions directly for this farmer
+    predictions = CropPredictionRequest.objects.filter(farmer=request.user).order_by(
+        "-requested_at"
+    )
 
     context = {
         "title": "Prediction History",
@@ -227,82 +228,6 @@ def subscription_details(request):
     }
 
     return render(request, "dashboard/subscription_details.html", context)
-
-
-@login_required
-def manual_input_form(request):
-    """Form for manual crop input by farmers"""
-    if not request.user.is_farmer:
-        return JsonResponse({"error": "Access denied"}, status=403)
-
-    if request.method == "POST":
-        try:
-            # Validate soil parameters
-            input_params = {
-                "nitrogen": request.POST.get("nitrogen"),
-                "phosphorus": request.POST.get("phosphorus"),
-                "potassium": request.POST.get("potassium"),
-                "ph": request.POST.get("ph"),
-                "temperature": request.POST.get("temperature"),
-                "humidity": request.POST.get("humidity"),
-                "rainfall": request.POST.get("rainfall"),
-            }
-
-            validation_errors = validate_soil_parameters(input_params)
-            if validation_errors:
-                return JsonResponse(
-                    {
-                        "success": False,
-                        "error": "Validation failed: " + "; ".join(validation_errors),
-                    },
-                    status=400,
-                )
-
-            manual_input = ManualCropInput.objects.create(
-                farmer=request.user,
-                nitrogen=float(request.POST.get("nitrogen")),
-                phosphorus=float(request.POST.get("phosphorus")),
-                potassium=float(request.POST.get("potassium")),
-                ph=float(request.POST.get("ph")),
-                temperature=float(request.POST.get("temperature")),
-                humidity=float(request.POST.get("humidity")),
-                rainfall=float(request.POST.get("rainfall")),
-                field_area=float(request.POST.get("field_area", 0)) or None,
-                notes=request.POST.get("notes", ""),
-            )
-
-            # Create a prediction request based on manual input
-            # This would trigger the ML prediction service
-
-            return JsonResponse(
-                {
-                    "success": True,
-                    "message": "Manual input recorded successfully",
-                    "input_id": str(manual_input.id),
-                }
-            )
-        except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=400)
-
-    # Get farmer's field profile for defaults
-    try:
-        field_profile = FarmerFieldProfile.objects.get(farmer=request.user)
-        region = field_profile.region.lower()
-    except FarmerFieldProfile.DoesNotExist:
-        field_profile = None
-        region = "bhairahawa"  # Default region
-
-    # Get regional defaults
-    regional_defaults = get_regional_defaults(region)
-
-    context = {
-        "title": "New Crop Prediction",
-        "field_profile": field_profile,
-        "regional_defaults": regional_defaults,
-        "user": request.user,
-    }
-
-    return render(request, "dashboard/manual_input_form.html", context)
 
 
 @login_required

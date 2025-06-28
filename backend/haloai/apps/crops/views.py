@@ -2,6 +2,8 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 import json
 from typing import Dict, Any
 
@@ -9,6 +11,10 @@ from typing import Dict, Any
 from services.enhanced_iot_service import enhanced_iot_service
 from services.enhanced_weather_service import enhanced_weather_service
 from services.real_ml_prediction_service import real_ml_service
+
+# Import models for saving predictions
+from .models import CropPredictionRequest
+from apps.dashboard.models import ManualCropInput
 
 
 # Create your views here.
@@ -51,6 +57,40 @@ def crop_prediction_api(request):
 
         # Format response
         response_data = format_prediction_response(prediction_result, prediction_input)
+
+        # Save prediction to database if user is authenticated
+        if request.user.is_authenticated and request.user.role == "farmer":
+            # Create ManualCropInput record
+            manual_input = ManualCropInput.objects.create(
+                farmer=request.user,
+                nitrogen=prediction_input.get("nitrogen", 0),
+                phosphorus=prediction_input.get("phosphorus", 0),
+                potassium=prediction_input.get("potassium", 0),
+                ph=prediction_input.get("ph", 0),
+                temperature=prediction_input.get("temperature", 0),
+                humidity=prediction_input.get("humidity", 0),
+                rainfall=prediction_input.get("rainfall", 0),
+                field_area=data.get("field_area", None),
+                notes=data.get("notes", ""),
+            )
+
+            # Create CropPredictionRequest record
+            prediction_request = CropPredictionRequest.objects.create(
+                farmer=request.user,
+                manual_input=manual_input,
+                nitrogen=prediction_input.get("nitrogen", 0),
+                phosphorus=prediction_input.get("phosphorus", 0),
+                potassium=prediction_input.get("potassium", 0),
+                ph=prediction_input.get("ph", 0),
+                temperature=prediction_input.get("temperature", 0),
+                humidity=prediction_input.get("humidity", 0),
+                rainfall=prediction_input.get("rainfall", 0),
+                status="completed",
+                predicted_crops=prediction_result.get("predictions", []),
+                confidence_score=prediction_result.get("confidence", 0),
+                processed_at=timezone.now(),
+                notes=data.get("notes", ""),
+            )
 
         return JsonResponse({"status": "success", "data": response_data})
 
