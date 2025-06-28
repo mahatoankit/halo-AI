@@ -49,9 +49,8 @@ def farmer_dashboard(request):
     """
     Enhanced Farmer Dashboard with comprehensive features
     """
-    # Skip farmer check for testing
-    # if not request.user.is_farmer:
-    #     return render(request, "dashboard/access_denied.html")
+    if not request.user.is_farmer:
+        return render(request, "dashboard/access_denied.html")
 
     # Get farmer's subscription
     try:
