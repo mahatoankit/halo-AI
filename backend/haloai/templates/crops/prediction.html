@@ -55,10 +55,10 @@ Halo AI{% endblock %} {% block content %}
                   type="number"
                   id="nitrogen"
                   name="nitrogen"
-                  step="0.01"
+                  step="0.00001"
                   required
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                  placeholder="e.g., 80.5"
+                  placeholder="e.g., 80.12345"
                 />
               </div>
 
@@ -72,10 +72,10 @@ Halo AI{% endblock %} {% block content %}
                   type="number"
                   id="phosphorus"
                   name="phosphorus"
-                  step="0.01"
+                  step="0.00001"
                   required
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                  placeholder="e.g., 42.0"
+                  placeholder="e.g., 42.12345"
                 />
               </div>
 
@@ -89,10 +89,10 @@ Halo AI{% endblock %} {% block content %}
                   type="number"
                   id="potassium"
                   name="potassium"
-                  step="0.01"
+                  step="0.00001"
                   required
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                  placeholder="e.g., 38.0"
+                  placeholder="e.g., 38.12345"
                 />
               </div>
 
@@ -106,12 +106,12 @@ Halo AI{% endblock %} {% block content %}
                   type="number"
                   id="ph"
                   name="ph"
-                  step="0.01"
+                  step="0.00001"
                   min="0"
                   max="14"
                   required
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                  placeholder="e.g., 6.8"
+                  placeholder="e.g., 6.82345"
                 />
               </div>
             </div>
@@ -149,10 +149,10 @@ Halo AI{% endblock %} {% block content %}
                   type="number"
                   id="temperature"
                   name="temperature"
-                  step="0.1"
+                  step="0.00001"
                   required
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                  placeholder="e.g., 25.5"
+                  placeholder="e.g., 25.54321"
                 />
               </div>
 
@@ -166,12 +166,12 @@ Halo AI{% endblock %} {% block content %}
                   type="number"
                   id="humidity"
                   name="humidity"
-                  step="0.1"
+                  step="0.00001"
                   min="0"
                   max="100"
                   required
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                  placeholder="e.g., 65.2"
+                  placeholder="e.g., 65.23456"
                 />
               </div>
 
@@ -185,10 +185,10 @@ Halo AI{% endblock %} {% block content %}
                   type="number"
                   id="rainfall"
                   name="rainfall"
-                  step="0.1"
+                  step="0.00001"
                   required
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                  placeholder="e.g., 1200.5"
+                  placeholder="e.g., 1200.56789"
                 />
               </div>
 
@@ -242,11 +242,11 @@ Halo AI{% endblock %} {% block content %}
                   type="number"
                   id="area"
                   name="area"
-                  step="0.1"
+                  step="0.00001"
                   min="0.1"
                   required
                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                  placeholder="e.g., 2.5"
+                  placeholder="e.g., 2.54321"
                 />
               </div>
 
@@ -991,7 +991,7 @@ Halo AI{% endblock %} {% block content %}
     // Update connection status
     const statusElement = document.getElementById("connection-status");
     if (statusElement) {
-      statusElement.innerHTML = "🔄 Fetching live data...";
+      statusElement.innerHTML = " Fetching live data...";
       statusElement.className = "text-blue-600";
     }
 
@@ -1007,7 +1007,7 @@ Halo AI{% endblock %} {% block content %}
     const cacheBuster = new Date().getTime();
     const url = `/crop-prediction/api/real-time-data/?region=Bhairahawa-Butwal&_=${cacheBuster}`;
 
-    console.log("🔄 Auto-fetching display data from:", url);
+    console.log(" Auto-fetching display data from:", url);
 
     fetch(url, {
       method: "GET",
@@ -1025,10 +1025,10 @@ Halo AI{% endblock %} {% block content %}
         return response.json();
       })
       .then((data) => {
-        console.log("📊 Display data received:", data);
+        console.log(" Display data received:", data);
         if (data.status === "success" && data.data) {
           const realData = data.data;
-          console.log("✅ Processing display data:", realData);
+          console.log(" Processing display data:", realData);
 
           // Validate data exists with fallbacks (for display function)
           const ph =
@@ -1048,7 +1048,7 @@ Halo AI{% endblock %} {% block content %}
               ? parseFloat(realData.humidity)
               : 60;
 
-          console.log("🔢 Display values:", {
+          console.log(" Display values: ", {
             ph,
             temperature,
             rainfall,
@@ -1111,7 +1111,7 @@ Halo AI{% endblock %} {% block content %}
             statusElement.className = "text-green-600";
           }
         } else {
-          console.error("❌ Display API returned error or missing data:", data);
+          console.error(" Display API returned error or missing data:", data);
           setDefaultDataDisplayQuiet();
 
           // Update connection status
@@ -1122,12 +1122,12 @@ Halo AI{% endblock %} {% block content %}
         }
       })
       .catch((error) => {
-        console.error("❌ Error fetching real-time data for display:", error);
+        console.error(" Error fetching real-time data for display:", error);
         setDefaultDataDisplayQuiet();
 
         // Update connection status
         if (statusElement) {
-          statusElement.innerHTML = "❌ Connection Failed";
+          statusElement.innerHTML = " Connection Failed";
           statusElement.className = "text-red-600";
         }
       });

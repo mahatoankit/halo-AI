@@ -123,9 +123,9 @@ def get_real_time_data(request):
 
         # Get regional NPK averages (as specified in requirements)
         npk_defaults = {
-            "nitrogen": 30,  # Bhairahawa regional average
-            "phosphorus": 22.5,  # Regional average
-            "potassium": 60,  # Regional average
+            "nitrogen":1000,  # Bhairahawa regional average
+            "phosphorus": 35.63,  # Regional average
+            "potassium": 116.34,  # Regional average
         }
 
         real_time_data = {
