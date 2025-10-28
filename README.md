@@ -1,303 +1,204 @@
-# 🌾 HALO-AI: Intelligent Crop Recommendation System
+# HALO-AI: Intelligent Crop Recommendation System 
+
+**Winner - Idea For Impact 2025 Hackathon | Kings College**
 
 [![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Django](https://img.shields.io/badge/Django-5.2+-green.svg)](https://www.djangoproject.com/)
 [![Firebase](https://img.shields.io/badge/Firebase-Firestore-orange.svg)](https://firebase.google.com/docs/firestore)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue.svg)](https://www.postgresql.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Production--Ready-green.svg)]()
 
-## 📋 Project Overview
+## Problem Statement
 
-HALO-AI is a **production-ready** intelligent agricultural management system built with Django 5.2+ that empowers farmers with AI-driven crop recommendations, community collaboration, and comprehensive farm management tools. The system integrates machine learning prediction services, Firebase real-time database, IoT sensor simulation, and a multi-role user management system to provide a complete agricultural intelligence platform.
+Farmers worldwide face critical challenges in crop selection due to:
+- **Information Asymmetry**: Limited access to scientific data on optimal crop choices based on soil and environmental conditions
+- **Resource Inefficiency**: Suboptimal crop selection leading to poor yields, wasted resources, and economic losses
+- **Knowledge Gap**: Lack of real-time expert guidance and community support for agricultural decisions
+- **Market Fragmentation**: Difficulty accessing fair markets, quality inputs, and funding opportunities
+- **Technology Barrier**: Complex agricultural data remains inaccessible to farmers without technical expertise
 
-### 🎯 Key Features
+These challenges result in reduced agricultural productivity, increased crop failures, and economic hardship for farming communities globally.
 
-- **🤖 ML-Powered Predictions**: Real-time crop recommendations using XGBoost, Random Forest, and SVM models
-- **� Multi-Role Platform**: Farmers, Community Admins, Technicians, and Global Administrators
-- **� Community Platform**: Forums, discussions, Q&A, and knowledge sharing
-- **📊 Analytics Dashboard**: Comprehensive insights and reporting for all user roles
-- **� Marketplace**: Agricultural products and services trading platform
-- **💡 Expert Consultation**: Connect farmers with agricultural experts
-- **💰 Grants & Funding**: Government and NGO funding opportunities
-- **� IoT Integration**: Sensor data collection and real-time monitoring
-- **� Firebase Backend**: Real-time data synchronization and scalable storage
-- **✅ Production Deployed**: Fully functional system with complete feature set
+## Solution Overview
 
-### 🏆 Production-Ready Status
+HALO-AI is a production-ready intelligent agricultural management platform that addresses these challenges through:
 
-**✅ FULLY IMPLEMENTED & WORKING:**
+- **AI-Driven Crop Recommendations**: Machine learning models (XGBoost, Random Forest, SVM) analyze 7 key parameters (NPK, temperature, humidity, pH, rainfall) to predict optimal crops from 22+ varieties
+- **Multi-Role Platform**: Tailored interfaces for farmers, community administrators, technicians, and global administrators
+- **Knowledge Exchange**: Community forums, expert consultations, and peer-to-peer knowledge sharing
+- **Integrated Marketplace**: Direct access to agricultural products, services, and fair pricing
+- **Financial Support**: Centralized information on government grants and funding opportunities
+- **IoT Integration**: Real-time sensor data collection and monitoring for precision agriculture
+- **Real-Time Data Synchronization**: Firebase-powered backend ensuring instant updates and scalability
 
-- Complete Django application with 10+ modular apps
-- Multi-user authentication and role-based access control
-- ML prediction services with real model integration
-- Firebase Firestore integration for real-time data
-- Responsive web interface with professional UI
-- Community features with forums and discussions
-- Marketplace for agricultural products and services
-- Analytics and reporting dashboard
-- Expert consultation platform
-- Government grants and funding information
-- IoT sensor data management
-- Comprehensive admin panel
+## Technical Architecture
 
-## 🏗️ System Architecture
-
-HALO-AI is built as a **monolithic Django application** with a **modular app-based architecture** for scalability and maintainability:
+HALO-AI employs a modular Django architecture with production-grade components:
 
 ```
-HALO-AI System Architecture
-┌─────────────────────────────────────────────────────────────────┐
-│                    Django Web Application                       │
-├─────────────────────────────────────────────────────────────────┤
-│  Frontend Layer (Django Templates + Static Assets)             │
-├─────────────────────────────────────────────────────────────────┤
-│  View Layer (Django Views + URL Routing)                       │
-├─────────────────────────────────────────────────────────────────┤
-│  Business Logic Layer (Services + Models)                      │
-├─────────────────────────────────────────────────────────────────┤
-│  Data Layer (PostgreSQL + Firebase Firestore)                 │
-└─────────────────────────────────────────────────────────────────┘
-              │                    │                    │
-              ▼                    ▼                    ▼
-    ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-    │   ML Services   │  │ Firebase Cloud  │  │  IoT Sensors    │
-    │   (XGBoost/RF)  │  │   (Real-time)   │  │  (Simulation)   │
-    └─────────────────┘  └─────────────────┘  └─────────────────┘
+Application Stack
+├── Frontend: Django Templates + Bootstrap CSS + JavaScript
+├── Backend: Django 5.2+ with modular app architecture
+├── ML Services: XGBoost, Random Forest, SVM models
+├── Databases: PostgreSQL (primary) + Firebase Firestore (real-time)
+├── IoT Layer: Sensor simulation and data collection framework
+└── Deployment: WSGI/ASGI configuration for production readiness
 ```
 
-## 📁 Project Structure
+### Core Capabilities
 
-**Current Clean & Production-Ready Structure:**
+**Machine Learning Integration**
+- Real-time crop prediction using ensemble ML models
+- Support for 22 crop types across cereals, pulses, fruits, and commercial crops
+- Prediction accuracy tracking and historical analysis
+- Regional optimization based on geographical data
+
+**User Management System**
+- Role-based access control (Farmers, Community Admins, Technicians, Global Admins)
+- Location-based user profiling with latitude/longitude support
+- Account approval workflow and profile management
+- Authentication and authorization security
+
+**Community Platform**
+- Discussion forums for knowledge sharing
+- Expert consultation booking system
+- Q&A platform with regional farmer groups
+- Success story documentation and best practices
+
+**Agricultural Marketplace**
+- Product listings with categorization and filtering
+- Service provider directory
+- Price comparison and review system
+- Location-based supplier discovery
+
+**Analytics & Insights**
+- Prediction accuracy metrics and model performance tracking
+- Regional crop success rate analysis
+- User engagement statistics
+- ROI and economic impact assessment
+
+## Project Structure
 
 ```
 Codebase/
-├── backend/                      # Main Django Application
-│   └── haloai/                   # Django Project Root
+├── backend/                      # Django Application
+│   └── haloai/                   # Project Root
 │       ├── manage.py             # Django management utility
-│       ├── haloai/               # Project Configuration
-│       │   ├── settings.py       # Django settings (PostgreSQL + Firebase)
-│       │   ├── urls.py           # Main URL configuration
-│       │   ├── wsgi.py           # WSGI configuration for deployment
-│       │   └── asgi.py           # ASGI configuration for async features
-│       ├── apps/                 # Django Applications (Modular Architecture)
-│       │   ├── analytics/        # ✅ Analytics & Reporting Dashboard
-│       │   ├── community/        # ✅ Community Forums & Discussions
-│       │   ├── crops/            # ✅ Crop Prediction & Recommendations
-│       │   ├── dashboard/        # ✅ Role-based Dashboards
-│       │   ├── experts/          # ✅ Expert Consultation Platform
-│       │   ├── grants/           # ✅ Government Grants & Funding
-│       │   ├── home/             # ✅ Landing Pages & Public Content
-│       │   ├── marketplace/      # ✅ Agricultural Marketplace
-│       │   ├── sensors/          # ✅ IoT Sensor Data Management
-│       │   └── users/            # ✅ User Management & Authentication
-│       ├── services/             # Business Logic Services
-│       │   ├── crop_prediction_service.py    # ML Model Integration
-│       │   ├── firebase_service_refactored.py # Firebase Operations
-│       │   ├── real_ml_prediction_service.py  # Production ML Service
-│       │   ├── enhanced_iot_service.py        # IoT Data Processing
-│       │   └── firestore_user_service.py      # User Data Management
-│       ├── templates/            # Django HTML Templates
-│       │   ├── base.html         # Base template with navigation
-│       │   ├── analytics/        # Analytics dashboard templates
-│       │   ├── community/        # Community forum templates
-│       │   ├── crops/            # Crop prediction interfaces
-│       │   ├── dashboard/        # Role-specific dashboards
-│       │   ├── experts/          # Expert consultation templates
-│       │   ├── grants/           # Grants and funding pages
-│       │   ├── home/             # Public landing pages
-│       │   ├── marketplace/      # Marketplace interfaces
-│       │   ├── sensors/          # IoT dashboard templates
-│       │   └── users/            # Authentication templates
+│       ├── haloai/               # Configuration
+│       │   ├── settings.py       # Django settings
+│       │   ├── urls.py           # URL routing
+│       │   ├── wsgi.py           # WSGI deployment
+│       │   └── asgi.py           # ASGI configuration
+│       ├── apps/                 # Modular Applications
+│       │   ├── analytics/        # Analytics & Reporting
+│       │   ├── community/        # Community Forums
+│       │   ├── crops/            # Crop Predictions
+│       │   ├── dashboard/        # Role-based Dashboards
+│       │   ├── experts/          # Expert Consultation
+│       │   ├── grants/           # Government Grants
+│       │   ├── home/             # Landing Pages
+│       │   ├── marketplace/      # Agricultural Marketplace
+│       │   ├── sensors/          # IoT Data Management
+│       │   └── users/            # User Management
+│       ├── services/             # Business Logic
+│       │   ├── crop_prediction_service.py
+│       │   ├── firebase_service_refactored.py
+│       │   ├── real_ml_prediction_service.py
+│       │   ├── enhanced_iot_service.py
+│       │   └── firestore_user_service.py
+│       ├── templates/            # HTML Templates
 │       └── static/               # CSS, JavaScript, Images
-│           ├── css/              # Stylesheet files
-│           ├── js/               # JavaScript files
-│           └── images/           # Static images and assets
-├── iot/                          # IoT Sensor Simulation Framework
-│   ├── sensors/                  # Sensor Hardware Simulation
-│   │   └── soil_sensors.py       # Multi-sensor node simulation
+├── iot/                          # IoT Sensor Framework
+│   ├── sensors/                  # Sensor Simulation
 │   └── data_collection/          # Data Collection Services
-│       └── service.py            # Real-time data collection
-├── env/                          # Python Virtual Environment
-├── requirements.txt              # Production Dependencies
-├── firebase-service-account.json # Firebase Configuration
-└── README.md                     # This Documentation
+├── ml/                           # Machine Learning
+│   ├── data/                     # Training Datasets
+│   ├── models/                   # Trained Models
+│   └── notebooks/                # Jupyter Notebooks
+├── env/                          # Virtual Environment
+├── requirements.txt              # Dependencies
+└── firebase-service-account.json # Firebase Configuration
 ```
 
-## 🎯 Django Applications Overview
+## Django Applications
 
-### 🏠 **Home App** (`apps.home`)
+### Core Applications
 
-- **Purpose**: Public landing pages and general information
-- **Features**: Landing page, about us, contact information
-- **Key Views**: Public homepage, navigation hub
+| Application | Purpose | Key Features |
+|------------|---------|--------------|
+| **users** | User management and authentication | Multi-role system, location-based profiles, approval workflow |
+| **crops** | Crop prediction and recommendations | ML-powered predictions, history tracking, regional analysis |
+| **community** | Social platform for farmers | Forums, discussions, Q&A, knowledge sharing |
+| **marketplace** | Agricultural products and services | Product listings, price comparison, reviews |
+| **experts** | Expert consultation platform | Booking system, expert profiles, consultation history |
+| **grants** | Government grants and funding | Eligibility checker, application tracking, documentation support |
+| **analytics** | Data insights and reporting | Prediction accuracy, usage statistics, regional trends |
+| **sensors** | IoT sensor data management | Sensor registration, data visualization, health monitoring |
+| **dashboard** | Role-specific interfaces | Customized dashboards for each user role |
+| **home** | Public landing pages | Homepage, about, contact information |
 
-### 👥 **Users App** (`apps.users`)
+## Machine Learning Pipeline
 
-- **Purpose**: User management and authentication
-- **User Roles**:
-  - **👩‍🌾 Farmers**: Primary users seeking crop recommendations
-  - **👨‍💼 Community Admins**: Regional/local agricultural administrators
-  - **🔧 Technicians**: Field technicians and agricultural specialists
-  - **⚙️ Global Admins**: System administrators
-- **Features**:
-  - Custom user model with role-based permissions
-  - Location-based user management (latitude/longitude)
-  - Profile management with bio and images
-  - Account approval workflow
-- **Models**: `CustomUser` with enhanced location and role fields
+### Model Architecture
 
-### 🌾 **Crops App** (`apps.crops`)
+The system employs an ensemble approach with three ML models:
 
-- **Purpose**: Core crop prediction and recommendation system
-- **Features**:
-  - AI-powered crop recommendations using XGBoost/Random Forest
-  - Support for 22+ crop types
-  - Manual input and IoT sensor-based predictions
-  - Prediction history tracking
-  - Regional success rate analysis
-- **Models**: `CropType`, `CropPredictionRequest`, `CropPredictionResult`
-- **ML Integration**: Real-time predictions using production ML models
+1. **XGBoost** (Primary Model)
+   - Gradient boosting for high accuracy
+   - Handles non-linear relationships effectively
+   - Production-optimized for real-time predictions
 
-### 🏪 **Marketplace App** (`apps.marketplace`)
+2. **Random Forest**
+   - Ensemble method for robust predictions
+   - Reduces overfitting through bagging
+   - Provides feature importance insights
 
-- **Purpose**: Agricultural products and services trading platform
-- **Features**:
-  - Product listings and categories
-  - Service provider directory
-  - Price comparisons and reviews
-  - Location-based marketplace filtering
+3. **Support Vector Machine (SVM)**
+   - Classification for discrete crop categories
+   - Effective in high-dimensional spaces
+   - Complementary predictions to ensemble models
 
-### 🏆 **Experts App** (`apps.experts`)
+### Input Parameters
 
-- **Purpose**: Expert consultation and advisory services
-- **Features**:
-  - Expert profiles and specializations
-  - Consultation booking system
-  - Q&A platform
-  - Expert verification system
+The models analyze seven critical agricultural parameters:
 
-### 💰 **Grants App** (`apps.grants`)
+| Parameter | Description | Unit |
+|-----------|-------------|------|
+| **N** | Nitrogen content in soil | kg/ha |
+| **P** | Phosphorus content in soil | kg/ha |
+| **K** | Potassium content in soil | kg/ha |
+| **Temperature** | Average temperature | °C |
+| **Humidity** | Relative humidity | % |
+| **pH** | Soil pH level | 0-14 scale |
+| **Rainfall** | Annual rainfall | mm |
 
-- **Purpose**: Government and NGO funding opportunities
-- **Features**:
-  - Grant listings and eligibility criteria
-  - Application status tracking
-  - Funding news and updates
-  - Regional grant information
+### Supported Crops
 
-### 🌍 **Community App** (`apps.community`)
+The system provides recommendations for 22 crop types:
 
-- **Purpose**: Social platform for farmers and agricultural community
-- **Features**:
-  - Discussion forums
-  - Knowledge sharing platform
-  - Community Q&A
-  - Regional farmer groups
+**Cereals**: Rice, Maize  
+**Pulses**: Chickpea, Kidney Beans, Pigeon Peas, Moth Beans, Mung Bean, Black Gram, Lentil  
+**Fruits**: Pomegranate, Banana, Mango, Grapes, Watermelon, Muskmelon, Apple, Orange, Papaya  
+**Commercial**: Cotton, Jute, Coffee, Coconut
 
-### 📊 **Analytics App** (`apps.analytics`)
-
-- **Purpose**: Data insights and reporting dashboard
-- **Features**:
-  - Prediction accuracy metrics
-  - Usage statistics
-  - Regional crop success rates
-  - User engagement analytics
-
-### 📱 **Sensors App** (`apps.sensors`)
-
-- **Purpose**: IoT sensor data management and visualization
-- **Features**:
-  - Sensor registration and management
-  - Real-time data visualization
-  - Historical sensor data analysis
-  - Sensor health monitoring
-
-### 🎛️ **Dashboard App** (`apps.dashboard`)
-
-- **Purpose**: Role-specific dashboard interfaces
-- **Features**:
-  - Farmer dashboard with crop recommendations
-  - Community Admin dashboard with regional insights
-  - Technician dashboard with field data
-  - Global Admin dashboard with system overview
-
-## 🤖 Machine Learning & AI Integration
-
-### 🎯 Production ML Service
-
-The system uses **real machine learning models** integrated directly into Django views through the `RealMLPredictionService`:
-
-**Supported Models:**
-
-- **🏆 XGBoost** - Primary production model for highest accuracy
-- **🌳 Random Forest** - Ensemble method for robust predictions
-- **⚡ SVM** - Support Vector Machine for classification
-
-**Crop Support:**
-The system can predict optimal crops from **22 categories**:
-
-- **Cereals**: Rice, Maize
-- **Pulses**: Chickpea, Kidney Beans, Pigeon Peas, Moth Beans, Mung Bean, Black Gram, Lentil
-- **Fruits**: Pomegranate, Banana, Mango, Grapes, Watermelon, Muskmelon, Apple, Orange, Papaya
-- **Commercial**: Cotton, Jute, Coffee, Coconut
-
-**Input Parameters (7 features):**
-
-- **N, P, K**: Soil nutrient levels (Nitrogen, Phosphorus, Potassium)
-- **Temperature**: Average temperature (°C)
-- **Humidity**: Relative humidity (%)
-- **pH**: Soil pH level (0-14 scale)
-- **Rainfall**: Annual rainfall (mm)
-
-### 🔬 ML Service Integration
-
-```python
-# Real ML Integration in Django Views
-from services.real_ml_prediction_service import RealMLPredictionService
-
-class CropPredictionView(View):
-    def post(self, request):
-        # Get user input
-        input_data = {
-            'N': float(request.POST['nitrogen']),
-            'P': float(request.POST['phosphorus']),
-            'K': float(request.POST['potassium']),
-            'temperature': float(request.POST['temperature']),
-            'humidity': float(request.POST['humidity']),
-            'ph': float(request.POST['ph']),
-            'rainfall': float(request.POST['rainfall'])
-        }
-
-        # Make prediction using production ML service
-        ml_service = RealMLPredictionService()
-        prediction = ml_service.predict_crop(input_data)
-
-        # Save prediction to database and Firebase
-        # Return results to user
-```
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
-- **Python 3.12+** (Tested with Python 3.12)
-- **PostgreSQL 15+** (Primary database)
-- **Git** for version control
-- **Firebase Account** (for real-time features)
-- **Virtual environment** (recommended)
+- Python 3.12+
+- PostgreSQL 15+
+- Firebase account with Firestore enabled
+- Git
 
-### ⚡ Quick Setup
+### Installation
 
 1. **Clone the repository**
-
    ```bash
    git clone <repository-url>
    cd Codebase
    ```
 
 2. **Set up Python environment**
-
    ```bash
    python -m venv env
    source env/bin/activate  # Linux/Mac
@@ -305,487 +206,295 @@ class CropPredictionView(View):
    ```
 
 3. **Install dependencies**
-
    ```bash
    pip install -r requirements.txt
    ```
 
 4. **Configure environment variables**
-
    ```bash
    cp .env.example .env
-   # Edit .env with your database and Firebase credentials
+   # Edit .env with your credentials
+   ```
+
+   Required environment variables:
+   ```
+   DATABASE_URL=postgresql://username:password@localhost:5432/haloai_db
+   SECRET_KEY=your-secret-key
+   DEBUG=True
+   ALLOWED_HOSTS=localhost,127.0.0.1
+   FIREBASE_CREDENTIALS_PATH=firebase-service-account.json
+   FIREBASE_PROJECT_ID=your-project-id
    ```
 
 5. **Set up database**
-
    ```bash
    cd backend/haloai
    python manage.py migrate
    python manage.py createsuperuser
    ```
 
-6. **Start the development server**
-
+6. **Start development server**
    ```bash
    python manage.py runserver
    ```
 
 7. **Access the application**
-   - **Main Application**: `http://localhost:8000/`
-   - **Admin Panel**: `http://localhost:8000/admin/`
-   - **Crop Predictions**: `http://localhost:8000/crop-prediction/`
-   - **Community**: `http://localhost:8000/community/`
-   - **Marketplace**: `http://localhost:8000/marketplace/`
+   - Main Application: `http://localhost:8000/`
+   - Admin Panel: `http://localhost:8000/admin/`
+   - Crop Predictions: `http://localhost:8000/crop-prediction/`
 
-### 🔧 Configuration
-
-**Environment Variables (.env):**
-
-```bash
-# Database Configuration
-DATABASE_URL=postgresql://username:password@localhost:5432/haloai_db
-
-# Django Settings
-SECRET_KEY=your-secret-key-here
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
-
-# Firebase Configuration
-FIREBASE_CREDENTIALS_PATH=firebase-service-account.json
-FIREBASE_PROJECT_ID=your-project-id
-```
-
-**Firebase Setup:**
+### Firebase Setup
 
 1. Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
 2. Enable Firestore Database
-3. Generate service account key
+3. Generate service account key (Settings → Service accounts → Generate new private key)
 4. Save as `firebase-service-account.json` in project root
-5. Update `.env` with your Firebase project details
+5. Update `.env` with Firebase project details
 
-## 🌐 Application Features & User Workflows
+## Application Features
 
-### 👩‍🌾 **Farmer Workflow**
+### User Workflows
 
-1. **Registration**: Sign up with location details
-2. **Profile Setup**: Add farm information and preferences
-3. **Crop Prediction**: Input soil parameters or use IoT sensors
-4. **Get Recommendations**: Receive AI-powered crop suggestions
-5. **View History**: Track past predictions and outcomes
-6. **Community Participation**: Join discussions and forums
-7. **Marketplace Access**: Browse and purchase agricultural products
-8. **Expert Consultation**: Book sessions with agricultural experts
+**Farmer Workflow**
+1. Register with location details
+2. Input soil and environmental parameters (manual or IoT)
+3. Receive AI-powered crop recommendations
+4. Access community forums and expert consultations
+5. Browse marketplace for agricultural products
+6. Track prediction history and outcomes
 
-### 👨‍💼 **Community Admin Workflow**
+**Community Admin Workflow**
+1. Manage regional farmers and data
+2. Input environmental data for region
+3. Moderate community discussions
+4. Review regional analytics and trends
+5. Coordinate grant opportunities
 
-1. **Regional Management**: Oversee assigned geographical areas
-2. **Farmer Support**: Help farmers with technical issues
-3. **Data Input**: Enter NPK and environmental data for region
-4. **Community Moderation**: Manage local forum discussions
-5. **Analytics Review**: Monitor regional crop success rates
-6. **Grant Coordination**: Facilitate access to funding opportunities
+**Technician Workflow**
+1. Collect field data and sensor readings
+2. Monitor IoT equipment status
+3. Provide technical support to farmers
+4. Validate data quality
+5. Generate technical reports
 
-### 🔧 **Technician Workflow**
+**Global Admin Workflow**
+1. Oversee platform operations
+2. Manage user approvals and roles
+3. Monitor system analytics
+4. Verify expert credentials
+5. Administer grants and funding programs
 
-1. **Field Data Collection**: Input sensor readings and field observations
-2. **Equipment Management**: Monitor IoT sensors and equipment status
-3. **Farmer Training**: Provide technical support and training
-4. **Data Validation**: Verify and validate collected agricultural data
-5. **Report Generation**: Create technical reports for management
+### Key URLs
 
-### ⚙️ **Global Admin Workflow**
+| Feature | URL Path | Description |
+|---------|----------|-------------|
+| Home | `/` | Landing page |
+| Authentication | `/auth/` | Login, register, profile |
+| Crop Predictions | `/crop-prediction/` | AI recommendations |
+| Community | `/community/` | Forums and discussions |
+| Marketplace | `/marketplace/` | Products and services |
+| Experts | `/experts/` | Consultation platform |
+| Grants | `/grants-and-offers/` | Funding opportunities |
+| Analytics | `/analytics/` | Insights and reporting |
+| Sensors | `/sensors/` | IoT monitoring |
+| Dashboard | `/dashboard/` | Role-based dashboards |
+| Admin | `/admin/` | Django admin interface |
 
-1. **System Oversight**: Monitor overall platform health and usage
-2. **User Management**: Approve new users and manage roles
-3. **Content Moderation**: Review and approve community content
-4. **Analytics Dashboard**: View comprehensive system analytics
-5. **Expert Management**: Verify and manage expert credentials
-6. **Grant Administration**: Manage funding opportunities and applications
+## Technology Stack
 
-## 📊 Key Application URLs
+### Backend
+- **Django 5.2+**: Web framework
+- **PostgreSQL 15+**: Primary database
+- **Firebase Firestore**: Real-time NoSQL database
+- **Python 3.12**: Core language
 
-| Feature                 | URL Path              | Description                         |
-| ----------------------- | --------------------- | ----------------------------------- |
-| **Home**                | `/`                   | Landing page and navigation         |
-| **Authentication**      | `/auth/`              | Login, register, profile management |
-| **Crop Predictions**    | `/crop-prediction/`   | AI-powered crop recommendations     |
-| **Community Forums**    | `/community/`         | Discussion forums and Q&A           |
-| **Marketplace**         | `/marketplace/`       | Agricultural products and services  |
-| **Expert Consultation** | `/experts/`           | Connect with agricultural experts   |
-| **Grants & Funding**    | `/grants-and-offers/` | Government and NGO funding          |
-| **Analytics**           | `/analytics/`         | Data insights and reporting         |
-| **IoT Sensors**         | `/sensors/`           | Sensor data and monitoring          |
-| **Role Dashboards**     | `/dashboard/`         | Role-specific dashboard interfaces  |
-| **Admin Panel**         | `/admin/`             | Django admin interface              |
+### Machine Learning
+- **XGBoost**: Primary ML model
+- **Scikit-learn**: ML framework
+- **Pandas & NumPy**: Data processing
+- **Random Forest & SVM**: Ensemble methods
 
-## ⚡ Core Features in Detail
+### Frontend
+- **Django Templates**: Server-side rendering
+- **Bootstrap CSS**: Responsive design
+- **JavaScript**: Interactive features
 
-### 🤖 **Intelligent Crop Prediction**
+### Cloud Services
+- **Firebase**: Real-time sync and authentication
+- **Google Cloud**: Infrastructure support
 
-- **Multi-Model Ensemble**: Uses XGBoost, Random Forest, and SVM
-- **Real-time Processing**: Instant predictions based on input parameters
-- **Historical Tracking**: Complete prediction history for farmers
-- **Regional Optimization**: Location-specific recommendations
-- **Confidence Scoring**: Prediction accuracy and confidence metrics
-
-### 🏪 **Agricultural Marketplace**
-
-- **Product Categories**: Seeds, fertilizers, equipment, tools
-- **Service Listings**: Consultation, equipment rental, transportation
-- **Location-based Filtering**: Find local suppliers and services
-- **Price Comparison**: Compare prices across different vendors
-- **Review System**: User ratings and reviews for products/services
-
-### 🌍 **Community Platform**
-
-- **Discussion Forums**: Topic-based agricultural discussions
-- **Knowledge Sharing**: Best practices and experience sharing
-- **Q&A System**: Ask questions and get expert answers
-- **Regional Groups**: Location-based farmer communities
-- **Success Stories**: Share and learn from successful farming experiences
-
-### �‍🎓 **Expert Consultation**
-
-- **Expert Profiles**: Detailed profiles with specializations and credentials
-- **Booking System**: Schedule consultations with agricultural experts
-- **Multiple Formats**: Video calls, phone calls, in-person meetings
-- **Consultation History**: Track past consultations and recommendations
-- **Expert Ratings**: Community-driven expert evaluation system
-
-### 💰 **Grants & Funding**
-
-- **Government Schemes**: Central and state government agricultural schemes
-- **NGO Programs**: Non-governmental organization funding opportunities
-- **Eligibility Checker**: Automated eligibility assessment
-- **Application Tracking**: Track application status and progress
-- **Documentation Support**: Guidance on required documents and procedures
-
-### 📈 **Analytics & Insights**
-
-- **Prediction Accuracy**: Track ML model performance over time
-- **Regional Trends**: Agricultural trends by geographical region
-- **Crop Success Rates**: Historical success rates for different crops
-- **User Engagement**: Platform usage and user activity metrics
-- **Economic Impact**: ROI and economic benefits analysis
-
-## �️ Technology Stack
-
-### **Backend Framework**
-
-- **Django 5.2+**: Modern Python web framework
-- **PostgreSQL 15+**: Primary relational database
-- **Firebase Firestore**: Real-time NoSQL database for live features
-
-### **Machine Learning**
-
-- **XGBoost**: Primary ML model for crop predictions
-- **Random Forest**: Ensemble method for robust predictions
-- **Scikit-learn**: ML library and model management
-- **Pandas & NumPy**: Data processing and analysis
-
-### **Frontend**
-
-- **Django Templates**: Server-side rendered HTML
-- **Bootstrap CSS**: Responsive design framework
-- **JavaScript**: Interactive frontend features
-- **Static Assets**: CSS, JS, and image optimization
-
-### **Cloud Services**
-
-- **Firebase**: Real-time database and authentication
-- **Google Cloud**: Backend infrastructure support
-- **PostgreSQL Cloud**: Scalable database hosting
-
-### **Development Tools**
-
-- **Python 3.12+**: Core programming language
-- **Git**: Version control and collaboration
+### Development Tools
+- **Git**: Version control
 - **Virtual Environment**: Dependency isolation
-- **Django Admin**: Built-in administration interface
+- **WSGI/ASGI**: Production deployment
 
-### **Production Features**
-
-- **WSGI/ASGI**: Production deployment ready
-- **Environment Configuration**: Separate dev/staging/production settings
-- **Database Migrations**: Automated schema management
-- **Static File Handling**: Optimized asset delivery
-- **Security Features**: CSRF protection, authentication, authorization
-
-## 🔧 Development & Deployment
-
-### **Local Development**
+## Testing
 
 ```bash
-# Start development server
-cd backend/haloai
-python manage.py runserver
-
-# Run database migrations
-python manage.py migrate
-
-# Create admin user
-python manage.py createsuperuser
-
-# Collect static files
-python manage.py collectstatic
-```
-
-### **Testing**
-
-```bash
-# Run Django test suite
+# Run full test suite
 python manage.py test
 
-# Test specific apps
+# Test specific application
 python manage.py test apps.crops
-python manage.py test apps.users
 
 # Run with coverage
 coverage run --source='.' manage.py test
 coverage report
 ```
 
-### **Production Deployment**
+## Deployment
 
-- **WSGI Server**: Gunicorn or uWSGI
-- **Web Server**: Nginx reverse proxy
-- **Database**: PostgreSQL with connection pooling
-- **Static Files**: CDN or cloud storage
-- **Environment**: Docker containers for consistency
-- **Monitoring**: Logging and performance monitoring
+### Production Configuration
 
-## 🎯 Use Cases & Real-World Applications
+1. **Set production environment variables**
+   ```bash
+   DEBUG=False
+   ALLOWED_HOSTS=your-domain.com
+   ```
 
-### **Primary Use Cases**
+2. **Collect static files**
+   ```bash
+   python manage.py collectstatic
+   ```
 
-1. **Precision Agriculture**: Data-driven crop selection for optimal yields
-2. **Risk Management**: Reduce crop failure through AI predictions
-3. **Resource Optimization**: Efficient use of fertilizers, water, and land
-4. **Community Building**: Connect farmers and agricultural professionals
-5. **Knowledge Sharing**: Platform for agricultural best practices
-6. **Market Access**: Connect farmers with buyers and suppliers
-7. **Expert Support**: Access to agricultural consultation and advice
-8. **Funding Access**: Information about grants and financial opportunities
+3. **Use production database**
+   - Configure PostgreSQL with connection pooling
+   - Set up database backups
 
-### **Target Users**
+4. **Deploy with WSGI server**
+   ```bash
+   gunicorn haloai.wsgi:application
+   ```
 
-- **👩‍🌾 Small and Medium Farmers**: Primary beneficiaries seeking crop guidance
-- **🏛️ Agricultural Departments**: Government agencies supporting farmers
-- **🌾 Agricultural Cooperatives**: Organizations managing farmer groups
-- **🎓 Research Institutions**: Universities and research organizations
-- **💼 Agricultural Businesses**: Companies serving the farming community
-- **🌍 NGOs**: Non-governmental organizations working in agriculture
-- **📊 Policy Makers**: Government officials creating agricultural policies
+5. **Configure web server**
+   - Nginx reverse proxy
+   - SSL/TLS certificates
+   - Static file serving
 
-### **Impact Areas**
+### Production Checklist
 
-- **🍽️ Food Security**: Improved crop yields and food production
-- **💚 Sustainability**: Optimized resource usage and environmental protection
-- **💰 Economic Growth**: Increased farmer income and reduced losses
-- **📚 Education**: Knowledge transfer and capacity building
-- **🌐 Digital Inclusion**: Bringing technology to rural agricultural communities
-- **🤝 Community Development**: Strengthening agricultural communities
+- [ ] Environment variables configured
+- [ ] Debug mode disabled
+- [ ] Allowed hosts set
+- [ ] Static files collected
+- [ ] Database migrations applied
+- [ ] Superuser created
+- [ ] Firebase credentials configured
+- [ ] HTTPS enabled
+- [ ] Monitoring and logging configured
+- [ ] Backup system implemented
 
-## 🤝 Contributing
+## Impact & Use Cases
 
-We welcome contributions to HALO-AI! This project represents a production-ready agricultural intelligence platform that can make a real difference in farmers' lives.
+### Target Users
 
-### 🚀 Contributing Guidelines
+- **Small and Medium Farmers**: Primary beneficiaries seeking data-driven crop guidance
+- **Agricultural Departments**: Government agencies supporting farmers
+- **Agricultural Cooperatives**: Organizations managing farmer groups
+- **Research Institutions**: Universities studying agricultural practices
+- **Agricultural Businesses**: Companies serving the farming community
+- **NGOs**: Organizations working in agricultural development
+- **Policy Makers**: Government officials creating agricultural policies
 
-1. **Fork the repository**
-2. **Create a feature branch**: `git checkout -b feature/amazing-improvement`
-3. **Set up development environment**: Follow the setup instructions above
-4. **Make your changes** with proper testing
-5. **Follow code standards**: PEP 8, type hints, comprehensive docstrings
-6. **Add tests**: Ensure your changes are properly tested
-7. **Commit with descriptive messages**: `git commit -m 'Add crop yield prediction feature'`
-8. **Push to your branch**: `git push origin feature/amazing-improvement`
-9. **Open a Pull Request** with detailed description
+### Real-World Impact
 
-### 🎯 Priority Areas for Contribution
+- **Food Security**: Improved crop yields and production efficiency
+- **Sustainability**: Optimized resource usage and environmental protection
+- **Economic Growth**: Increased farmer income through better crop selection
+- **Education**: Knowledge transfer and capacity building
+- **Digital Inclusion**: Technology accessibility for rural communities
+- **Community Development**: Strengthening agricultural networks
 
-**🔥 High Priority:**
+## Contributing
 
-- **🧪 Testing Suite**: Comprehensive test coverage for all Django apps
-- **📱 Mobile Responsiveness**: Enhanced mobile UI/UX improvements
-- **🌍 Internationalization**: Multi-language support for global deployment
-- **⚡ Performance Optimization**: Database query optimization and caching
-- **🔒 Security Enhancements**: Advanced security features and audit trails
+We welcome contributions to HALO-AI. This project represents a production-ready platform that can make meaningful impact in agricultural communities.
 
-**🌟 Medium Priority:**
+### How to Contribute
 
-- **📊 Advanced Analytics**: Enhanced reporting and visualization features
-- **🤖 ML Model Improvements**: Additional ensemble methods and deep learning
-- **🛰️ Satellite Integration**: Remote sensing data integration for crop monitoring
-- **💬 Real-time Chat**: In-app messaging and real-time communication
-- **📧 Notification System**: Email and SMS notification capabilities
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/improvement`)
+3. Set up development environment
+4. Make changes with proper testing
+5. Follow code standards (PEP 8, type hints, docstrings)
+6. Commit with descriptive messages (`git commit -m 'Add feature'`)
+7. Push to branch (`git push origin feature/improvement`)
+8. Open a Pull Request with detailed description
 
-**💡 Enhancement Ideas:**
+### Priority Areas
 
-- **📱 Mobile App**: React Native or Flutter mobile application
-- **🌦️ Weather API Integration**: Real-time weather data for enhanced predictions
-- **💰 Economic Analysis**: Cost-benefit analysis and ROI calculations
-- **🔄 Crop Rotation Planning**: Multi-season planning algorithms
-- **🎯 Precision Farming**: GPS-based field mapping and zone management
+**High Priority**
+- Comprehensive test coverage
+- Mobile responsiveness improvements
+- Multi-language support (i18n)
+- Performance optimization and caching
+- Security enhancements and audit trails
 
-### 🛠️ Development Environment Setup
+**Medium Priority**
+- Advanced analytics and visualization
+- ML model improvements and deep learning
+- Satellite imagery integration
+- Real-time chat and messaging
+- Email/SMS notification system
 
-```bash
-# Clone your fork
-git clone https://github.com/your-username/halo-ai.git
-cd halo-ai/Codebase
+**Enhancement Ideas**
+- Mobile application (React Native/Flutter)
+- Weather API integration
+- Economic analysis and ROI calculations
+- Crop rotation planning algorithms
+- GPS-based field mapping
 
-# Set up development environment
-python -m venv env
-source env/bin/activate
-pip install -r requirements.txt
+### Code Standards
 
-# Set up database
-cd backend/haloai
-python manage.py migrate
-python manage.py createsuperuser
+- Follow PEP 8 guidelines
+- Add type annotations for functions
+- Include comprehensive docstrings
+- Write tests for new features
+- Use clear commit messages
+- All changes require code review
 
-# Start development server
-python manage.py runserver
-```
+## License
 
-### 📋 Code Standards
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
-- **Python Style**: Follow PEP 8 guidelines
-- **Type Hints**: Add type annotations for all functions
-- **Documentation**: Include comprehensive docstrings
-- **Testing**: Write tests for new features and bug fixes
-- **Commit Messages**: Use clear, descriptive commit messages
-- **Code Review**: All changes require code review before merging
+**MIT License Summary**
+- Commercial use allowed
+- Modification allowed
+- Distribution allowed
+- Private use allowed
+- License and copyright notice required
+- No warranty provided
 
-### 🐛 Bug Reports
+## Acknowledgments
 
-Found a bug? Help us improve:
+### Idea for Impact Hackathon 2025
 
-1. **Check existing issues** to avoid duplicates
-2. **Create detailed bug report** with:
-   - Steps to reproduce the issue
-   - Expected vs actual behavior
-   - Environment details (OS, Python version, browser)
-   - Error messages and logs
-   - Screenshots if applicable
-3. **Add relevant labels** (bug, critical, etc.)
+HALO-AI was developed for the Idea for Impact Hackathon 2025 at Kings College, representing our commitment to using technology for sustainable agriculture and global food security.
 
-### 💡 Feature Requests
+**Project Mission**: Empowering farmers worldwide with AI-driven agricultural intelligence to promote sustainable farming practices, increase crop yields, and ensure food security for future generations.
 
-Have ideas for improvement?
+### Data & Research
+- Open-source agricultural and crop recommendation datasets
+- Scientific research on precision agriculture
+- Government agricultural statistics and regional data
 
-1. **Open an issue** with the `enhancement` label
-2. **Describe the feature** and its benefits clearly
-3. **Provide use cases** and examples
-4. **Discuss implementation** approaches
-5. **Consider backward compatibility** and impact
+### Technology
+- Django Foundation and open-source community
+- Firebase for real-time infrastructure
+- Scikit-learn ML community
+- PostgreSQL development team
 
-## 📄 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-**MIT License Summary:**
-
-- ✅ Commercial use allowed
-- ✅ Modification allowed
-- ✅ Distribution allowed
-- ✅ Private use allowed
-- ❗ License and copyright notice required
-- ❗ No warranty provided
-
-## 🏆 Project Information
-
-### **Idea for Impact Hackathon 2025**
-
-HALO-AI was developed for the **Idea for Impact Hackathon 2025**, representing our commitment to using technology for sustainable agriculture and global food security.
-
-**🎯 Project Mission:**
-
-> "Empowering farmers worldwide with AI-driven agricultural intelligence to promote sustainable farming practices, increase crop yields, and ensure food security for future generations."
-
-### 🌟 **Project Achievements**
-
-**🏗️ Technical Excellence:**
-
-- **Production-Ready System**: Fully functional Django application with real-world features
-- **Advanced ML Integration**: Real machine learning models providing accurate crop predictions
-- **Scalable Architecture**: Modular Django apps with Firebase real-time capabilities
-- **Comprehensive Feature Set**: 10+ integrated applications covering the entire agricultural ecosystem
-- **Professional Development**: Clean code, proper documentation, and production deployment readiness
-
-**🌍 Real-World Impact:**
-
-- **Farmer Empowerment**: Direct access to AI-powered agricultural recommendations
-- **Community Building**: Platform connecting farmers, experts, and agricultural professionals
-- **Knowledge Sharing**: Comprehensive information exchange and best practices platform
-- **Market Access**: Connecting farmers with buyers, suppliers, and service providers
-- **Economic Benefits**: Reducing crop failure risks and improving agricultural profitability
-
-**📊 Platform Statistics:**
-
-- **22 Crop Types**: Comprehensive crop recommendation coverage
-- **4 User Roles**: Multi-level platform access and functionality
-- **10+ Django Apps**: Modular architecture for scalability and maintenance
-- **7 Key Features**: Predictions, Community, Marketplace, Experts, Grants, Analytics, IoT
-- **Production Ready**: Fully deployable with real-world application capabilities
-
-### 👥 **Development Team Values**
-
-- **🌱 Sustainability**: Promoting environmentally conscious agricultural practices
-- **🤝 Community**: Building connections within the agricultural ecosystem
-- **💡 Innovation**: Leveraging cutting-edge technology for agricultural advancement
-- **🎯 Impact**: Creating real-world solutions for agricultural challenges
-- **🌍 Accessibility**: Making agricultural intelligence accessible to farmers worldwide
-
-## 🙏 Acknowledgments
-
-### **📊 Data & Research**
-
-- **Agricultural Datasets**: Open-source agricultural and crop recommendation datasets
-- **Research Papers**: Scientific research on precision agriculture and crop optimization
-- **Government Data**: Agricultural department statistics and regional farming data
-
-### **🛠️ Technology Partners**
-
-- **Django Foundation**: Robust web framework for rapid development
-- **Firebase**: Real-time database and cloud infrastructure
-- **Scikit-learn Community**: Machine learning libraries and algorithms
-- **PostgreSQL**: Reliable and scalable database management
-- **Open Source Community**: Countless libraries and tools that made this project possible
-
-### **🌍 Inspiration & Mission**
-
-- **UN Sustainable Development Goals**:
-  - **Goal 2 (Zero Hunger)**: Ending hunger and achieving food security
-  - **Goal 15 (Life on Land)**: Sustainable land use and agricultural practices
-- **Precision Agriculture Movement**: Technology-driven farming for sustainability
-- **Global Food Security Initiative**: Working towards worldwide food availability
-- **Agricultural Innovation Communities**: Farmers, researchers, and technologists collaborating for progress
-
-### **🎓 Educational Resources**
-
-- **Agricultural Universities**: Research and educational content on modern farming
-- **FAO (Food and Agriculture Organization)**: Global agricultural statistics and best practices
-- **Agricultural Extension Services**: Ground-level agricultural support and knowledge
-- **Farmer Communities**: Real-world experience and traditional knowledge integration
+### Inspiration
+- UN Sustainable Development Goals (Goal 2: Zero Hunger, Goal 15: Life on Land)
+- Precision agriculture movement
+- Global food security initiatives
+- Agricultural innovation communities
 
 ---
 
-<div align="center">
+**Bridging technology and agriculture to cultivate a sustainable future**
 
-**🌱 "Bridging technology and agriculture to cultivate a sustainable future"**
+Made for Idea for Impact Hackathon 2025 | Kings College
 
----
-
-### **Made with ❤️ for Idea for Impact Hackathon 2025**
-
-**Building tomorrow's agricultural intelligence today**
-
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-black.svg)](https://github.com/your-repo/halo-ai)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black.svg)](#)
 [![Django](https://img.shields.io/badge/Built%20with-Django-green.svg)](https://www.djangoproject.com/)
 [![AI Powered](https://img.shields.io/badge/AI-Powered-blue.svg)](#)
-[![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-green.svg)](#)
-
-</div>
